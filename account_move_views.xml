@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_ktx_expense_management_root"
+        name="Liquidaciones"
+        web_icon="ktx_expense_management,static/description/icon.png"
+        sequence="90"/>
+
+    <menuitem
+        id="menu_ktx_expense_dashboard"
+        name="Tablero"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_expense_dashboard"
+        sequence="5"/>
+
+    <menuitem
+        id="menu_ktx_settlement_staging"
+        name="Gastos por Liquidar"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_settlement_staging"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_ktx_settlement"
+        name="Liquidaciones"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_settlement"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_ktx_settlement_approvals"
+        name="Autorizaciones"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_settlement_approvals"
+        sequence="30"/>
+
+    <menuitem
+        id="menu_ktx_config_settings"
+        name="Configuración"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_expense_config_settings"
+        sequence="100"
+        groups="base.group_system"/>
+
+</odoo>
