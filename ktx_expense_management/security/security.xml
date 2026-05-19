@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Company isolation is handled in Python (_search overrides) on both
+        ktx.settlement.staging and ktx.settlement, so that the
+        "Asignación Multiempresa" config parameter can bypass the filter
+        without needing to remove/recreate ir.rules at runtime.
+    -->
+</odoo>

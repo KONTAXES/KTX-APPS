@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ktx_settlement_staging_all,ktx.settlement.staging all,model_ktx_settlement_staging,,1,1,1,1
+access_ktx_settlement_all,ktx.settlement all,model_ktx_settlement,,1,1,1,1
+access_ktx_settlement_line_all,ktx.settlement.line all,model_ktx_settlement_line,,1,1,1,1
+access_ktx_settlement_payment_wizard_all,ktx.settlement.payment.wizard all,model_ktx_settlement_payment_wizard,,1,1,1,1
+access_ktx_staging_selection_wizard_all,ktx.staging.selection.wizard all,model_ktx_staging_selection_wizard,,1,1,1,1
+access_ktx_staging_selection_line_all,ktx.staging.selection.line all,model_ktx_staging_selection_line,,1,1,1,1
+access_ktx_settlement_company_account_all,ktx.settlement.company.account all,model_ktx_settlement_company_account,,1,1,1,1
+access_ktx_settlement_reject_wizard_all,ktx.settlement.reject.wizard all,model_ktx_settlement_reject_wizard,,1,1,1,1
+access_ktx_expense_dashboard_all,ktx.expense.dashboard all,model_ktx_expense_dashboard,,1,1,1,1
