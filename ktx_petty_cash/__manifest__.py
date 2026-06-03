@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Caja Chica",
-    "version": "19.0.2.0.5",
+    "version": "19.0.2.0.6",
     "category": "Accounting/Accounting",
     "summary": "Fondos de caja chica con gráficos configurables, integración contable, asientos automáticos y cierres mensuales",
     "description": "Gestion de fondos de caja chica con flujo de aprobacion, integracion contable, reposiciones y cierres mensuales.",

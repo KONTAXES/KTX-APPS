@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Liquidación de Gastos",
-    "version": "19.0.1.0.5",
+    "version": "19.0.1.0.6",
     "category": "Accounting/Accounting",
     "summary": "Full expense settlement workflow: staging, multi-level approval, automatic journal entries, payment wizard and KPI dashboard",
     "description": "Flujo completo de liquidacion de gastos: staging, aprobacion multinivel, asientos automaticos y dashboard.",

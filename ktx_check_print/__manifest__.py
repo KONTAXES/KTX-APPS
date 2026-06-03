@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     "name": "Impresión de Cheques",
-    "version": "19.0.1.0.5",
+    "version": "19.0.1.0.6",
     "category": "Accounting/Accounting",
     "summary": "Impresión de cheques con voucher y póliza contable desde pagos de Odoo",
     "description": "Impresion de cheques con voucher y poliza contable desde pagos de Odoo, con monto en letras en espanol.",

@@ -29,7 +29,7 @@ Funcionalidades:
     'author': 'Kontaxes',
     'website': 'https://www.kontaxes.com',
     'category': 'Accounting/Localizations/Guatemala',
-    'version': '19.0.3.0.2',
+    'version': '19.0.3.0.3',
     'license': 'OPL-1',
     'price': 20.00,
     'currency': 'USD',
