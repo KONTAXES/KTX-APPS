@@ -1,0 +1,14 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Odoo
+*.egg-info/
+.eggs/
+
+# Editor / OS
+.DS_Store
+*.swp
+*.swo
+Thumbs.db
