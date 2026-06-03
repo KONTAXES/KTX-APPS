@@ -1,0 +1,196 @@
+<!--
+  Pagina de presentacion KTX Caja Chica.
+  Estructura Bootstrap + colores hex inline + <img> (sobrevive el sanitizador de
+  apps.odoo.com). Banner GIF animado. El <style> es mejora solo para el backend.
+  Sin <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(21,128,61,.18); }
+  .ktx-pg .ktx-stat { transition: transform .2s; }
+  .ktx-pg .ktx-stat:hover { transform: translateY(-4px); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(34,197,94,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(22px);} to {opacity:1; transform:none;} }
+  .ktx-pg .ktx-card, .ktx-pg .ktx-step { animation: ktxRise .6s ease both; }
+</style>
+
+<section class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2937; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.gif" alt="Caja Chica - Fondos y reposiciones"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#15803d; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">Kanban</div><div style="font-size:13px; margin-top:6px;">Dashboard de fondos</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#22c55e; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">Auto</div><div style="font-size:13px; margin-top:6px;">Asientos contables</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#f59e0b; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">4</div><div style="font-size:13px; margin-top:6px;">Tipos de grafico</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#0f766e; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">PDF</div><div style="font-size:13px; margin-top:6px;">Reportes con firmas</div></div></div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="text-center py-4">
+      <div style="color:#0f766e; font-weight:700; font-size:13px; letter-spacing:2px;">FONDOS DE CAJA CHICA EN ODOO</div>
+      <h2 style="color:#15803d; font-weight:800; font-size:30px; margin-top:6px;">Controla cada quetzal del fondo</h2>
+      <p class="mx-auto" style="color:#3f6151; font-size:17px; max-width:780px; margin-top:12px;">
+        Gestiona fondos de caja chica con flujo de aprobacion completo e integracion nativa con la
+        contabilidad de Odoo. <strong style="color:#1f2937;">Caja Chica</strong> registra gastos,
+        genera los asientos automaticamente, controla el saldo en tiempo real y maneja reposiciones
+        y cierres mensuales &mdash; con alertas y trazabilidad total.
+      </p>
+    </div>
+
+    <!-- FLUJO -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#0f766e; font-weight:700; font-size:13px; letter-spacing:2px;">FLUJO DEL GASTO</div>
+      <h2 style="color:#15803d; font-weight:800; font-size:30px; margin-top:6px;">De la solicitud al reembolso</h2>
+    </div>
+    <div class="row g-3 text-center pb-4">
+      <div class="col-4"><div class="ktx-card rounded p-3 h-100" style="background-color:#fff; border:1px solid #cdedd8;">
+        <div class="rounded-circle d-inline-block text-center" style="background-color:#dcfce7; color:#15803d; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-pencil"></i></div>
+        <h4 style="color:#15803d; font-size:15px; margin-top:10px;">Borrador</h4></div></div>
+      <div class="col-4"><div class="ktx-card rounded p-3 h-100" style="background-color:#fff; border:1px solid #cdedd8;">
+        <div class="rounded-circle d-inline-block text-center" style="background-color:#dcfce7; color:#15803d; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-thumbs-up"></i></div>
+        <h4 style="color:#15803d; font-size:15px; margin-top:10px;">Aprobado</h4></div></div>
+      <div class="col-4"><div class="ktx-card rounded p-3 h-100" style="background-color:#22c55e; border:1px solid #22c55e;">
+        <div class="rounded-circle d-inline-block text-center" style="background-color:#fff; color:#16a34a; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-check"></i></div>
+        <h4 style="color:#fff; font-size:15px; margin-top:10px;">Reembolsado</h4></div></div>
+    </div>
+
+    <!-- FUNCIONALIDADES -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#0f766e; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#15803d; font-weight:800; font-size:30px; margin-top:6px;">Todo el ciclo de caja chica</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#15803d;"><i class="fa fa-th-large"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Dashboard Kanban</h3>
+        <p style="font-size:14px; color:#3f6151;">Vista de fondos con grafico configurable: barras, pastel, dona u horizontal.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#d97706;"><i class="fa fa-archive"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Fondos con custodio</h3>
+        <p style="font-size:14px; color:#3f6151;">Cada fondo tiene custodio, cuenta contable y saldo minimo de alerta.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#15803d;"><i class="fa fa-book"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Asiento automatico</h3>
+        <p style="font-size:14px; color:#3f6151;">Genera la partida contable al confirmar el reembolso y al publicar la reposicion.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#d97706;"><i class="fa fa-money"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Pagar con Caja Chica</h3>
+        <p style="font-size:14px; color:#3f6151;">Boton directo en facturas y asientos para liquidarlos contra el fondo.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#15803d;"><i class="fa fa-balance-scale"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Saldo corriente</h3>
+        <p style="font-size:14px; color:#3f6151;">Saldo en tiempo real por cada movimiento, con alerta al bajar del minimo.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#d97706;"><i class="fa fa-refresh"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Reposiciones</h3>
+        <p style="font-size:14px; color:#3f6151;">Solicitudes con flujo borrador &rarr; confirmado &rarr; aprobado &rarr; publicado y carga automatica de gastos.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#15803d;"><i class="fa fa-lock"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cierre mensual</h3>
+        <p style="font-size:14px; color:#3f6151;">Bloqueo de periodo con registro completo en el chatter para auditoria.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#d97706;"><i class="fa fa-ban"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Rechazo con nota</h3>
+        <p style="font-size:14px; color:#3f6151;">Rechaza gastos con motivo obligatorio para dejar registro claro.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4eede;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#15803d;"><i class="fa fa-file-pdf-o"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Reportes PDF</h3>
+        <p style="font-size:14px; color:#3f6151;">Estado del fondo y reposicion con firmas, listos para imprimir y archivar.</p></div></div>
+    </div>
+
+    <!-- COMPATIBILIDAD -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4eede;"><div style="font-size:26px; color:#15803d;"><i class="fa fa-bolt"></i></div><h4 style="color:#15803d; font-size:15px; margin-top:8px;">Odoo 19</h4><p style="font-size:12px; color:#3f6151;">Community y Enterprise.</p></div></div>
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4eede;"><div style="font-size:26px; color:#f59e0b;"><i class="fa fa-bell"></i></div><h4 style="color:#15803d; font-size:15px; margin-top:8px;">Alertas</h4><p style="font-size:12px; color:#3f6151;">Notificaciones y actividades.</p></div></div>
+      <div class="col-12 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4eede;"><div style="font-size:26px; color:#0f766e;"><i class="fa fa-users"></i></div><h4 style="color:#15803d; font-size:15px; margin-top:8px;">Seguridad</h4><p style="font-size:12px; color:#3f6151;">Grupos Usuario y Administrador.</p></div></div>
+    </div>
+    <!-- CAPTURAS DE PANTALLA -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#16a34a; font-weight:700; font-size:13px; letter-spacing:2px;">EN ACCION</div>
+      <h2 style="color:#15803d; font-weight:800; font-size:28px; margin-top:6px;">Asi se ve en tu Odoo</h2>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12">
+        <img src="sc_03_fondo.png" alt="Fondo de caja chica con saldos, botones y grafico"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_02_kanban.png" alt="Vista Kanban de fondos con grafico de ejecucion"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_01_ajustes.png" alt="Configuracion de Caja Chica en Ajustes de Odoo"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12">
+        <img src="sc_04_reporte.png" alt="Reporte PDF Estado de Caja Chica con movimientos"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+    </div>
+
+    <!-- DEMO EN VIVO -->
+    <div class="rounded p-4 my-4 text-center" style="background-color:#0f172a; color:#ffffff;">
+      <div style="color:#4ade80; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase;">Pruebalo sin instalar nada</div>
+      <h2 style="color:#ffffff; font-weight:800; font-size:27px; margin-top:6px;">Demo en vivo, gratis</h2>
+      <p class="mx-auto" style="color:#cbd5e1; max-width:600px; margin-top:8px; font-size:15px;">
+        Entra a nuestra base de datos de demostracion y prueba el modulo con datos reales,
+        sin instalar nada. Disponible las 24 horas.
+      </p>
+      <div class="row g-2 justify-content-center my-3">
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">USUARIO</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">CONTRASENA</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+      </div>
+      <a href="https://app.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background-color:#16a34a; color:#ffffff; font-weight:800; font-size:16px; text-decoration:none; padding:13px 34px; border-radius:999px;">
+        Entrar a app.kontaxes.com &rarr;
+      </a>
+      <div style="color:#94a3b8; font-size:14px; margin-top:14px;">
+        O escribe en tu navegador: <span style="color:#ffffff; font-weight:700;">app.kontaxes.com</span>
+      </div>
+    </div>
+
+    <!-- PRECIO INTRODUCTORIO -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#f0f9ff; border:2px solid #0369a1;">
+      <div style="color:#0369a1; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Introduccion</div>
+      <div style="font-size:38px; font-weight:900; color:#0369a1; line-height:1.1; margin-top:6px;">$20 <span style="font-size:16px; font-weight:500; color:#64748b;">USD</span></div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$40 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Precio especial por tiempo limitado. Una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+
+
+    <!-- CTA -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#15803d; color:#fff;">
+      <h2 style="color:#fff; font-weight:800; font-size:26px;">Caja chica ordenada y auditable</h2>
+      <p class="mx-auto" style="color:#d6f5e1; max-width:640px; margin-top:10px; font-size:15px;">
+        Fondos, gastos, reposiciones y cierres con contabilidad automatica &mdash; todo dentro de Odoo.
+      </p>
+    </div>
+
+    <div class="text-center pb-5" style="color:#8aa395; font-size:13px;">
+      <p style="margin-bottom:4px;">Caja Chica &mdash; por Kontaxes</p>
+      <p style="margin:0;">Odoo 19 &bull; Community &amp; Enterprise</p>
+    </div>
+
+  </div>
+</section>

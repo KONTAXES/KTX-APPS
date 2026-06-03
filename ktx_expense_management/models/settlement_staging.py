@@ -80,7 +80,6 @@ class SettlementStaging(models.Model):
         string="Estado",
         default="pending",
         required=True,
-        tracking=True,
         index=True,
     )
     state_color = fields.Integer(compute="_compute_state_color")
@@ -96,10 +95,10 @@ class SettlementStaging(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         """Apply company filter unless multi-company staging is enabled."""
         if not self.env.su:
-            multi = self.env["ir.config_parameter"].sudo().get_param(
-                "ktx_expense_management.multi_company_staging", "False"
+            multi = self.env['ir.config_parameter'].sudo().get_param(
+                'ktx_expense_management.multi_company_staging', 'False'
             )
-            if multi not in ("True", "1", "true"):
+            if multi not in ('True', '1', 'true'):
                 domain = [("company_id", "in", self.env.companies.ids)] + list(domain)
         return super()._search(domain, offset=offset, limit=limit, order=order, **kwargs)
 
@@ -169,11 +168,11 @@ class SettlementStaging(models.Model):
             )
 
         # Validar que todos los gastos sean de la misma empresa (solo si multi-empresa está desactivado)
-        multi = self.env["ir.config_parameter"].sudo().get_param(
-            "ktx_expense_management.multi_company_staging", "False"
+        multi = self.env['ir.config_parameter'].sudo().get_param(
+            'ktx_expense_management.multi_company_staging', 'False'
         )
         companies = eligible.mapped("company_id")
-        if multi not in ("True", "1", "true") and len(companies) > 1:
+        if multi not in ('True', '1', 'true') and len(companies) > 1:
             raise UserError(
                 _("Los gastos seleccionados pertenecen a diferentes empresas (%s). "
                   "Seleccione gastos de una sola empresa.")

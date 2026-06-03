@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Carta Bond: 8.5" x 11" (215.9 x 279.4 mm) con márgenes mínimos -->
+    <record id="paperformat_check_letter" model="report.paperformat">
+        <field name="name">KTX Cheque Carta Bond</field>
+        <field name="format">custom</field>
+        <field name="page_height">279</field>
+        <field name="page_width">216</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line">False</field>
+        <field name="header_spacing">0</field>
+    </record>
+
+    <!-- Papel Continuo: 9.5" x 11" (241.3 x 279.4 mm) con márgenes mínimos -->
+    <record id="paperformat_check_continuous" model="report.paperformat">
+        <field name="name">KTX Cheque Papel Continuo</field>
+        <field name="format">custom</field>
+        <field name="page_height">279</field>
+        <field name="page_width">241</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">5</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">5</field>
+        <field name="margin_right">5</field>
+        <field name="header_line">False</field>
+        <field name="header_spacing">0</field>
+    </record>
+
+</odoo>

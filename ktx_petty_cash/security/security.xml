@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="group_petty_cash_user" model="res.groups">
+        <field name="name">Caja Chica / Usuario</field>
+    </record>
+
+    <record id="group_petty_cash_manager" model="res.groups">
+        <field name="name">Caja Chica / Administrador</field>
+        <field name="implied_ids" eval="[(4, ref('group_petty_cash_user'))]"/>
+    </record>
+
+    <!-- Todo usuario interno obtiene acceso automáticamente -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_petty_cash_user'))]"/>
+    </record>
+
+    <!-- Contabilidad / Administrador → Administrador de Caja Chica -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_petty_cash_manager'))]"/>
+    </record>
+
+</odoo>

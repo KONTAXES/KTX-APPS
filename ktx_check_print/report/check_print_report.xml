@@ -1,0 +1,442 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════
+         Reporte Carta Bond
+    ══════════════════════════════════════════════════════ -->
+    <record id="action_report_ktx_check_letter" model="ir.actions.report">
+        <field name="name">Cheque Voucher (Carta)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_check_print.report_ktx_check</field>
+        <field name="report_file">ktx_check_print.report_ktx_check</field>
+        <field name="paperformat_id" ref="paperformat_check_letter"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">('Cheque - ' + (object.memo or object.ref or '') + ' - ' + (object.partner_id.name or '')).strip(' -')</field>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════
+         Reporte Papel Continuo
+    ══════════════════════════════════════════════════════ -->
+    <record id="action_report_ktx_check_continuous" model="ir.actions.report">
+        <field name="name">Cheque Voucher (Continuo)</field>
+        <field name="model">account.payment</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_check_print.report_ktx_check</field>
+        <field name="report_file">ktx_check_print.report_ktx_check</field>
+        <field name="paperformat_id" ref="paperformat_check_continuous"/>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════
+         Template QWeb — compartido por ambos reportes
+    ══════════════════════════════════════════════════════ -->
+    <template id="report_ktx_check">
+        <t t-call="web.html_container">
+            <!-- charset hint in body — picked up by older wkhtmltopdf versions -->
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            <t t-foreach="docs" t-as="o">
+
+                <!-- ── Parámetros empresa ── -->
+                <t t-set="cfg"      t-value="o.company_id"/>
+                <t t-set="mt"       t-value="cfg.ktx_check_margin_top    or 0"/>
+                <t t-set="ml"       t-value="cfg.ktx_check_margin_left   or 0"/>
+                <t t-set="mr"       t-value="cfg.ktx_check_margin_right  or 0"/>
+                <t t-set="app"      t-value="cfg.ktx_check_appearance    or 'classic'"/>
+                <t t-set="bank_fmt" t-value="o.journal_id.ktx_check_bank_format or 'none'"/>
+
+                <!-- ── Paleta de colores según apariencia ── -->
+                <t t-set="hdr_bg"
+                   t-value="'#f5f5f5' if app == 'classic' else ('#e8f4f4' if app == 'modern' else '#fafafa')"/>
+                <t t-set="tbl_hdr_bg"
+                   t-value="'#555555' if app == 'classic' else ('#007B7F' if app == 'modern' else '#888888')"/>
+                <t t-set="border_col"
+                   t-value="'#cccccc' if app == 'classic' else ('#007B7F' if app == 'modern' else '#dddddd')"/>
+                <t t-set="accent_col"
+                   t-value="'#333333' if app == 'classic' else ('#007B7F' if app == 'modern' else '#555555')"/>
+
+                <!-- ── Datos del cheque ── -->
+                <t t-set="check_num"    t-value="o.memo or o.ref or ''"/>
+                <t t-set="date_str"     t-value="o._ktx_get_date_formatted()"/>
+                <t t-set="amount_words" t-value="o._ktx_get_amount_in_words()"/>
+                <t t-set="partner_name" t-value="(o.partner_id.name or '').upper()"/>
+                <t t-set="symbol"       t-value="o.currency_id.symbol or 'Q'"/>
+                <t t-set="amount_fmt"   t-value="'{:,.2f}'.format(o.amount)"/>
+                <t t-set="bank_display" t-value="o._ktx_get_bank_display()"/>
+                <t t-set="exch_rate"    t-value="o._ktx_get_exchange_rate()"/>
+                <t t-set="memo_val"     t-value="o.payment_reference or o.name or ''"/>
+
+                <!-- ── Posiciones configurables por compañía ── -->
+                <t t-set="pos_height"      t-value="o.company_id.ktx_check_height    or 70"/>
+                <t t-set="pos_date_top"    t-value="o.company_id.ktx_check_date_top  or 25"/>
+                <t t-set="pos_date_left"   t-value="o.company_id.ktx_check_date_left or 20"/>
+                <t t-set="pos_amt_top"     t-value="o.company_id.ktx_check_amount_top  or 25"/>
+                <t t-set="pos_amt_left"    t-value="o.company_id.ktx_check_amount_left or 150"/>
+                <t t-set="pos_payee_top"   t-value="o.company_id.ktx_check_payee_top  or 31"/>
+                <t t-set="pos_payee_left"  t-value="o.company_id.ktx_check_payee_left or 20"/>
+                <t t-set="pos_words_top"   t-value="o.company_id.ktx_check_words_top  or 38"/>
+                <t t-set="pos_words_left"  t-value="o.company_id.ktx_check_words_left or 20"/>
+                <t t-set="pos_nonneg_top"  t-value="o.company_id.ktx_check_nonneg_top  or 48"/>
+                <t t-set="pos_nonneg_left" t-value="o.company_id.ktx_check_nonneg_left or 20"/>
+
+                <!-- ════════════════════════════════════════════════
+                     PÁGINA — wrapper con márgenes laterales
+                ════════════════════════════════════════════════ -->
+                <div t-attf-style="
+                    font-family: Arial, Helvetica, sans-serif;
+                    font-size: 9pt;
+                    padding-left: #{ml}mm;
+                    padding-right: #{mr}mm;
+                ">
+
+                    <!-- ════════════════════════════════════════════
+                         SECCIÓN 1 — CHEQUE (solo datos sobre el
+                         papel pre-impreso del banco)
+                    ════════════════════════════════════════════ -->
+
+                    <!-- ── BANCO PROMERICA GUATEMALA ──
+                         Posiciones absolutas medidas desde el borde del formulario:
+                           Fecha / Monto numérico : base y=30mm
+                           Beneficiario           : base y=36mm
+                           Monto en letras        : base y=42mm
+                           NO NEGOCIABLE          : base y=52mm
+                           Datos izquierda        : x=25mm
+                           Monto numérico         : x=134mm
+                    ── -->
+                    <t t-if="bank_fmt == 'promerica_gt'">
+                        <!-- margin-left negativo cancela el padding-left del wrapper -->
+                        <div t-attf-style="
+                            position: relative;
+                            height: #{pos_height}mm;
+                            margin-top: #{mt}mm;
+                            margin-left: -#{ml}mm;
+                        ">
+                            <!-- Fecha -->
+                            <div t-attf-style="
+                                position: absolute;
+                                top: #{pos_date_top}mm; left: #{pos_date_left}mm;
+                                font-size: 9pt; font-weight: bold;
+                                letter-spacing: 0.3px; white-space: nowrap;
+                            ">
+                                <t t-esc="date_str"/>
+                            </div>
+
+                            <!-- Monto numérico; sin símbolo -->
+                            <div t-attf-style="
+                                position: absolute;
+                                top: #{pos_amt_top}mm; left: #{pos_amt_left}mm;
+                                font-size: 9pt; font-weight: bold;
+                                letter-spacing: 0.3px; white-space: nowrap;
+                            ">
+                                ****<t t-esc="amount_fmt"/>***
+                            </div>
+
+                            <!-- Beneficiario -->
+                            <div t-attf-style="
+                                position: absolute;
+                                top: #{pos_payee_top}mm; left: #{pos_payee_left}mm;
+                                font-size: 9pt; font-weight: bold;
+                                text-transform: uppercase;
+                                letter-spacing: 0.3px; white-space: nowrap;
+                            ">
+                                <t t-esc="partner_name"/>
+                            </div>
+
+                            <!-- Monto en letras; nowrap sin límite de ancho -->
+                            <div t-attf-style="
+                                position: absolute;
+                                top: #{pos_words_top}mm; left: #{pos_words_left}mm;
+                                font-size: 9pt; font-weight: bold;
+                                text-transform: uppercase;
+                                letter-spacing: 0.3px;
+                                white-space: nowrap;
+                            ">
+                                <t t-esc="amount_words"/>***
+                            </div>
+
+                            <!-- NO NEGOCIABLE -->
+                            <t t-if="o.ktx_non_negotiable">
+                                <div t-attf-style="
+                                    position: absolute;
+                                    top: #{pos_nonneg_top}mm; left: #{pos_nonneg_left}mm;
+                                    font-size: 9pt; font-weight: bold;
+                                    letter-spacing: 0.5px;
+                                ">
+                                    NO NEGOCIABLE
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- ── FORMATO GENÉRICO (sin banco configurado) ── -->
+                    <t t-else="">
+                        <div t-attf-style="
+                            margin-top: #{mt}mm;
+                            position: relative;
+                            height: 80mm;
+                            width: 100%;
+                        ">
+                            <div style="position: absolute; top: 26mm; left: 25mm; font-size: 9pt; font-weight: bold;">
+                                <t t-esc="date_str"/>
+                            </div>
+                            <div style="position: absolute; top: 26mm; left: 120mm; font-size: 9pt; font-weight: bold;">
+                                ****<t t-esc="symbol"/><t t-esc="amount_fmt"/>***
+                            </div>
+                            <div style="position: absolute; top: 32mm; left: 25mm; font-size: 9pt; font-weight: bold; text-transform: uppercase;">
+                                <t t-esc="partner_name"/>
+                            </div>
+                            <div style="position: absolute; top: 38mm; left: 25mm; font-size: 9pt; font-weight: bold; text-transform: uppercase;">
+                                <t t-esc="amount_words"/>***
+                            </div>
+                            <t t-if="o.ktx_non_negotiable">
+                                <div style="position: absolute; top: 48mm; left: 25mm; font-size: 9pt; font-weight: bold;">
+                                    NO NEGOCIABLE
+                                </div>
+                            </t>
+                        </div>
+                    </t>
+
+                    <!-- ════════════════════════════════════════════
+                         VOUCHER — empieza aquí (debajo del cheque)
+                    ════════════════════════════════════════════ -->
+
+                    <!-- Separador perforado entre cheque y voucher -->
+                    <div style="border-top: 1.5px dashed #aaa; margin: 2mm 0 4mm 0;"/>
+
+                    <!-- ── Encabezado empresa ── -->
+                    <table t-attf-style="
+                        width: 100%;
+                        border-collapse: collapse;
+                        background: #{hdr_bg};
+                        border: 1px solid #{border_col};
+                        border-radius: 4px;
+                        margin-bottom: 2mm;
+                    ">
+                        <tr>
+                            <!-- Datos empresa -->
+                            <td style="padding: 3mm 4mm; font-size: 9pt; line-height: 1.6; vertical-align: top;">
+                                <div style="font-size: 11pt; font-weight: bold;">
+                                    <t t-esc="o.company_id.name or ''"/>
+                                </div>
+                                <t t-if="o.company_id.street">
+                                    <div><t t-esc="o.company_id.street"/></div>
+                                </t>
+                                <t t-if="o.company_id.city">
+                                    <div><t t-esc="o.company_id.city"/></div>
+                                </t>
+                                <t t-if="o.company_id.vat">
+                                    <div>NIT <t t-esc="o.company_id.vat"/></div>
+                                </t>
+                            </td>
+                            <!-- Logo empresa — ocupa toda la altura de la celda -->
+                            <td style="width: 35%; padding: 3mm 4mm; text-align: right; vertical-align: middle;">
+                                <img t-if="o.company_id.logo"
+                                     t-att-src="image_data_uri(o.company_id.logo)"
+                                     style="max-width: 100%; height: auto; max-height: 28mm; display: block; margin-left: auto;"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ── Barra título voucher ── -->
+                    <div t-attf-style="
+                        background: #{tbl_hdr_bg};
+                        color: white;
+                        font-weight: bold;
+                        font-size: 8pt;
+                        padding: 1.5mm 4mm;
+                        border-radius: 3px;
+                        margin-bottom: 2mm;
+                        letter-spacing: 0.5px;
+                    ">
+                        VOUCHER DE CHEQUE
+                    </div>
+
+                    <!-- ── Tabla de datos del cheque ── -->
+                    <table t-attf-style="
+                        width: 100%;
+                        border-collapse: collapse;
+                        font-size: 8.5pt;
+                        margin-bottom: 3mm;
+                        border: 1px solid #{border_col};
+                        border-radius: 4px;
+                    ">
+                        <tr>
+                            <!-- Columna izquierda -->
+                            <td t-attf-style="
+                                width: 55%;
+                                padding: 2mm 3mm;
+                                border-right: 1px solid #{border_col};
+                                vertical-align: top;
+                            ">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="width: 30%; font-weight: bold; padding: 1mm 0;">BANCO:</td>
+                                        <td style="padding: 1mm 0;"><t t-esc="o.journal_id.bank_id.name or o.journal_id.bank_account_id.bank_id.name or o.journal_id.name or ''"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0;">CUENTA:</td>
+                                        <td style="padding: 1mm 0;"><t t-esc="o.journal_id.bank_account_id.acc_number or ''"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0;">FECHA:</td>
+                                        <td style="padding: 1mm 0;"><t t-esc="date_str"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0; vertical-align: top;">PAGUESE A:</td>
+                                        <td style="padding: 1mm 0; font-weight: bold;"><t t-esc="partner_name"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <!-- Columna derecha -->
+                            <td style="width: 45%; padding: 2mm 3mm; vertical-align: top;">
+                                <table style="width: 100%; border-collapse: collapse;">
+                                    <tr>
+                                        <td style="width: 40%; font-weight: bold; padding: 1mm 0;">NO. CHEQUE:</td>
+                                        <td style="padding: 1mm 0; font-weight: bold; font-size: 12pt; color: #cc0000;">
+                                            <t t-esc="check_num"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0;">MONTO:</td>
+                                        <td style="padding: 1mm 0; font-weight: bold;">
+                                            <t t-esc="symbol"/><t t-esc="amount_fmt"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0;">TC:</td>
+                                        <td style="padding: 1mm 0;">
+                                            <t t-esc="'%.5f' % exch_rate"/>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="font-weight: bold; padding: 1mm 0;">MONEDA:</td>
+                                        <td style="padding: 1mm 0;">
+                                            <t t-esc="symbol"/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ════════════════════════════════════════════
+                         SECCIÓN 3 — PÓLIZA CONTABLE
+                    ════════════════════════════════════════════ -->
+                    <div t-attf-style="
+                        border: 1px solid #{border_col};
+                        border-radius: 4px;
+                        overflow: hidden;
+                        margin-bottom: 3mm;
+                    ">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 8.5pt;">
+                            <thead>
+                                <tr t-attf-style="background: #{tbl_hdr_bg}; color: white;">
+                                    <th style="padding: 1.5mm 3mm; text-align: left; width: 14%; border-right: 1px solid rgba(255,255,255,0.3);">CÓDIGO</th>
+                                    <th style="padding: 1.5mm 3mm; text-align: left; border-right: 1px solid rgba(255,255,255,0.3);">CUENTA CONTABLE</th>
+                                    <th style="padding: 1.5mm 3mm; text-align: right; width: 14%; border-right: 1px solid rgba(255,255,255,0.3);">DEBE</th>
+                                    <th style="padding: 1.5mm 3mm; text-align: right; width: 14%;">HABER</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="total_debit"  t-value="0.0"/>
+                                <t t-set="total_credit" t-value="0.0"/>
+                                <t t-if="o.move_id">
+                                    <t t-foreach="o.move_id.line_ids" t-as="line">
+                                        <t t-set="total_debit"  t-value="total_debit  + line.debit"/>
+                                        <t t-set="total_credit" t-value="total_credit + line.credit"/>
+                                        <tr t-att-style="'background:#fafafa;' if line_index % 2 == 0 else ''">
+                                            <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm;">
+                                                <t t-esc="line.account_id.code or ''"/>
+                                            </td>
+                                            <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm;">
+                                                <t t-esc="line.account_id.name or ''"/>
+                                            </td>
+                                            <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm; text-align: right;">
+                                                <t t-if="line.debit" t-esc="'{:,.2f}'.format(line.debit)"/>
+                                            </td>
+                                            <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm; text-align: right;">
+                                                <t t-if="line.credit" t-esc="'{:,.2f}'.format(line.credit)"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </t>
+                                <!-- Filas en blanco para relleno (mínimo 3) -->
+                                <t t-set="line_count" t-value="len(o.move_id.line_ids) if o.move_id else 0"/>
+                                <t t-foreach="range(max(0, 3 - line_count))" t-as="blank">
+                                    <tr style="height: 7mm;">
+                                        <td t-attf-style="border: 1px solid #{border_col};"/>
+                                        <td t-attf-style="border: 1px solid #{border_col};"/>
+                                        <td t-attf-style="border: 1px solid #{border_col};"/>
+                                        <td t-attf-style="border: 1px solid #{border_col};"/>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tfoot>
+                                <tr t-attf-style="background: #{hdr_bg}; font-weight: bold;">
+                                    <td colspan="2" t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm; text-align: right;">
+                                        TOTALES
+                                    </td>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm; text-align: right;">
+                                        <t t-esc="'{:,.2f}'.format(total_debit)"/>
+                                    </td>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 1.5mm 3mm; text-align: right;">
+                                        <t t-esc="'{:,.2f}'.format(total_credit)"/>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <!-- ── Concepto / Memo + No. Póliza ── -->
+                    <div t-attf-style="
+                        border: 1px solid #{border_col};
+                        border-radius: 4px;
+                        padding: 2mm 4mm;
+                        font-size: 8.5pt;
+                        margin-bottom: 3mm;
+                    ">
+                        <div style="min-height: 8mm;">
+                            <span style="font-weight: bold;">CONCEPTO: </span><t t-esc="memo_val"/>
+                        </div>
+                        <div t-attf-style="border-top: 1px solid #{border_col}; padding-top: 1.5mm; margin-top: 1.5mm;">
+                            <span style="font-weight: bold;">NO. DE PÓLIZA: </span>
+                            <t t-esc="o.move_id.name if o.move_id else ''"/>
+                        </div>
+                    </div>
+
+                    <!-- ════════════════════════════════════════════
+                         SECCIÓN 4 — FIRMAS
+                    ════════════════════════════════════════════ -->
+                    <div t-attf-style="
+                        border: 1px solid #{border_col};
+                        border-radius: 4px;
+                        overflow: hidden;
+                    ">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 8pt;">
+                            <thead>
+                                <tr t-attf-style="background: #{tbl_hdr_bg}; color: white;">
+                                    <th style="padding: 1.5mm 3mm; border-right: 1px solid rgba(255,255,255,0.3);">EMITIDO POR</th>
+                                    <th style="padding: 1.5mm 3mm; border-right: 1px solid rgba(255,255,255,0.3);">OPERADO POR</th>
+                                    <th style="padding: 1.5mm 3mm; border-right: 1px solid rgba(255,255,255,0.3);">RECIBIDO POR</th>
+                                    <th style="padding: 1.5mm 3mm;">FECHA RECIBIDO</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 7mm 3mm 3mm 3mm; font-size: 8pt;">
+                                        <t t-esc="o.create_uid.name or ''"/>
+                                    </td>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 7mm 3mm 3mm 3mm;"/>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 7mm 3mm 3mm 3mm;"/>
+                                    <td t-attf-style="border: 1px solid #{border_col}; padding: 7mm 3mm 3mm 3mm;"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div><!-- /page wrapper -->
+            </t>
+        </t>
+    </template>
+
+</odoo>

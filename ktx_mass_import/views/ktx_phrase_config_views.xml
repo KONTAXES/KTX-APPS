@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_phrase_config_view_list" model="ir.ui.view">
+        <field name="name">ktx.phrase.config.list</field>
+        <field name="model">ktx.phrase.config</field>
+        <field name="arch" type="xml">
+            <list string="Frases SAT FEL" editable="bottom">
+                <field name="tipo_frase" string="Tipo"/>
+                <field name="codigo_escenario" string="Escenario"/>
+                <field name="tipo_regimen" string="Regimen" optional="show"/>
+                <field name="descripcion" string="Descripcion SAT"/>
+                <field name="descripcion_es" string="Texto en Factura"/>
+                <field name="include_in_footer" string="En Notas"/>
+                <field name="clear_taxes" string="Limpiar IVA"
+                       decoration-danger="clear_taxes == True"/>
+                <field name="tax_id" string="Retencion Compras (esta empresa)"
+                       domain="[('type_tax_use', 'in', ['purchase', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                       options="{'no_create': True}"/>
+                <field name="tax_id_sale" string="Retencion Ventas (esta empresa)"
+                       domain="[('type_tax_use', 'in', ['sale', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                       options="{'no_create': True}" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_phrase_config_view_form" model="ir.ui.view">
+        <field name="name">ktx.phrase.config.form</field>
+        <field name="model">ktx.phrase.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuracion de Frase SAT FEL">
+                <sheet>
+                    <group string="Identificacion SAT">
+                        <field name="tipo_frase"
+                               help="TipoFrase del XML FEL (1=ISR, 2=IVA Agente, 3=Sin credito fiscal, 4=Exento IVA, etc.)"/>
+                        <field name="codigo_escenario"
+                               help="CodigoEscenario del XML FEL"/>
+                        <field name="tipo_regimen" string="Regimen / Categoria"/>
+                        <field name="descripcion" string="Descripcion SAT"
+                               help="Descripcion oficial del catalogo SAT"/>
+                    </group>
+                    <group string="Comportamiento en Factura">
+                        <field name="descripcion_es" string="Texto a mostrar en Factura"
+                               help="Texto que se incluira en las Notas de la factura cuando aparezca esta frase. Si esta vacio se usa la Descripcion SAT."/>
+                        <field name="include_in_footer"
+                               help="Si activo, el texto aparece en el campo Notas/Narration de la factura"/>
+                        <field name="clear_taxes"
+                               help="Si activo, elimina TODOS los impuestos de las lineas al importar este documento."/>
+                    </group>
+                    <group string="Retenciones por tipo de importacion (esta empresa)"
+                           invisible="clear_taxes">
+                        <group string="Compras (Proveedores)">
+                            <field name="tax_id" string="Retencion Compras"
+                                   domain="[('type_tax_use', 'in', ['purchase', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                                   options="{'no_create': True}"
+                                   help="Retencion a agregar en facturas de proveedores (ej: ISR retencion Tipo 1/Esc.2, IVA Agente Tipo 2/Esc.1)."/>
+                        </group>
+                        <group string="Ventas (Clientes)">
+                            <field name="tax_id_sale" string="Retencion Ventas"
+                                   domain="[('type_tax_use', 'in', ['sale', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                                   options="{'no_create': True}"
+                                   help="Retencion a agregar en facturas de clientes."/>
+                        </group>
+                        <field name="active"/>
+                    </group>
+                    <group invisible="not clear_taxes">
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_phrase_config_view_search" model="ir.ui.view">
+        <field name="name">ktx.phrase.config.search</field>
+        <field name="model">ktx.phrase.config</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="descripcion"/>
+                <field name="tipo_regimen"/>
+                <field name="tax_id"/>
+                <field name="tax_id_sale"/>
+                <filter string="Con retencion compras" name="with_tax" domain="[('tax_id','!=',False)]"/>
+                <filter string="Con retencion ventas" name="with_tax_sale" domain="[('tax_id_sale','!=',False)]"/>
+                <filter string="Exento / Limpian IVA" name="clear_taxes" domain="[('clear_taxes','=',True)]"/>
+                <filter string="En notas" name="in_footer" domain="[('include_in_footer','=',True)]"/>
+                <group>
+                    <filter string="Tipo Frase" name="gb_tipo" domain="[]" context="{'group_by':'tipo_frase'}"/>
+                    <filter string="Regimen" name="gb_regimen" domain="[]" context="{'group_by':'tipo_regimen'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ktx_phrase_config_action" model="ir.actions.act_window">
+        <field name="name">Frases SAT FEL</field>
+        <field name="res_model">ktx.phrase.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="ktx_phrase_config_view_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure las frases SAT
+            </p>
+            <p>Cada frase del XML FEL (TipoFrase/CodigoEscenario) puede configurarse
+               para agregar texto a las facturas y/o aplicar impuestos de retencion
+               diferenciados por tipo (compras o ventas).</p>
+        </field>
+    </record>
+
+</odoo>

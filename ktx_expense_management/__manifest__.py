@@ -1,32 +1,14 @@
 # -*- coding: utf-8 -*-
 {
-    "name": "KTX Expense Settlements",
-    "version": "19.0.1.0.1",
+    "name": "Liquidación de Gastos",
+    "version": "19.0.1.0.4",
     "category": "Accounting/Accounting",
     "summary": "Full expense settlement workflow: staging, multi-level approval, automatic journal entries, payment wizard and KPI dashboard",
-    "description": """
-KTX Expense Settlements
-========================
-Complete expense reimbursement workflow for Odoo 19.
-
-Key features:
-- Expense staging (group vendor bills / journal entries)
-- Multi-level approval flow: Draft → Confirmed → Approved → Posted → Paid
-- Automatic journal entries on posting (multicompany, multicurrency)
-- Payment wizard with journal, date, amount, write-off handling
-- Odoo activities + email notifications at each state change
-- Per-employee spending limits
-- Rejection with mandatory reason note
-- KPI dashboard: totals by state, pending amount, monthly chart, top employees
-- Export to Excel with one click
-- Intercompany: assign a different paying company per settlement
-
-Compatible with Odoo 19 Community and Enterprise, on-premise only.
-    """,
+    "description": "Flujo completo de liquidacion de gastos: staging, aprobacion multinivel, asientos automaticos y dashboard.",
     "author": "KONTAXES",
     "website": "https://app.kontaxes.com",
-    "license": "LGPL-3",
-    "price": 0,
+    "license": "OPL-1",
+    "price": 20.00,
     "currency": "USD",
     "depends": [
         "account",
@@ -51,6 +33,7 @@ Compatible with Odoo 19 Community and Enterprise, on-premise only.
     "application": True,
     "auto_install": False,
     "images": [
+        "static/description/banner.gif",
         "static/description/banner.png",
     ],
     "web_icon": "ktx_expense_management,static/description/icon.png",

@@ -1,0 +1,167 @@
+<!--
+  Pagina de presentacion KTX Impresion de Cheques.
+  Estructura Bootstrap + colores hex inline + <img> (sobrevive el sanitizador de
+  apps.odoo.com). Banner GIF animado. El <style> es mejora solo para el backend.
+  Sin <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(3,105,161,.18); }
+  .ktx-pg .ktx-stat { transition: transform .2s; }
+  .ktx-pg .ktx-stat:hover { transform: translateY(-4px); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(14,165,233,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(22px);} to {opacity:1; transform:none;} }
+  .ktx-pg .ktx-card { animation: ktxRise .6s ease both; }
+</style>
+
+<section class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2937; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.gif" alt="Impresion de Cheques desde pagos de Odoo"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#0369a1; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">3&#8209;en&#8209;1</div><div style="font-size:13px; margin-top:6px;">Cheque+voucher+poliza</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#0ea5e9; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">mm</div><div style="font-size:13px; margin-top:6px;">Posicion configurable</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#38bdf8; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">GT</div><div style="font-size:13px; margin-top:6px;">Formato Guatemala</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#0f766e; color:#fff;"><div style="font-size:30px; font-weight:800; line-height:1;">Auto</div><div style="font-size:13px; margin-top:6px;">Adjunta al chatter</div></div></div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="text-center py-4">
+      <div style="color:#0ea5e9; font-weight:700; font-size:13px; letter-spacing:2px;">IMPRESION DE CHEQUES EN ODOO</div>
+      <h2 style="color:#0369a1; font-weight:800; font-size:30px; margin-top:6px;">Imprime cheques desde tus pagos</h2>
+      <p class="mx-auto" style="color:#3d586a; font-size:17px; max-width:780px; margin-top:12px;">
+        Genera el cheque directamente desde los pagos registrados en Odoo, con voucher y poliza
+        contable en una sola impresion. <strong style="color:#1f2937;">Impresion de Cheques</strong>
+        incluye monto en letras en espanol, posicionamiento configurable en milimetros por banco y
+        adjunta el PDF al chatter del pago automaticamente.
+      </p>
+    </div>
+
+    <!-- FUNCIONALIDADES -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#0ea5e9; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#0369a1; font-weight:800; font-size:30px; margin-top:6px;">Cheques profesionales en un clic</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-print"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Imprimir desde el pago</h3>
+        <p style="font-size:14px; color:#3d586a;">Botones "Imprimir Cheque" y "Adjuntar al Chatter" en los pagos publicados.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-file-text-o"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cheque + voucher + poliza</h3>
+        <p style="font-size:14px; color:#3d586a;">PDF con formato Guatemala: cheque, voucher, poliza contable y firmas.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-language"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Monto en letras</h3>
+        <p style="font-size:14px; color:#3d586a;">Importe escrito en espanol (UN MIL QUINIENTOS CON 00/100) automaticamente.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-ban"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">NO NEGOCIABLE</h3>
+        <p style="font-size:14px; color:#3d586a;">Opcion por pago, visible solo cuando el metodo de pago es Cheque.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-arrows"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Posicion en milimetros</h3>
+        <p style="font-size:14px; color:#3d586a;">Ajusta la posicion de cada dato en mm por diario o banco para calzar tu formato.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #d4e9f3;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0f2fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#0369a1;"><i class="fa fa-cog"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Formato por empresa</h3>
+        <p style="font-size:14px; color:#3d586a;">Configura papel, apariencia y margenes por empresa segun tu chequera.</p></div></div>
+    </div>
+
+    <!-- COMPATIBILIDAD -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4e9f3;"><div style="font-size:26px; color:#0369a1;"><i class="fa fa-bolt"></i></div><h4 style="color:#0369a1; font-size:15px; margin-top:8px;">Odoo 19</h4><p style="font-size:12px; color:#3d586a;">Community y Enterprise.</p></div></div>
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4e9f3;"><div style="font-size:26px; color:#0ea5e9;"><i class="fa fa-puzzle-piece"></i></div><h4 style="color:#0369a1; font-size:15px; margin-top:8px;">Solo account</h4><p style="font-size:12px; color:#3d586a;">Sin dependencias extra.</p></div></div>
+      <div class="col-12 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #d4e9f3;"><div style="font-size:26px; color:#0f766e;"><i class="fa fa-paperclip"></i></div><h4 style="color:#0369a1; font-size:15px; margin-top:8px;">Auto-adjunto</h4><p style="font-size:12px; color:#3d586a;">El PDF se guarda en el chatter.</p></div></div>
+    </div>
+    <!-- CAPTURAS DE PANTALLA -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#0ea5e9; font-weight:700; font-size:13px; letter-spacing:2px;">EN ACCION</div>
+      <h2 style="color:#0369a1; font-weight:800; font-size:28px; margin-top:6px;">Asi se ve en tu Odoo</h2>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12">
+        <img src="sc_03_pago.png" alt="Vista del pago con botones Imprimir Cheque y PDF generado"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_04_pdf.png" alt="PDF: cheque + voucher + poliza contable"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_01_config.png" alt="Configuracion de posicion en milimetros por banco"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12">
+        <img src="sc_02_diario.png" alt="Formato de Cheque KTX en el diario bancario"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+    </div>
+
+    <!-- DEMO EN VIVO -->
+    <div class="rounded p-4 my-4 text-center" style="background-color:#0f172a; color:#ffffff;">
+      <div style="color:#38bdf8; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase;">Pruebalo sin instalar nada</div>
+      <h2 style="color:#ffffff; font-weight:800; font-size:27px; margin-top:6px;">Demo en vivo, gratis</h2>
+      <p class="mx-auto" style="color:#cbd5e1; max-width:600px; margin-top:8px; font-size:15px;">
+        Entra a nuestra base de datos de demostracion y prueba el modulo con datos reales,
+        sin instalar nada. Disponible las 24 horas.
+      </p>
+      <div class="row g-2 justify-content-center my-3">
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">USUARIO</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">CONTRASENA</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+      </div>
+      <a href="https://app.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background-color:#0ea5e9; color:#ffffff; font-weight:800; font-size:16px; text-decoration:none; padding:13px 34px; border-radius:999px;">
+        Entrar a app.kontaxes.com &rarr;
+      </a>
+      <div style="color:#94a3b8; font-size:14px; margin-top:14px;">
+        O escribe en tu navegador: <span style="color:#ffffff; font-weight:700;">app.kontaxes.com</span>
+      </div>
+    </div>
+
+    <!-- PRECIO INTRODUCTORIO -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#f0f9ff; border:2px solid #0369a1;">
+      <div style="color:#0369a1; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Introduccion</div>
+      <div style="font-size:38px; font-weight:900; color:#0369a1; line-height:1.1; margin-top:6px;">$10 <span style="font-size:16px; font-weight:500; color:#64748b;">USD</span></div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$20 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Precio especial por tiempo limitado. Una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+
+
+    <!-- CTA -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#0369a1; color:#fff;">
+      <h2 style="color:#fff; font-weight:800; font-size:26px;">Tus cheques, listos para firmar</h2>
+      <p class="mx-auto" style="color:#cfeaf7; max-width:640px; margin-top:10px; font-size:15px;">
+        Cheque, voucher y poliza contable con monto en letras, directo desde el pago de Odoo.
+      </p>
+    </div>
+
+    <div class="text-center pb-5" style="color:#8aa6b5; font-size:13px;">
+      <p style="margin-bottom:4px;">Impresion de Cheques &mdash; por Kontaxes</p>
+      <p style="margin:0;">Odoo 19 &bull; Community &amp; Enterprise</p>
+    </div>
+
+  </div>
+</section>

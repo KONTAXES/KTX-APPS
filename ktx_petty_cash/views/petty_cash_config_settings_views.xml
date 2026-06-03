@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_ktx_petty_cash" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ktx.petty.cash</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Caja Chica" name="ktx_petty_cash"
+                    groups="ktx_petty_cash.group_petty_cash_manager">
+                    <group>
+                        <field name="petty_cash_transit_account_id"
+                               string="Cuenta Transitoria de Reposición"
+                               help="Cuenta puente entre banco y caja chica al agregar fondos (debe tener 'Permitir conciliación' activo)."/>
+                        <field name="petty_cash_default_account_id"
+                               string="Cuenta de Caja Chica por Defecto"
+                               help="Cuenta contable utilizada por defecto al crear nuevos fondos."/>
+                        <field name="petty_cash_default_journal_id"
+                               string="Diario por Defecto"
+                               help="Diario contable utilizado por defecto para asientos de caja chica."/>
+                        <field name="petty_cash_require_authorizer"
+                               string="Requerir Autorizador"
+                               help="Cada fondo de caja chica debe tener un autorizador asignado."/>
+                        <field name="petty_cash_auto_reconcile"
+                               string="Reconciliar con Facturas"
+                               help="Reconcilia automáticamente el asiento contable con la factura de origen al confirmar el pago."/>
+                        <field name="petty_cash_multi_company"
+                               string="Vista Multiempresa"
+                               help="Muestra fondos, movimientos y gastos por reembolsar de todas las compañías del usuario. Si no está activo, cada compañía ve únicamente su propia información."/>
+                    </group>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_ktx_petty_cash_config_settings" model="ir.actions.act_window">
+        <field name="name">Configuración de Caja Chica</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'ktx_petty_cash'}</field>
+    </record>
+</odoo>

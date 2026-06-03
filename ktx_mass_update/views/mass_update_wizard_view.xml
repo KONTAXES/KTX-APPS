@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ktx_mass_update_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.mass.update.wizard.form</field>
+        <field name="model">ktx.mass.update.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asignación Masiva">
+
+                <!-- Campos invisibles para condiciones -->
+                <field name="move_ids" invisible="1"/>
+                <field name="has_vendor" invisible="1"/>
+                <field name="has_customer" invisible="1"/>
+                <field name="non_draft_count" invisible="1"/>
+                <field name="has_reconciled" invisible="1"/>
+                <field name="reconciled_count" invisible="1"/>
+                <field name="draft_count" invisible="1"/>
+                <field name="vendor_count" invisible="1"/>
+                <field name="customer_count" invisible="1"/>
+
+                <!-- Resultado de la última acción -->
+                <div class="alert alert-success mb-0" role="alert"
+                     invisible="not result_message">
+                    <i class="fa fa-check-circle me-1" title="Éxito"/>
+                    <field name="result_message" readonly="1" nolabel="1"
+                           class="d-inline"/>
+                </div>
+
+                <!-- Advertencia: documentos no en borrador -->
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="non_draft_count == 0">
+                    <i class="fa fa-exclamation-triangle me-1" title="Atención"/>
+                    <strong>Atención:</strong>
+                    <field name="non_draft_count" readonly="1" nolabel="1"
+                           class="d-inline fw-bold"/>
+                    documento(s) no están en borrador y serán ignorados.
+                    Use la pestaña <em>Restablecer a Borrador</em> si es necesario.
+                </div>
+
+                <!-- Advertencia: documentos conciliados -->
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="not has_reconciled">
+                    <i class="fa fa-link me-1" title="Advertencia"/>
+                    <strong>Advertencia:</strong>
+                    <field name="reconciled_count" readonly="1" nolabel="1"
+                           class="d-inline fw-bold"/>
+                    documento(s) tienen pagos aplicados (conciliados).
+                    Si una factura tiene pagos aplicados (conciliados), al modificar el total deshará esa conciliación.
+                </div>
+
+                <notebook>
+
+                    <!-- ═══════════════════════════════════════════════════════
+                         PESTAÑA 1 — Restablecer a Borrador
+                    ════════════════════════════════════════════════════════ -->
+                    <page string="Restablecer a Borrador" name="page_reset">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-1" title="Información"/>
+                            Las facturas deben estar en estado <strong>Borrador</strong>
+                            para poder modificar sus cuentas e impuestos en las demás pestañas.<br/>
+                            <strong>Advertencia:</strong> si una factura tiene pagos conciliados,
+                            revertirla a borrador <em>deshará</em> esa conciliación.
+                        </div>
+                        <group>
+                            <group string="Resumen de selección">
+                                <field name="draft_count"
+                                       string="En borrador"
+                                       readonly="1"/>
+                                <field name="non_draft_count"
+                                       string="No en borrador (publicadas / canceladas)"
+                                       readonly="1"/>
+                            </group>
+                        </group>
+                        <div class="mt-3">
+                            <button string="Restablecer a Borrador"
+                                    name="action_reset_to_draft"
+                                    type="object"
+                                    class="btn btn-primary"
+                                    invisible="non_draft_count == 0"/>
+                        </div>
+                    </page>
+
+                    <!-- ═══════════════════════════════════════════════════════
+                         PESTAÑA 2 — Gasto / Venta
+                    ════════════════════════════════════════════════════════ -->
+                    <page string="Gasto / Venta" name="page_accounts">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-1" title="Información"/>
+                            Actualiza la cuenta contable de las líneas de
+                            <strong>gasto</strong> (facturas de proveedor) e
+                            <strong>ingreso</strong> (facturas de cliente)
+                            en los documentos en borrador seleccionados.
+                        </div>
+                        <group>
+                            <group string="Facturas de proveedor"
+                                   invisible="not has_vendor">
+                                <field name="expense_account_id"/>
+                            </group>
+                            <group string="Facturas de cliente"
+                                   invisible="not has_customer">
+                                <field name="income_account_id"/>
+                            </group>
+                        </group>
+                        <div class="mt-3">
+                            <button string="Aplicar"
+                                    name="action_apply_accounts"
+                                    type="object"
+                                    class="btn btn-primary"/>
+                        </div>
+                    </page>
+
+                    <!-- ═══════════════════════════════════════════════════════
+                         PESTAÑA 3 — Impuestos
+                    ════════════════════════════════════════════════════════ -->
+                    <page string="Impuestos" name="page_taxes">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-1" title="Información"/>
+                            Modifica los impuestos en las líneas de factura de los
+                            documentos en borrador seleccionados.
+                        </div>
+                        <group>
+                            <group string="Acción">
+                                <field name="tax_action_type" widget="radio"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Impuestos de compra"
+                                   invisible="not has_vendor">
+                                <field name="vendor_tax_ids"
+                                       widget="many2many_tags"
+                                       invisible="tax_action_type == 'reset'"/>
+                            </group>
+                            <group string="Impuestos de venta"
+                                   invisible="not has_customer">
+                                <field name="customer_tax_ids"
+                                       widget="many2many_tags"
+                                       invisible="tax_action_type == 'reset'"/>
+                            </group>
+                        </group>
+                        <div class="mt-3">
+                            <button string="Aplicar"
+                                    name="action_apply_taxes"
+                                    type="object"
+                                    class="btn btn-primary"/>
+                        </div>
+                    </page>
+
+                    <!-- ═══════════════════════════════════════════════════════
+                         PESTAÑA 4 — CxC / CxP
+                    ════════════════════════════════════════════════════════ -->
+                    <page string="CxC / CxP" name="page_cxp_cxc">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-1" title="Información"/>
+                            Actualiza las cuentas de <strong>Cuentas por Pagar</strong>
+                            y/o <strong>Cuentas por Cobrar</strong> en los documentos
+                            en borrador seleccionados.
+                        </div>
+                        <group>
+                            <group string="Facturas de proveedor"
+                                   invisible="not has_vendor">
+                                <field name="account_payable_id"/>
+                            </group>
+                            <group string="Facturas de cliente"
+                                   invisible="not has_customer">
+                                <field name="account_receivable_id"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Opciones adicionales">
+                                <field name="update_partner_account"/>
+                            </group>
+                        </group>
+                        <div class="mt-3">
+                            <button string="Aplicar"
+                                    name="action_apply_cxp_cxc"
+                                    type="object"
+                                    class="btn btn-primary"/>
+                        </div>
+                    </page>
+
+                    <!-- ═══════════════════════════════════════════════════════
+                         PESTAÑA 5 — Confirmar
+                    ════════════════════════════════════════════════════════ -->
+                    <page string="Confirmar" name="page_confirm"
+                          invisible="draft_count == 0">
+                        <div class="alert alert-info" role="alert">
+                            <i class="fa fa-info-circle me-1" title="Información"/>
+                            Confirma (publica) los documentos que están en estado
+                            <strong>Borrador</strong>. Los documentos ya confirmados
+                            serán ignorados.
+                        </div>
+                        <group>
+                            <group string="Resumen de selección">
+                                <field name="draft_count"
+                                       string="En borrador (serán confirmados)"
+                                       readonly="1"/>
+                                <field name="non_draft_count"
+                                       string="Ya confirmados / cancelados (serán ignorados)"
+                                       readonly="1"/>
+                            </group>
+                        </group>
+                        <div class="mt-3">
+                            <button string="Confirmar"
+                                    name="action_confirm_moves"
+                                    type="object"
+                                    class="btn btn-primary"/>
+                        </div>
+                    </page>
+
+                </notebook>
+
+                <footer>
+                    <button string="Cerrar" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Regla multi-empresa: cada usuario ve solo las sesiones de
+             importacion de las empresas a las que tiene acceso. -->
+        <record id="ktx_import_session_company_rule" model="ir.rule">
+            <field name="name">KTX Import Session: multi-company</field>
+            <field name="model_id" ref="model_ktx_import_session"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="ktx_import_document_company_rule" model="ir.rule">
+            <field name="name">KTX Import Document: multi-company</field>
+            <field name="model_id" ref="model_ktx_import_document"/>
+            <field name="global" eval="True"/>
+            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+    </data>
+</odoo>

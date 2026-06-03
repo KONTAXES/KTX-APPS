@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── FORM ─── -->
+    <record id="view_ktx_petty_cash_fund_form" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.fund.form</field>
+        <field name="model">ktx.petty.cash.fund</field>
+        <field name="arch" type="xml">
+            <form string="Fondo de Caja Chica">
+                <header>
+                    <button name="action_add_funds" string="Agregar Fondos" type="object"
+                        class="btn-primary" invisible="state != 'open'"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_add_expense" string="Agregar Movimiento" type="object"
+                        class="btn-secondary" invisible="state != 'open'"/>
+                    <button name="action_open_closing_wizard" string="Cerrar Caja"
+                        type="object" class="btn-danger" invisible="state != 'open'"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_print_pdf" string="Imprimir Reporte PDF"
+                        type="object" class="btn-secondary"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_download_excel" string="Descargar Excel"
+                        type="object" class="btn-secondary"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_send_by_email" string="Enviar por Correo"
+                        type="object" class="btn-secondary"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="open,closed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_moves" icon="fa-list">
+                            <field name="move_count" widget="statinfo" string="Movimientos"/>
+                        </button>
+                        <button class="oe_stat_button" type="object"
+                            name="action_view_replenishments" icon="fa-refresh">
+                            <field name="replenishment_count" widget="statinfo" string="Reposiciones"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Nombre del fondo"/></h1>
+                    </div>
+                    <group>
+                        <group string="Información General">
+                            <field name="custodian_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="authorizer_id"/>
+                        </group>
+                        <group string="Saldos">
+                            <field name="initial_amount"/>
+                            <field name="current_balance" class="fw-bold"/>
+                            <field name="min_balance"/>
+                            <field name="total_spent"/>
+                            <field name="total_replenished"/>
+                            <field name="pending_approval"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Configuración Contable">
+                            <field name="journal_id"/>
+                            <field name="account_id"/>
+                        </group>
+                        <group string="Visualización">
+                            <field name="chart_type" widget="radio"/>
+                        </group>
+                    </group>
+                    <group string="Gráfico de Ejecución">
+                        <field name="chart_html" widget="html" nolabel="1"
+                            style="min-height:140px"/>
+                    </group>
+                    <notebook>
+                        <page string="Movimientos" name="moves">
+                            <field name="line_ids">
+                                <list string="Movimientos y Reposiciones"
+                                    edit="0" create="0"
+                                    delete="1"
+                                    decoration-danger="state in ('rejected', 'cancelled')"
+                                    decoration-muted="state == 'cancelled'">
+                                    <field name="payment_date" string="F. Pago" optional="show"/>
+                                    <field name="date" string="F. Factura"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="move_type" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="debit" sum="Total Débitos"/>
+                                    <field name="credit" sum="Total Créditos"/>
+                                    <field name="balance_after"/>
+                                    <field name="ref" optional="hide"/>
+                                    <field name="period_label" optional="hide"/>
+                                    <field name="period_closed" optional="hide"/>
+                                    <field name="accounting_move_id" optional="hide"/>
+                                    <field name="state" widget="badge"
+                                        decoration-success="state == 'reimbursed'"
+                                        decoration-warning="state in ('approved', 'pending')"
+                                        decoration-danger="state in ('rejected', 'cancelled')"
+                                        decoration-info="state == 'draft'"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── LIST ─── -->
+    <record id="view_ktx_petty_cash_fund_list" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.fund.list</field>
+        <field name="model">ktx.petty.cash.fund</field>
+        <field name="arch" type="xml">
+            <list string="Fondos de Caja Chica" decoration-muted="state == 'closed'"
+                  decoration-danger="is_low_balance == True">
+                <field name="name"/>
+                <field name="custodian_id"/>
+                <field name="currency_id" groups="base.group_multi_currency"/>
+                <field name="initial_amount"/>
+                <field name="current_balance"/>
+                <field name="min_balance" optional="hide"/>
+                <field name="pending_approval"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'open'"
+                    decoration-muted="state == 'closed'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="is_low_balance" column_invisible="1"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ─── KANBAN (Main Dashboard) ─── -->
+    <record id="view_ktx_petty_cash_fund_kanban" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.fund.kanban</field>
+        <field name="model">ktx.petty.cash.fund</field>
+        <field name="arch" type="xml">
+            <kanban sample="1">
+                <field name="name"/>
+                <field name="custodian_id"/>
+                <field name="current_balance"/>
+                <field name="initial_amount"/>
+                <field name="is_low_balance"/>
+                <field name="total_spent"/>
+                <field name="currency_id"/>
+                <field name="state"/>
+                <field name="pending_approval"/>
+                <field name="chart_html"/>
+                <templates>
+                    <t t-name="card" class="flex-column">
+                        <div class="d-flex justify-content-between align-items-start mb-1">
+                            <strong><field name="name"/></strong>
+                            <span t-if="record.state.raw_value == 'open'"
+                                class="badge text-bg-success ms-1">Abierto</span>
+                            <span t-else="" class="badge text-bg-secondary ms-1">Cerrado</span>
+                        </div>
+                        <div class="text-muted small mb-2">
+                            <i class="fa fa-user me-1" title="Custodio"/><field name="custodian_id"/>
+                        </div>
+                        <div class="d-flex justify-content-between mb-1">
+                            <div>
+                                <div class="text-muted small">Saldo Disponible</div>
+                                <div class="fw-bold fs-5">
+                                    <field name="current_balance" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"/>
+                                </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-muted small">Gastado</div>
+                                <div class="text-danger">
+                                    <field name="total_spent" widget="monetary"
+                                        options="{'currency_field': 'currency_id'}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div t-if="record.pending_approval.raw_value > 0" class="mb-1">
+                            <span class="badge bg-warning text-dark">
+                                <i class="fa fa-clock-o me-1"/>
+                                <t t-esc="record.pending_approval.raw_value"/> por aprobar
+                            </span>
+                        </div>
+                        <div t-if="record.is_low_balance.raw_value" class="mb-1">
+                            <span class="badge bg-danger">
+                                <i class="fa fa-warning me-1"/> Saldo bajo
+                            </span>
+                        </div>
+                        <div class="mt-1" style="border-top:1px solid #e5e7eb;padding-top:6px">
+                            <field name="chart_html" widget="html"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ─── SEARCH ─── -->
+    <record id="view_ktx_petty_cash_fund_search" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.fund.search</field>
+        <field name="model">ktx.petty.cash.fund</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="custodian_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="state_open" string="Abiertos" domain="[('state','=','open')]"/>
+                <filter name="state_closed" string="Cerrados" domain="[('state','=','closed')]"/>
+                <separator/>
+                <filter name="by_company" string="Por Compañía"
+                        groups="base.group_multi_company"
+                        context="{'group_by': 'company_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ─── ACTION (Kanban first) ─── -->
+    <record id="action_ktx_petty_cash_fund" model="ir.actions.act_window">
+        <field name="name">Fondos de Caja Chica</field>
+        <field name="res_model">ktx.petty.cash.fund</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_ktx_petty_cash_fund_search"/>
+        <field name="context">{'search_default_state_open': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primer fondo de caja chica.</p>
+            <p>Define el monto inicial, custodio y cuenta contable.</p>
+        </field>
+    </record>
+
+</odoo>

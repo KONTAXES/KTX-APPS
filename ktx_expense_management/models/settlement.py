@@ -202,10 +202,10 @@ class Settlement(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         """Filter settlements by company unless multi-company mode is enabled."""
         if not self.env.su:
-            multi = self.env["ir.config_parameter"].sudo().get_param(
-                "ktx_expense_management.multi_company_staging", "False"
+            multi = self.env['ir.config_parameter'].sudo().get_param(
+                'ktx_expense_management.multi_company_staging', 'False'
             )
-            if multi not in ("True", "1", "true"):
+            if multi not in ('True', '1', 'true'):
                 domain = [("company_id", "in", self.env.companies.ids)] + list(domain)
         return super()._search(domain, offset=offset, limit=limit, order=order, **kwargs)
 

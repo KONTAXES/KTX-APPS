@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ktx_petty_cash_add_expense_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.add.expense.wizard.form</field>
+        <field name="model">ktx.petty.cash.add.expense.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Agregar Movimiento">
+                <sheet>
+                    <div class="oe_title"><h2>Agregar Movimiento a la Caja Chica</h2></div>
+                    <group>
+                        <group string="Configuración">
+                            <field name="fund_id" readonly="1"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="payment_date"/>
+                            <field name="auto_approve"/>
+                            <field name="auto_pay" invisible="not auto_approve"/>
+                        </group>
+                        <group string="Resumen">
+                            <field name="total_amount"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Gastos / Ingresos Manuales" name="manual">
+                            <field name="line_ids">
+                                <list editable="bottom">
+                                    <field name="move_type"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="date"/>
+                                    <field name="ref"/>
+                                    <field name="account_id"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Total"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Gastos con Factura" name="staging">
+                            <field name="staging_ids">
+                                <list>
+                                    <field name="move_name"/>
+                                    <field name="partner_id"/>
+                                    <field name="invoice_date"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount_pending" sum="Total"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button name="action_add" string="Agregar a Caja Chica" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

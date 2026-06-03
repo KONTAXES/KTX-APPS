@@ -1,0 +1,11 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ktx_session_user,ktx.import.session user,model_ktx_import_session,account.group_account_user,1,1,1,0
+access_ktx_session_manager,ktx.import.session manager,model_ktx_import_session,account.group_account_manager,1,1,1,1
+access_ktx_document_user,ktx.import.document user,model_ktx_import_document,account.group_account_user,1,1,1,1
+access_ktx_document_manager,ktx.import.document manager,model_ktx_import_document,account.group_account_manager,1,1,1,1
+access_ktx_contact_user,ktx.import.contact user,model_ktx_import_contact,account.group_account_user,1,1,1,1
+access_ktx_contact_manager,ktx.import.contact manager,model_ktx_import_contact,account.group_account_manager,1,1,1,1
+access_ktx_tax_mapping_user,ktx.tax.mapping user,model_ktx_tax_mapping,account.group_account_user,1,0,0,0
+access_ktx_tax_mapping_manager,ktx.tax.mapping manager,model_ktx_tax_mapping,account.group_account_manager,1,1,1,1
+access_ktx_phrase_config_user,ktx.phrase.config user,model_ktx_phrase_config,account.group_account_user,1,0,0,0
+access_ktx_phrase_config_manager,ktx.phrase.config manager,model_ktx_phrase_config,account.group_account_manager,1,1,1,1

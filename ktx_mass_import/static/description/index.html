@@ -1,0 +1,367 @@
+<!--
+  Pagina de presentacion Importacion Masiva XML-SAT FEL.
+
+  ESTRATEGIA DE COMPATIBILIDAD:
+  - apps.odoo.com elimina <style>, gradientes, animaciones, flex inline y JS.
+    Por eso la estructura usa SOLO clases Bootstrap + colores hex inline + <img>,
+    que SI sobreviven el sanitizador y se ven ordenadas y profesionales.
+  - El banner es un GIF animado (imagen) que SI se reproduce en la tienda.
+  - El bloque <style> de abajo es una MEJORA que solo aplica en el backend de
+    Odoo (degradados, hover, animaciones). En la tienda se ignora sin romper nada.
+  - No se usan <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  /* Mejora visual SOLO para el backend de Odoo (la tienda ignora este bloque). */
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(11,92,102,.18); }
+  .ktx-pg .ktx-stat { background-image: linear-gradient(135deg,#5EE6D0,#2BB7C9); transition: transform .2s; }
+  .ktx-pg .ktx-stat:hover { transform: translateY(-4px); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(43,183,201,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(22px);} to {opacity:1; transform:none;} }
+  .ktx-pg .ktx-card, .ktx-pg .ktx-step { animation: ktxRise .6s ease both; }
+</style>
+
+<section class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2a37; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <!-- ============ HERO / BANNER ANIMADO ============ -->
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.gif" alt="Importacion Masiva XML-SAT FEL"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+    </div>
+
+    <!-- ============ STATS ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#2BB7C9; color:#ffffff;">
+          <div style="font-size:34px; font-weight:800; line-height:1;">&#8734;</div>
+          <div style="font-size:13px; margin-top:6px;">Archivos por carga</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#FF6B57; color:#ffffff;">
+          <div style="font-size:34px; font-weight:800; line-height:1;">12</div>
+          <div style="font-size:13px; margin-top:6px;">Tipos de Frases SAT</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#7B6BE8; color:#ffffff;">
+          <div style="font-size:34px; font-weight:800; line-height:1;">80+</div>
+          <div style="font-size:13px; margin-top:6px;">Escenarios FEL</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#0B5C66; color:#ffffff;">
+          <div style="font-size:34px; font-weight:800; line-height:1;">98%</div>
+          <div style="font-size:13px; margin-top:6px;">Menos tiempo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ INTRO ============ -->
+    <div class="text-center py-4">
+      <div style="color:#FF6B57; font-weight:700; font-size:13px; letter-spacing:2px;">EL RETO DE LA CONTABILIDAD FEL</div>
+      <h2 style="color:#0B5C66; font-weight:800; font-size:30px; margin-top:6px;">Adios a digitar facturas una por una</h2>
+      <p class="mx-auto" style="color:#5b6b6e; font-size:17px; max-width:760px; margin-top:12px;">
+        Cada mes recibes decenas o cientos de facturas electronicas en XML. Registrarlas a mano
+        significa abrir cada archivo, copiar datos, calcular impuestos y revisar totales.
+        <strong style="color:#1f2a37;">Importacion Masiva</strong> automatiza todo: carga, valida,
+        mapea impuestos y crea las facturas en Odoo &mdash; con el XML adjunto y los totales exactos.
+      </p>
+    </div>
+
+    <!-- ============ COMPARATIVA MANUAL vs KTX ============ -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#FF6B57; font-weight:700; font-size:13px; letter-spacing:2px;">COMPARATIVA</div>
+      <h2 style="color:#0B5C66; font-weight:800; font-size:30px; margin-top:6px;">Manual vs. Importacion Masiva</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-6">
+        <div class="rounded p-4 h-100" style="background-color:#fff5f3; border:1px solid #ffd9d1;">
+          <h3 style="color:#c0392b; font-size:19px; font-weight:700;">
+            <i class="fa fa-hand-paper-o" aria-hidden="true"></i> Proceso Manual</h3>
+          <div style="color:#c0392b; font-size:12px; font-weight:700; margin-bottom:12px;">Lento y propenso a errores</div>
+          <div style="font-size:14px; line-height:2.0; color:#7a4a44;">
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Abrir y leer cada XML uno por uno</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Transcribir NIT, fechas y montos a mano</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Calcular el impuesto de cada linea</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Convertir descuentos de monto a porcentaje</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Revisar duplicados y NIT a ojo</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Descartar anulados / CAIS / CIVA manualmente</div>
+          </div>
+          <div class="mt-3 pt-3" style="border-top:2px solid #f3c7bf; color:#c0392b; font-weight:700;">
+            <i class="fa fa-clock-o"></i> 100 facturas &asymp; <span style="font-size:24px;">5 horas</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#eafaf6; border:1px solid #b6ece4;">
+          <h3 style="color:#0B5C66; font-size:19px; font-weight:700;">
+            <i class="fa fa-rocket" aria-hidden="true"></i> Con Importacion Masiva</h3>
+          <div style="color:#0B5C66; font-size:12px; font-weight:700; margin-bottom:12px;">Rapido y exacto</div>
+          <div style="font-size:14px; line-height:2.0; color:#2c5b58;">
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Selecciona todos los XML de una sola vez</div>
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Lee y completa los datos automaticamente</div>
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Mapea impuestos por linea segun catalogo SAT</div>
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Descuentos al porcentaje exacto</div>
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Detecta duplicados y valida NIT solo</div>
+            <div><i class="fa fa-check-circle" style="color:#2BB7C9;"></i> Omite anulados, CAIS y CIVA automaticamente</div>
+          </div>
+          <div class="mt-3 pt-3" style="border-top:2px solid #b6ece4; color:#0B5C66; font-weight:700;">
+            <i class="fa fa-clock-o"></i> 100 facturas &asymp; <span style="font-size:24px;">9 minutos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ AHORRO DE TIEMPO (barras estaticas) ============ -->
+    <div class="rounded p-4 my-3" style="background-color:#f3fbfb; border:1px solid #d7eef0;">
+      <h3 class="text-center" style="color:#0B5C66; font-weight:800; font-size:22px;">Ahorro de tiempo real</h3>
+      <p class="text-center" style="color:#5b6b6e; font-size:14px;">Estimado sobre 3 minutos por factura digitada a mano.</p>
+
+      <div class="mt-4" style="font-weight:700; color:#c0392b; font-size:14px;">Manual &mdash; 5 horas (100 facturas)</div>
+      <div class="rounded" style="background-color:#e7eef0; height:26px; margin-top:4px;">
+        <div class="rounded" style="background-color:#FF6B57; width:100%; height:26px;"></div>
+      </div>
+      <div class="mt-3" style="font-weight:700; color:#0B5C66; font-size:14px;">Importacion Masiva &mdash; 9 minutos</div>
+      <div class="rounded" style="background-color:#e7eef0; height:26px; margin-top:4px;">
+        <div class="rounded" style="background-color:#2BB7C9; width:4%; height:26px;"></div>
+      </div>
+
+      <div class="row g-3 text-center mt-3">
+        <div class="col-3"><div class="rounded p-3" style="background-color:#ffffff; border:1px solid #e2e8f0;"><div style="font-weight:800; color:#0B5C66; font-size:18px;">-96%</div><div style="font-size:11px; color:#5b6b6e;">50 facturas</div></div></div>
+        <div class="col-3"><div class="rounded p-3" style="background-color:#ffffff; border:1px solid #e2e8f0;"><div style="font-weight:800; color:#0B5C66; font-size:18px;">-97%</div><div style="font-size:11px; color:#5b6b6e;">100 facturas</div></div></div>
+        <div class="col-3"><div class="rounded p-3" style="background-color:#ffffff; border:1px solid #e2e8f0;"><div style="font-weight:800; color:#0B5C66; font-size:18px;">-98%</div><div style="font-size:11px; color:#5b6b6e;">500 facturas</div></div></div>
+        <div class="col-3"><div class="rounded p-3" style="background-color:#ffffff; border:1px solid #e2e8f0;"><div style="font-weight:800; color:#0B5C66; font-size:18px;">-99%</div><div style="font-size:11px; color:#5b6b6e;">1000 facturas</div></div></div>
+      </div>
+    </div>
+
+    <!-- ============ FUNCIONALIDADES ============ -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#FF6B57; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#0B5C66; font-weight:800; font-size:30px; margin-top:6px;">Todo lo que necesitas, en un solo modulo</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <!-- tarjeta -->
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e2f8f5; width:50px; height:50px; line-height:50px; font-size:20px; color:#2BB7C9;"><i class="fa fa-folder-open"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Carga masiva sin limite</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Selecciona cientos de XML FEL a la vez. Funciona en Windows, Mac y Linux desde el navegador.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ffe9e4; width:50px; height:50px; line-height:50px; font-size:20px; color:#FF6B57;"><i class="fa fa-search"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Validacion inteligente</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Detecta duplicados, archivos no compatibles y facturas con NIT distinto al de la empresa activa.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fff5e0; width:50px; height:50px; line-height:50px; font-size:20px; color:#e0a800;"><i class="fa fa-balance-scale"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Impuestos por linea</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Mapea cada impuesto del XML (NombreCorto + CodigoUG) al de Odoo: IVA, IDP y TASA MUNICIPAL.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f3ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#2b7cd6;"><i class="fa fa-line-chart"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Descuentos exactos</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Convierte descuentos de monto a porcentaje exacto para que el total coincida al centavo con el XML.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#f0ecff; width:50px; height:50px; line-height:50px; font-size:20px; color:#7B6BE8;"><i class="fa fa-file-text-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Frases SAT completas</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Los 12 tipos y 80+ escenarios del catalogo FEL, con retenciones ISR e IVA configurables por empresa.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f7ec; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-ban"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Omite lo que no aplica</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Reconoce y descarta documentos anulados, CAIS y CIVA, evitando registros incorrectos.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e2f8f5; width:50px; height:50px; line-height:50px; font-size:20px; color:#2BB7C9;"><i class="fa fa-users"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Contactos automaticos</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Crea los contactos que no existen y te deja asignar sus cuentas por cobrar y por pagar.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ffe9e4; width:50px; height:50px; line-height:50px; font-size:20px; color:#FF6B57;"><i class="fa fa-hashtag"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Correlativo de importacion</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Cada sesion recibe una referencia unica (IMP/AAAA/MM/0001) para trazabilidad auditable.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f3ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#2b7cd6;"><i class="fa fa-building"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Multiempresa real</h3>
+          <p style="font-size:14px; color:#5b6b6e;">Catalogo compartido, pero la asignacion contable es independiente por cada empresa.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FLUJO ============ -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#FF6B57; font-weight:700; font-size:13px; letter-spacing:2px;">COMO FUNCIONA</div>
+      <h2 style="color:#0B5C66; font-weight:800; font-size:30px; margin-top:6px;">De XML a factura en 4 pasos</h2>
+    </div>
+    <div class="row g-3 text-center pb-4">
+      <div class="col-6 col-md-3">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#2BB7C9; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-file-code-o"></i></div>
+          <h4 style="color:#0B5C66; font-size:16px; margin-top:12px;">1. Cargar</h4>
+          <p style="font-size:13px; color:#5b6b6e;">Subes todos los XML de una vez.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#FF6B57; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-search"></i></div>
+          <h4 style="color:#0B5C66; font-size:16px; margin-top:12px;">2. Validar</h4>
+          <p style="font-size:13px; color:#5b6b6e;">Detecta duplicados, NIT y anulados.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#7B6BE8; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-balance-scale"></i></div>
+          <h4 style="color:#0B5C66; font-size:16px; margin-top:12px;">3. Mapear</h4>
+          <p style="font-size:13px; color:#5b6b6e;">Asigna impuestos, frases y descuentos.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#0B5C66; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-check"></i></div>
+          <h4 style="color:#0B5C66; font-size:16px; margin-top:12px;">4. Facturar</h4>
+          <p style="font-size:13px; color:#5b6b6e;">Crea las facturas con el XML adjunto.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMPATIBILIDAD ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div style="font-size:26px; color:#2BB7C9;"><i class="fa fa-bolt"></i></div>
+          <h4 style="color:#0B5C66; font-size:15px; margin-top:8px;">Odoo 19</h4>
+          <p style="font-size:12px; color:#5b6b6e;">Arquitectura limpia, facil de migrar.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div style="font-size:26px; color:#FF6B57;"><i class="fa fa-flag"></i></div>
+          <h4 style="color:#0B5C66; font-size:15px; margin-top:8px;">SAT Guatemala</h4>
+          <p style="font-size:12px; color:#5b6b6e;">Esquema DTE FEL y catalogo de frases.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div style="font-size:26px; color:#7B6BE8;"><i class="fa fa-building"></i></div>
+          <h4 style="color:#0B5C66; font-size:15px; margin-top:8px;">Multiempresa</h4>
+          <p style="font-size:12px; color:#5b6b6e;">Una instalacion para todas tus empresas.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #e3edef;">
+          <div style="font-size:26px; color:#10b981;"><i class="fa fa-link"></i></div>
+          <h4 style="color:#0B5C66; font-size:15px; margin-top:8px;">Sin conflictos</h4>
+          <p style="font-size:12px; color:#5b6b6e;">No interfiere con modulos nativos.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CAPTURAS DE PANTALLA ============ -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#FF6B57; font-weight:700; font-size:13px; letter-spacing:2px;">EN ACCION</div>
+      <h2 style="color:#0B5C66; font-weight:800; font-size:28px; margin-top:6px;">Asi se ve en tu Odoo</h2>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12">
+        <img src="sc_03_importacion.png" alt="Sesion de importacion IMP/2026/06/0001 con 140 documentos listos y resumen"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_01_sat.png" alt="Agencia Virtual SAT - descarga de XML FEL"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_02_ajustes.png" alt="Configuracion KTX Import FEL - validacion NIT y productos por defecto"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_04_facturas.png" alt="Lista de 140 facturas creadas en borrador desde la importacion"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_05_factura.png" alt="Factura individual con datos XML FEL, lineas con IDP+IVA y nota en chatter"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+    </div>
+
+    <!-- ============ DEMO EN VIVO ============ -->
+    <div class="rounded p-4 my-4 text-center" style="background-color:#0f172a; color:#ffffff;">
+      <div style="color:#5EE6D0; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase;">Pruebalo sin instalar nada</div>
+      <h2 style="color:#ffffff; font-weight:800; font-size:27px; margin-top:6px;">Demo en vivo, gratis</h2>
+      <p class="mx-auto" style="color:#cbd5e1; max-width:600px; margin-top:8px; font-size:15px;">
+        Entra a nuestra base de datos de demostracion y prueba el modulo con datos reales,
+        sin instalar nada. Disponible las 24 horas.
+      </p>
+      <div class="row g-2 justify-content-center my-3">
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">USUARIO</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">CONTRASENA</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+      </div>
+      <a href="https://app.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background-color:#2BB7C9; color:#ffffff; font-weight:800; font-size:16px; text-decoration:none; padding:13px 34px; border-radius:999px;">
+        Entrar a app.kontaxes.com &rarr;
+      </a>
+      <div style="color:#94a3b8; font-size:14px; margin-top:14px;">
+        O escribe en tu navegador: <span style="color:#ffffff; font-weight:700;">app.kontaxes.com</span>
+      </div>
+    </div>
+
+    <!-- ============ PRECIO INTRODUCTORIO ============ -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#f0f9ff; border:2px solid #0369a1;">
+      <div style="color:#0369a1; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Introduccion</div>
+      <div style="font-size:38px; font-weight:900; color:#0369a1; line-height:1.1; margin-top:6px;">$20 <span style="font-size:16px; font-weight:500; color:#64748b;">USD</span></div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$40 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Precio especial por tiempo limitado. Una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#0B5C66; color:#ffffff;">
+      <h2 style="color:#ffffff; font-weight:800; font-size:26px;">Recupera horas de trabajo cada mes</h2>
+      <p class="mx-auto" style="color:#cfeef0; max-width:620px; margin-top:10px; font-size:15px;">
+        Importacion Masiva convierte una tarea tediosa y propensa a errores en un proceso
+        de minutos, exacto y auditable. Hecho en Guatemala, para la contabilidad guatemalteca.
+      </p>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="text-center pb-5" style="color:#8a9a9c; font-size:13px;">
+      <p style="margin-bottom:4px;">Importacion Masiva XML-SAT FEL &mdash; por Kontaxes</p>
+      <p style="margin:0;">Guatemala FEL &bull; Odoo 19 &bull; Multiempresa</p>
+    </div>
+
+  </div>
+</section>

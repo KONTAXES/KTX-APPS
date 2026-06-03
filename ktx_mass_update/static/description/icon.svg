@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#c4b5fd"/>
+      <stop offset="100%" stop-color="#67e8f9"/>
+    </linearGradient>
+    <linearGradient id="row1Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#818cf8"/>
+    </linearGradient>
+    <linearGradient id="row2Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="row3Grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="100%" stop-color="#f87171"/>
+    </linearGradient>
+    <linearGradient id="badgeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#4f46e5"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#7c3aed" flood-opacity="0.25"/>
+    </filter>
+    <filter id="badgeShadow">
+      <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="#4f46e5" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Tarjeta principal con sombra 3D -->
+  <rect x="8" y="14" width="112" height="100" rx="18"
+        fill="url(#bgGrad)" filter="url(#cardShadow)"/>
+
+  <!-- Sombra 3D inferior para efecto de profundidad -->
+  <rect x="12" y="110" width="104" height="6" rx="4"
+        fill="#7c3aed" opacity="0.18"/>
+
+  <!-- Línea de encabezado (simulando título) -->
+  <rect x="22" y="28" width="84" height="10" rx="5"
+        fill="#ffffff" opacity="0.6"/>
+
+  <!-- Fila 1 — lila -->
+  <rect x="22" y="46" width="84" height="13" rx="6"
+        fill="url(#row1Grad)" opacity="0.9"/>
+  <!-- Texto simulado fila 1 -->
+  <rect x="28" y="50" width="40" height="5" rx="2" fill="#fff" opacity="0.8"/>
+  <rect x="76" y="50" width="24" height="5" rx="2" fill="#fff" opacity="0.6"/>
+
+  <!-- Fila 2 — verde menta -->
+  <rect x="22" y="64" width="84" height="13" rx="6"
+        fill="url(#row2Grad)" opacity="0.9"/>
+  <rect x="28" y="68" width="32" height="5" rx="2" fill="#fff" opacity="0.8"/>
+  <rect x="76" y="68" width="24" height="5" rx="2" fill="#fff" opacity="0.6"/>
+
+  <!-- Fila 3 — coral -->
+  <rect x="22" y="82" width="84" height="13" rx="6"
+        fill="url(#row3Grad)" opacity="0.9"/>
+  <rect x="28" y="86" width="48" height="5" rx="2" fill="#fff" opacity="0.8"/>
+  <rect x="84" y="86" width="16" height="5" rx="2" fill="#fff" opacity="0.6"/>
+
+  <!-- Badge de edición circular en esquina inferior derecha -->
+  <circle cx="95" cy="98" r="18" fill="url(#badgeGrad)" filter="url(#badgeShadow)"/>
+
+  <!-- Ícono de lápiz (check / edición) dentro del badge -->
+  <g transform="translate(87, 90)" fill="none" stroke="#ffffff" stroke-width="2.2"
+     stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cuerpo del lápiz -->
+    <path d="M2 14 L10 6 L14 10 L6 18 Z"/>
+    <!-- Punta -->
+    <path d="M10 6 L12 4 L16 8 L14 10 Z"/>
+    <!-- Línea base -->
+    <line x1="1" y1="15" x2="6" y2="18"/>
+    <!-- Raya de brillo -->
+    <line x1="11" y1="7" x2="13" y2="9" stroke-opacity="0.5"/>
+  </g>
+</svg>
