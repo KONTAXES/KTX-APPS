@@ -25,7 +25,12 @@
                             <field name="ktx_check_paper_format" widget="radio"/>
                         </group>
                         <group>
-                            <field name="ktx_check_appearance" widget="radio"/>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Apariencia:</strong> Clásico<br/>
+                                <small class="text-muted">
+                                    Próximamente se añadirán más apariencias.
+                                </small>
+                            </div>
                         </group>
                     </group>
 

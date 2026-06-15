@@ -67,6 +67,7 @@
                 <t t-set="memo_val"     t-value="o.payment_reference or o.name or ''"/>
 
                 <!-- ── Posiciones configurables por compañía ── -->
+                <t t-set="blank_height"    t-value="o.company_id.ktx_check_blank_height or 80"/>
                 <t t-set="pos_height"      t-value="o.company_id.ktx_check_height    or 70"/>
                 <t t-set="pos_date_top"    t-value="o.company_id.ktx_check_date_top  or 25"/>
                 <t t-set="pos_date_left"   t-value="o.company_id.ktx_check_date_left or 20"/>
@@ -173,7 +174,7 @@
                         <div t-attf-style="
                             margin-top: #{mt}mm;
                             position: relative;
-                            height: 80mm;
+                            height: #{blank_height}mm;
                             width: 100%;
                         ">
                             <div style="position: absolute; top: 26mm; left: 25mm; font-size: 9pt; font-weight: bold;">

@@ -496,6 +496,11 @@ class SatgtDeclWizard(models.TransientModel):
             ('company_id', 'in', company_ids),
         ])
         tax_cat_map = {cfg.tax_id.id: cfg.category for cfg in configs}
+        # La categoría legacy en el propio impuesto tiene prioridad (igual que el
+        # libro de compras/ventas), de modo que la declaración y el libro
+        # clasifiquen idénticamente aun sin registros de configuración por empresa.
+        for tax in self.env['account.tax'].search([('ktx_satgt_category', '!=', False)]):
+            tax_cat_map[tax.id] = tax.ktx_satgt_category
 
         domain = [
             ('move_type', 'in', move_types),
@@ -537,35 +542,53 @@ class SatgtDeclWizard(models.TransientModel):
                 amount = sign * abs(line.balance)
                 is_svc = bool(line.product_id and line.product_id.type == 'service')
                 sfx    = '_serv' if is_svc else '_bienes'
+                lt     = list(line.tax_ids)
 
-                # 1) Pequeño Contribuyente (new boolean flag or legacy category)
-                is_pc = ('pequeno_cont' in cats) or any(
-                    t.ktx_is_pequeno for t in line.tax_ids if t.ktx_include_in_report
-                )
-                if is_pc:
+                # 1) Combustibles — checked before todo lo demás; las gasolineras
+                #    pueden ser pequeños contribuyentes y deben ir a su columna.
+                if is_compras:
+                    is_fuel = (
+                        any(t.ktx_is_combustible for t in lt if t.ktx_include_in_report)
+                        or (fuel_tax_ids and bool(set(line.tax_ids.ids) & fuel_tax_ids))
+                    )
+                    if is_fuel:
+                        totals['fuel'] += amount
+                        continue
+
+                # 2) Clasificación por switches booleanos (tiene prioridad sobre
+                #    la categoría legacy), idéntica a la del libro de compras/ventas.
+                flag_taxes = [t for t in lt if t.ktx_include_in_report]
+                if flag_taxes:
+                    if any(t.ktx_is_pequeno for t in flag_taxes):
+                        totals['pequeno_cont'] += amount
+                    elif any(t.ktx_is_exento for t in flag_taxes):
+                        prefix = 'import' if any(t.ktx_is_import for t in flag_taxes) else 'local'
+                        totals[f'{prefix}_exe{sfx}'] += amount
+                    else:
+                        prefix = 'import' if any(t.ktx_is_import for t in flag_taxes) else 'local'
+                        totals[f'{prefix}_grav{sfx}'] += amount
+                    continue
+
+                # 3) Pequeño Contribuyente (categoría legacy)
+                if 'pequeno_cont' in cats:
                     totals['pequeno_cont'] += amount
                     continue
-                # 2) Combustibles (configured fuel taxes) — only for compras
-                if is_compras and fuel_tax_ids and (set(line.tax_ids.ids) & fuel_tax_ids):
-                    totals['fuel'] += amount
-                    continue
-                # 3) Importación (explicit category)
+                # 4) Importación (categoría legacy explícita)
                 import_cats = cats & IMPORT_CATS
                 if import_cats:
                     cat = next(iter(import_cats))
                     if cat in totals:
                         totals[cat] += amount
                     continue
-                # 4) Exenta local (explicit category)
+                # 5) Exenta local (categoría legacy explícita)
                 exe_cats = cats & EXE_CATS
                 if exe_cats:
                     totals['local_exe' + sfx] += amount
                     continue
-                # 5) Gravada local (explicit IVA category or detected 12% IVA)
+                # 6) Gravada local (categoría IVA explícita o IVA 12% detectado)
                 if cats & IVA_CATS:
                     totals['local_grav' + sfx] += amount
                 else:
-                    lt = list(line.tax_ids)
                     if any(_is_iva(t) for t in lt):
                         totals['local_grav' + sfx] += amount
                     else:
@@ -573,9 +596,16 @@ class SatgtDeclWizard(models.TransientModel):
 
             for tl in move.line_ids.filtered(lambda l: l.tax_line_id):
                 tax = tl.tax_line_id
-                cat = tax_cat_map.get(tax.id)
-                if cat in IVA_CATS or (cat is None and _is_iva(tax)):
-                    totals['iva'] += sign * abs(tl.balance)
+                amt = sign * abs(tl.balance)
+                if tax.ktx_include_in_report:
+                    # Solo el IVA propiamente dicho suma al débito/crédito fiscal;
+                    # combustibles y otros cargos exentos no son IVA.
+                    if tax.ktx_is_iva:
+                        totals['iva'] += amt
+                else:
+                    cat = tax_cat_map.get(tax.id)
+                    if cat in IVA_CATS or (cat is None and _is_iva(tax)):
+                        totals['iva'] += amt
 
         return totals
 

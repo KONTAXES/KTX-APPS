@@ -31,11 +31,10 @@ class ResCompany(models.Model):
         string='Formato de Papel de Cheque',
         default='letter',
     )
+    # Apariencia: solo Clásico por ahora. Próximamente: Moderno, Minimalista.
     ktx_check_appearance = fields.Selection(
         selection=[
             ('classic', 'Clásico'),
-            ('modern', 'Moderno'),
-            ('minimal', 'Minimalista'),
         ],
         string='Apariencia del Cheque',
         default='classic',
@@ -57,78 +56,80 @@ class ResCompany(models.Model):
         string='Altura Área en Blanco (mm)',
         default=70.0,
         help=(
-            'Espacio en blanco debajo del monto en letras, '
-            'correspondiente al cuerpo del cheque físico. '
-            'Ajuste hasta que el voucher quede en la posición correcta.'
+            'Espacio reservado para el cuerpo del cheque físico en el formato '
+            'genérico (sin banco configurado). Aumente este valor si el voucher '
+            'queda superpuesto sobre el cheque; disminúyalo si queda demasiado '
+            'separado. Valor predeterminado: 80 mm.'
         ),
     )
 
     # ── Posiciones de impresión — store=False para no crear columnas nuevas ──
-    # Almacenadas vía ir.config_parameter keyed por empresa.
+    # Cada campo tiene su propio método inverse para que al modificar UNO
+    # se persista SOLO ESE y no se sobreescriban los demás con valores en caché.
     ktx_check_height = fields.Float(
         string='Altura sección cheque (mm)', default=70.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_height',
         store=False,
     )
     ktx_check_date_top = fields.Float(
         string='Fecha — superior (mm)', default=25.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_date_top',
         store=False,
     )
     ktx_check_date_left = fields.Float(
         string='Fecha — izquierda (mm)', default=20.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_date_left',
         store=False,
     )
     ktx_check_amount_top = fields.Float(
         string='Monto numérico — superior (mm)', default=25.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_amount_top',
         store=False,
     )
     ktx_check_amount_left = fields.Float(
         string='Monto numérico — izquierda (mm)', default=150.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_amount_left',
         store=False,
     )
     ktx_check_payee_top = fields.Float(
         string='Beneficiario — superior (mm)', default=31.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_payee_top',
         store=False,
     )
     ktx_check_payee_left = fields.Float(
         string='Beneficiario — izquierda (mm)', default=20.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_payee_left',
         store=False,
     )
     ktx_check_words_top = fields.Float(
         string='Monto en letras — superior (mm)', default=38.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_words_top',
         store=False,
     )
     ktx_check_words_left = fields.Float(
         string='Monto en letras — izquierda (mm)', default=20.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_words_left',
         store=False,
     )
     ktx_check_nonneg_top = fields.Float(
         string='NO NEGOCIABLE — superior (mm)', default=48.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_nonneg_top',
         store=False,
     )
     ktx_check_nonneg_left = fields.Float(
         string='NO NEGOCIABLE — izquierda (mm)', default=20.0,
         compute='_compute_ktx_check_positions',
-        inverse='_inverse_ktx_check_positions',
+        inverse='_inverse_ktx_check_nonneg_left',
         store=False,
     )
 
@@ -139,8 +140,22 @@ class ResCompany(models.Model):
                 raw = get(_POS_PARAM.format(pkey, company.id))
                 company[fname] = float(raw) if raw else default
 
-    def _inverse_ktx_check_positions(self):
+    def _save_pos_param(self, fname, pkey):
+        """Persist a single position field to ir.config_parameter."""
         set_param = self.env['ir.config_parameter'].sudo().set_param
         for company in self:
-            for fname, pkey, _default in _POS_FIELDS:
-                set_param(_POS_PARAM.format(pkey, company.id), str(company[fname]))
+            set_param(_POS_PARAM.format(pkey, company.id), str(company[fname]))
+
+    # Individual inverse methods — one per field so each save touches only
+    # its own ir.config_parameter key and never overwrites the others.
+    def _inverse_ktx_check_height(self):      self._save_pos_param('ktx_check_height',      'height')
+    def _inverse_ktx_check_date_top(self):    self._save_pos_param('ktx_check_date_top',    'date_top')
+    def _inverse_ktx_check_date_left(self):   self._save_pos_param('ktx_check_date_left',   'date_left')
+    def _inverse_ktx_check_amount_top(self):  self._save_pos_param('ktx_check_amount_top',  'amount_top')
+    def _inverse_ktx_check_amount_left(self): self._save_pos_param('ktx_check_amount_left', 'amount_left')
+    def _inverse_ktx_check_payee_top(self):   self._save_pos_param('ktx_check_payee_top',   'payee_top')
+    def _inverse_ktx_check_payee_left(self):  self._save_pos_param('ktx_check_payee_left',  'payee_left')
+    def _inverse_ktx_check_words_top(self):   self._save_pos_param('ktx_check_words_top',   'words_top')
+    def _inverse_ktx_check_words_left(self):  self._save_pos_param('ktx_check_words_left',  'words_left')
+    def _inverse_ktx_check_nonneg_top(self):  self._save_pos_param('ktx_check_nonneg_top',  'nonneg_top')
+    def _inverse_ktx_check_nonneg_left(self): self._save_pos_param('ktx_check_nonneg_left', 'nonneg_left')
