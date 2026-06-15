@@ -31,7 +31,7 @@ Funcionalidades:
     'category': 'Accounting/Localizations/Guatemala',
     'version': '19.0.3.0.3',
     'license': 'OPL-1',
-    'price': 20.00,
+    'price': 0.00,
     'currency': 'USD',
     'depends': ['base', 'account', 'mail'],
     'data': [

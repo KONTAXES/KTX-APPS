@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_satgt_book_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.satgt.book.wizard.form</field>
+        <field name="model">ktx.satgt.book.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reportería">
+                <sheet>
+                    <div class="row">
+                        <div class="col-12 col-lg-10 offset-lg-1">
+                            <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                        border-radius:8px;padding:20px 24px;">
+
+                                <!-- Libro / Reporte -->
+                                <h5 style="color:#0369a1;font-weight:700;margin-bottom:12px;">
+                                    Libro / Reporte
+                                </h5>
+                                <group>
+                                    <field name="book_type" nolabel="1"/>
+                                </group>
+
+                                <div style="margin:16px 0;border-top:1px solid #e2e8f0;"/>
+
+                                <!-- Diarios (visible para compras/ventas) -->
+                                <div invisible="book_type not in ('compras', 'ventas')">
+                                    <h5 style="color:#0369a1;font-weight:700;margin-bottom:8px;">
+                                        Diarios a incluir
+                                    </h5>
+                                    <group>
+                                        <field name="journal_ids" nolabel="1"
+                                               widget="many2many_tags"
+                                               domain="[('type', '=', book_type == 'compras' and 'purchase' or 'sale')]"
+                                               options="{'no_create': True}"
+                                               placeholder="Todos los diarios del tipo correspondiente"/>
+                                    </group>
+                                    <div style="margin:16px 0;border-top:1px solid #e2e8f0;"/>
+                                </div>
+
+                                <!-- Diarios (visible para diario/mayor) -->
+                                <div invisible="book_type not in ('diario', 'mayor')">
+                                    <h5 style="color:#0369a1;font-weight:700;margin-bottom:8px;">
+                                        Diarios a incluir
+                                    </h5>
+                                    <group>
+                                        <field name="journal_ids" nolabel="1"
+                                               widget="many2many_tags"
+                                               options="{'no_create': True}"
+                                               placeholder="Todos los diarios"/>
+                                    </group>
+                                    <div style="margin:16px 0;border-top:1px solid #e2e8f0;"/>
+                                </div>
+
+                                <!-- Cuentas Contables (visible solo para diario/mayor) -->
+                                <div invisible="book_type not in ('diario', 'mayor')">
+                                    <h5 style="color:#0369a1;font-weight:700;margin-bottom:8px;">
+                                        Cuentas Contables
+                                    </h5>
+                                    <group>
+                                        <field name="account_ids" nolabel="1"
+                                               widget="many2many_tags"
+                                               options="{'no_create': True}"
+                                               placeholder="Todas las cuentas"/>
+                                    </group>
+                                    <div style="margin:16px 0;border-top:1px solid #e2e8f0;"/>
+                                </div>
+
+                                <!-- Período -->
+                                <h5 style="color:#0369a1;font-weight:700;margin-bottom:8px;">
+                                    Período
+                                </h5>
+                                <group>
+                                    <field name="period_type" widget="radio"
+                                           options="{'horizontal': True}" nolabel="1"/>
+                                </group>
+
+                                <!-- Navegación mes / año -->
+                                <div class="d-flex align-items-center justify-content-between mt-2 mb-2"
+                                     invisible="period_type == 'personalizado'">
+                                    <button name="action_prev_period" type="object"
+                                            string="&#9664;"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            style="width:36px;font-size:14px;"/>
+                                    <field name="period_label" readonly="1" nolabel="1"
+                                           style="text-align:center;font-weight:700;
+                                                  font-size:14px;border:none;background:transparent;
+                                                  pointer-events:none;"/>
+                                    <button name="action_next_period" type="object"
+                                            string="&#9654;"
+                                            class="btn btn-sm btn-outline-secondary"
+                                            style="width:36px;font-size:14px;"/>
+                                </div>
+
+                                <!-- Fechas personalizadas -->
+                                <group invisible="period_type != 'personalizado'">
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                </group>
+
+                                <group>
+                                    <field name="folio_start"/>
+                                </group>
+
+                                <div style="margin:16px 0;border-top:1px solid #e2e8f0;"/>
+
+                                <!-- Moneda -->
+                                <h5 style="color:#0369a1;font-weight:700;margin-bottom:8px;">
+                                    Moneda
+                                </h5>
+                                <group>
+                                    <field name="use_company_currency"/>
+                                </group>
+
+                                <!-- Botones -->
+                                <div class="mt-4 d-flex gap-2">
+                                    <button name="action_print_pdf" type="object"
+                                            string="Imprimir PDF"
+                                            class="btn btn-primary flex-grow-1"
+                                            style="font-size:14px;padding:10px;"/>
+                                    <button name="action_export_excel" type="object"
+                                            string="Exportar Excel"
+                                            class="btn btn-success flex-grow-1"
+                                            style="font-size:14px;padding:10px;"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+                <footer>
+                    <button string="Cerrar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Acción genérica (sin contexto de tipo predefinido) -->
+    <record id="action_satgt_book_wizard" model="ir.actions.act_window">
+        <field name="name">Reportería</field>
+        <field name="res_model">ktx.satgt.book.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="action_satgt_book_compras" model="ir.actions.act_window">
+        <field name="name">Libro de Compras</field>
+        <field name="res_model">ktx.satgt.book.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_book_type': 'compras'}</field>
+    </record>
+
+    <record id="action_satgt_book_ventas" model="ir.actions.act_window">
+        <field name="name">Libro de Ventas</field>
+        <field name="res_model">ktx.satgt.book.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_book_type': 'ventas'}</field>
+    </record>
+
+    <record id="action_satgt_book_diario" model="ir.actions.act_window">
+        <field name="name">Libro Diario</field>
+        <field name="res_model">ktx.satgt.book.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_book_type': 'diario'}</field>
+    </record>
+
+    <record id="action_satgt_book_mayor" model="ir.actions.act_window">
+        <field name="name">Libro Mayor</field>
+        <field name="res_model">ktx.satgt.book.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{'default_book_type': 'mayor'}</field>
+    </record>
+</odoo>

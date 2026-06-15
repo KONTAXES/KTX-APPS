@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_libro_pc" model="ir.actions.report">
+        <field name="name">Libro Pequeño Contribuyente</field>
+        <field name="model">ktx.satgt.book.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_satgt_reports.report_libro_pc_template</field>
+        <field name="report_file">ktx_satgt_reports.report_libro_pc_template</field>
+        <field name="print_report_name">'Libro_PC_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="paperformat_id" ref="paperformat_satgt_libros"/>
+    </record>
+
+    <template id="report_libro_pc_template">
+        <t t-call="web.html_container">
+            <t t-set="pc"      t-value="docs._get_pc_book_lines()"/>
+            <t t-set="c_lines" t-value="pc[0]"/>
+            <t t-set="v_lines" t-value="pc[1]"/>
+            <t t-set="c_total" t-value="pc[2]"/>
+            <t t-set="v_total" t-value="pc[3]"/>
+            <t t-set="company" t-value="env.company"/>
+            <t t-set="mes"     t-value="docs._month_name()"/>
+            <t t-set="anio"    t-value="docs._year_str()"/>
+
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                @page {
+                    size: Letter landscape;
+                    margin-top:    <t t-esc="docs.margin_top    or 10"/>mm;
+                    margin-bottom: <t t-esc="docs.margin_bottom or 10"/>mm;
+                    margin-left:   <t t-esc="docs.margin_left   or 10"/>mm;
+                    margin-right:  <t t-esc="docs.margin_right  or 10"/>mm;
+                }
+                body { background: #fff; font-family: Arial, sans-serif; font-size: 8.5pt; color: #000; }
+
+                /* ── Header ── */
+                .rpt-header {
+                    position: relative;
+                    text-align: center;
+                    padding: 0 120px 5px 120px;
+                    border-bottom: 2px solid #000;
+                    margin-bottom: 6px;
+                    overflow: hidden;
+                }
+                .rpt-meta { font-size: 8pt; margin-bottom: 6px; text-align: center; }
+
+                /* ── Side-by-side container ── */
+                .pc-container { display: table; width: 100%; }
+                .pc-side      { display: table-cell; width: 50%; vertical-align: top; }
+                .pc-side-title {
+                    font-size: 9pt; font-weight: bold; text-align: center;
+                    border: 1px solid #000; border-bottom: 2px solid #000;
+                    padding: 3px 5px; background: #fff;
+                }
+
+                /* ── Inner PC table ── */
+                table.pc {
+                    width: 100%; border-collapse: collapse;
+                    table-layout: fixed; font-size: 8pt;
+                }
+                table.pc thead { display: table-header-group; }
+                table.pc thead th {
+                    border: 1px solid #000; padding: 2px 3px;
+                    text-align: center; vertical-align: middle;
+                    background: #fff; color: #000; font-weight: bold; font-size: 7.5pt;
+                }
+                table.pc tbody td {
+                    border: 1px solid #000; padding: 2px 3px;
+                    font-size: 8pt; text-align: left; vertical-align: middle; overflow: hidden;
+                }
+                .pc-total td {
+                    border: 1px solid #000; padding: 3px 4px;
+                    font-weight: bold; font-size: 8pt;
+                    background: #fff; color: #000; text-align: right;
+                }
+                .pc-total td.lbl { text-align: left; }
+
+                .num    { text-align: right !important; white-space: nowrap; }
+                .ctr    { text-align: center; }
+                .nowrap { white-space: nowrap; }
+            </style>
+
+            <!-- ── Encabezado ── -->
+            <div class="rpt-header">
+                <t t-if="company.logo">
+                    <div style="position:absolute; top:0; left:0;">
+                        <img t-att-src="image_data_uri(company.logo)"
+                             style="max-width:115px; max-height:75px; object-fit:contain; display:block;"/>
+                    </div>
+                </t>
+                <div style="font-size:11pt; font-weight:bold; line-height:1.6;">
+                    <t t-esc="company.name"/>
+                    <t t-if="company.street"><br/><t t-esc="company.street"/></t>
+                    <t t-if="company.street2"><br/><t t-esc="company.street2"/></t>
+                    <t t-if="company.vat"><br/>NIT:&#160;<t t-esc="company.vat"/></t>
+                </div>
+                <div style="font-size:12pt; font-weight:bold; letter-spacing:0.3px; margin-top:3px;">
+                    LIBRO DE COMPRAS Y VENTAS DE PEQUEÑO CONTRIBUYENTE
+                </div>
+            </div>
+            <div class="rpt-meta">
+                Mes <b><t t-esc="mes"/></b>&#160;&#160;
+                Año <b><t t-esc="anio"/></b>&#160;&#160;|&#160;&#160;
+                Período:&#160;<b><t t-esc="docs._period_str()"/></b>&#160;&#160;|&#160;&#160;
+                Compras:&#160;<b><t t-esc="len(c_lines)"/></b>&#160;&#160;
+                Ventas:&#160;<b><t t-esc="len(v_lines)"/></b>
+            </div>
+
+            <!-- ── Tablas lado a lado ── -->
+            <div class="pc-container">
+
+                <!-- ── Compras (izquierdo) ── -->
+                <div class="pc-side" style="padding-right:6px;">
+                    <div class="pc-side-title">COMPRAS</div>
+                    <table class="pc">
+                        <colgroup>
+                            <col style="width:22px;"/>
+                            <col style="width:22px;"/>
+                            <col style="width:55px;"/>
+                            <col style="width:68px;"/>
+                            <col style="width:62px;"/>
+                            <col/>
+                            <col style="width:68px;"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Día</th>
+                                <th>Serie</th>
+                                <th>Número</th>
+                                <th>NIT</th>
+                                <th>Proveedor</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <t t-if="not c_lines">
+                            <tbody>
+                                <tr>
+                                    <td colspan="7" style="text-align:center;color:#666;padding:14px;">
+                                        Sin compras en el período.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </t>
+                        <t t-if="c_lines">
+                            <tbody>
+                                <t t-foreach="c_lines" t-as="r">
+                                    <tr>
+                                        <td class="ctr"><t t-esc="r['no']"/></td>
+                                        <td class="ctr"><t t-esc="r['dia']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['serie']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['numero']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['nit']"/></td>
+                                        <td style="font-size:7.5pt;"><t t-esc="r['partner']"/></td>
+                                        <td class="num"><t t-esc="'{:,.2f}'.format(r['total'])"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tbody>
+                                <tr class="pc-total">
+                                    <td colspan="6" class="lbl">TOTAL COMPRAS</td>
+                                    <td><t t-esc="'{:,.2f}'.format(c_total)"/></td>
+                                </tr>
+                            </tbody>
+                        </t>
+                    </table>
+                </div>
+
+                <!-- ── Ventas (derecho) ── -->
+                <div class="pc-side" style="padding-left:6px; border-left:2px solid #000;">
+                    <div class="pc-side-title">VENTAS</div>
+                    <table class="pc">
+                        <colgroup>
+                            <col style="width:22px;"/>
+                            <col style="width:22px;"/>
+                            <col style="width:55px;"/>
+                            <col style="width:68px;"/>
+                            <col style="width:62px;"/>
+                            <col/>
+                            <col style="width:68px;"/>
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>Día</th>
+                                <th>Serie</th>
+                                <th>Número</th>
+                                <th>NIT</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <t t-if="not v_lines">
+                            <tbody>
+                                <tr>
+                                    <td colspan="7" style="text-align:center;color:#666;padding:14px;">
+                                        Sin ventas en el período.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </t>
+                        <t t-if="v_lines">
+                            <tbody>
+                                <t t-foreach="v_lines" t-as="r">
+                                    <tr>
+                                        <td class="ctr"><t t-esc="r['no']"/></td>
+                                        <td class="ctr"><t t-esc="r['dia']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['serie']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['numero']"/></td>
+                                        <td class="nowrap" style="font-size:7.5pt;"><t t-esc="r['nit']"/></td>
+                                        <td style="font-size:7.5pt;"><t t-esc="r['partner']"/></td>
+                                        <td class="num"><t t-esc="'{:,.2f}'.format(r['total'])"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                            <tbody>
+                                <tr class="pc-total">
+                                    <td colspan="6" class="lbl">TOTAL VENTAS</td>
+                                    <td><t t-esc="'{:,.2f}'.format(v_total)"/></td>
+                                </tr>
+                            </tbody>
+                        </t>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ── Certificación ── -->
+            <div style="margin-top:20px; font-size:8pt; line-height:1.7; text-align:justify; text-transform:uppercase;">
+                El infrascrito perito contador
+                <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b>
+                registrado ante la Superintendencia de Administración Tributaria -SAT-
+                con el número de registro
+                <b><t t-esc="company.ktx_contador_id.vat or '_______________'"/></b>,
+                <b>CERTIFICA:</b> Que los registros contenidos en el presente
+                <b>LIBRO DE COMPRAS Y VENTAS DE PEQUEÑO CONTRIBUYENTE</b>,
+                propiedad de la empresa <b><t t-esc="company.name"/></b>,
+                correspondientes a la fecha del
+                <b><t t-esc="docs.date_from.strftime('%d') if docs.date_from else ''"/></b>
+                al
+                <b><t t-esc="docs.date_to.strftime('%d') if docs.date_to else ''"/></b>
+                del mes <b><t t-esc="mes"/></b> del año <b><t t-esc="anio"/></b>,
+                presentan información razonable y objetiva según los movimientos realizados.
+            </div>
+            <table style="width:100%; margin-top:48px;">
+                <tr>
+                    <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                        <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                            <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b><br/>
+                            Perito Contador<br/>
+                            NIT:&#160;<t t-esc="company.ktx_contador_id.vat or '_______________'"/>
+                        </div>
+                    </td>
+                    <td style="width:10%;"/>
+                    <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                        <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                            <b><t t-esc="company.ktx_rep_legal_id.name or '___________________________'"/></b><br/>
+                            Representante Legal<br/>
+                            NIT:&#160;<t t-esc="company.ktx_rep_legal_id.vat or '_______________'"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </t>
+    </template>
+</odoo>

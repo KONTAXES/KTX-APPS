@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_satgt_resumen_user,ktx.satgt.resumen user,model_ktx_satgt_resumen,ktx_satgt_reports.group_satgt_user,1,0,1,0
+access_satgt_resumen_manager,ktx.satgt.resumen manager,model_ktx_satgt_resumen,ktx_satgt_reports.group_satgt_manager,1,1,1,1
+access_satgt_extra_tax_user,ktx.satgt.extra.tax user,model_ktx_satgt_extra_tax,ktx_satgt_reports.group_satgt_user,1,0,0,0
+access_satgt_extra_tax_manager,ktx.satgt.extra.tax manager,model_ktx_satgt_extra_tax,ktx_satgt_reports.group_satgt_manager,1,1,1,1
+access_satgt_book_wizard,ktx.satgt.book.wizard,model_ktx_satgt_book_wizard,ktx_satgt_reports.group_satgt_user,1,1,1,1
+access_satgt_decl_wizard,ktx.satgt.decl.wizard,model_ktx_satgt_decl_wizard,ktx_satgt_reports.group_satgt_user,1,1,1,1
+access_satgt_tax_config_user,ktx.satgt.tax.config user,model_ktx_satgt_tax_config,ktx_satgt_reports.group_satgt_user,1,0,0,0
+access_satgt_tax_config_manager,ktx.satgt.tax.config manager,model_ktx_satgt_tax_config,ktx_satgt_reports.group_satgt_manager,1,1,1,1

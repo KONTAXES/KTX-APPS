@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         IVA PERIOD FILTER — siempre mensual
+         ════════════════════════════════════════════════════════════════════ -->
+    <t t-name="ktx_satgt.IvaPeriodFilter">
+        <div class="o_satgt_filter_bar d-flex align-items-center gap-2 flex-wrap">
+
+            <!-- ── Botón de período (pill con calendar + dropdown) ────────── -->
+            <div class="position-relative">
+                <button type="button"
+                        class="o_satgt_pill_btn d-flex align-items-center gap-1"
+                        t-on-click.stop="togglePeriod">
+                    <i class="fa fa-calendar-o" style="opacity:.75;"/>
+                    <t t-esc="display"/>
+                </button>
+
+                <!-- Dropdown de período (solo Mes para IVA) -->
+                <div t-if="state.periodOpen" class="o_satgt_dropdown">
+                    <div class="o_satgt_dropdown_row o_satgt_row_active">
+                        <span class="o_satgt_row_check"><i class="fa fa-check"/></span>
+                        <span class="o_satgt_row_label">Mes</span>
+                        <div class="d-flex align-items-center gap-1 ms-auto">
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="prev">&#9664;</button>
+                            <span class="o_satgt_row_period" t-esc="display"/>
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="next">&#9654;</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ── Botón de Comparación ────────────────────────────────────── -->
+            <div class="position-relative">
+                <button type="button"
+                        class="o_satgt_pill_btn d-flex align-items-center gap-1"
+                        t-att-class="{ 'o_satgt_pill_active': isComparisonActive }"
+                        t-on-click.stop="toggleComparison">
+                    <i class="fa fa-percent" style="opacity:.75;"/>
+                    <t t-esc="comparisonLabel"/>
+                </button>
+
+                <div t-if="state.comparisonOpen" class="o_satgt_dropdown">
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'none' }"
+                         t-on-click="(e) => this.setComparison('none', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'none'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Sin comparación</span>
+                    </div>
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'prev' }"
+                         t-on-click="(e) => this.setComparison('prev', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'prev'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Mes anterior</span>
+                    </div>
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'same_year' }"
+                         t-on-click="(e) => this.setComparison('same_year', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'same_year'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Mismo mes año anterior</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge IVA -->
+            <span class="o_satgt_section_badge o_satgt_badge_iva">IVA — Mensual</span>
+        </div>
+    </t>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         ISR PERIOD FILTER — mensual o trimestral
+         ════════════════════════════════════════════════════════════════════ -->
+    <t t-name="ktx_satgt.IsrPeriodFilter">
+        <div class="o_satgt_filter_bar d-flex align-items-center gap-2 flex-wrap">
+
+            <!-- ── Botón de período ────────────────────────────────────────── -->
+            <div class="position-relative">
+                <button type="button"
+                        class="o_satgt_pill_btn d-flex align-items-center gap-1"
+                        t-on-click.stop="togglePeriod">
+                    <i class="fa fa-calendar-o" style="opacity:.75;"/>
+                    <t t-esc="display"/>
+                </button>
+
+                <!-- Dropdown: Mes y Trimestre -->
+                <div t-if="state.periodOpen" class="o_satgt_dropdown">
+
+                    <!-- Fila Mes -->
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': periodType === 'mes' }">
+                        <span class="o_satgt_row_check">
+                            <i t-if="periodType === 'mes'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label"
+                              t-on-click="setMes">Mes</span>
+                        <div t-if="periodType === 'mes'"
+                             class="d-flex align-items-center gap-1 ms-auto">
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="prev">&#9664;</button>
+                            <span class="o_satgt_row_period" t-esc="display"/>
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="next">&#9654;</button>
+                        </div>
+                    </div>
+
+                    <!-- Fila Trimestre -->
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': periodType === 'trim' }">
+                        <span class="o_satgt_row_check">
+                            <i t-if="periodType === 'trim'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label"
+                              t-on-click="setTrim">Trimestre</span>
+                        <div t-if="periodType === 'trim'"
+                             class="d-flex align-items-center gap-1 ms-auto">
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="prev">&#9664;</button>
+                            <span class="o_satgt_row_period" t-esc="display"/>
+                            <button type="button" class="o_satgt_arrow_btn"
+                                    t-on-click="next">&#9654;</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- ── Botón de Comparación ────────────────────────────────────── -->
+            <div class="position-relative">
+                <button type="button"
+                        class="o_satgt_pill_btn d-flex align-items-center gap-1"
+                        t-att-class="{ 'o_satgt_pill_active': isComparisonActive }"
+                        t-on-click.stop="toggleComparison">
+                    <i class="fa fa-percent" style="opacity:.75;"/>
+                    <t t-esc="comparisonLabel"/>
+                </button>
+
+                <div t-if="state.comparisonOpen" class="o_satgt_dropdown">
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'none' }"
+                         t-on-click="(e) => this.setComparison('none', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'none'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Sin comparación</span>
+                    </div>
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'prev' }"
+                         t-on-click="(e) => this.setComparison('prev', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'prev'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Período anterior</span>
+                    </div>
+                    <div class="o_satgt_dropdown_row"
+                         t-att-class="{ 'o_satgt_row_active': comparison === 'same_year' }"
+                         t-on-click="(e) => this.setComparison('same_year', e)">
+                        <span class="o_satgt_row_check">
+                            <i t-if="comparison === 'same_year'" class="fa fa-check"/>
+                        </span>
+                        <span class="o_satgt_row_label">Mismo período año anterior</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Badge ISR -->
+            <span class="o_satgt_section_badge o_satgt_badge_isr">ISR</span>
+        </div>
+    </t>
+
+</templates>

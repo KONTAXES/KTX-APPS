@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_satgt_decl_form" model="ir.ui.view">
+        <field name="name">ktx.satgt.decl.wizard.form</field>
+        <field name="model">ktx.satgt.decl.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Declaración Sombra">
+                <sheet>
+                    <field name="company_id" invisible="1"/>
+
+                    <notebook>
+
+                        <!-- ══════════════════════════════════════════════════
+                             IVA PEQUEÑO CONTRIBUYENTE
+                             (visible solo si régimen = pequeño contribuyente)
+                             ══════════════════════════════════════════════════ -->
+                        <page string="IVA Pequeño Contribuyente"
+                              invisible="company_iva_regime != 'pequeno'">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Período</b>
+                                        <group class="mt-1">
+                                            <field name="iva_period_type" widget="radio"
+                                                   options="{'horizontal': True}" nolabel="1"/>
+                                        </group>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1"
+                                             invisible="iva_period_type == 'personalizado'">
+                                            <button name="action_iva_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="iva_period_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;"/>
+                                            <button name="action_iva_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <group invisible="iva_period_type != 'personalizado'">
+                                            <field name="iva_date_from"/>
+                                            <field name="iva_date_to"/>
+                                        </group>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_iva_pc" nolabel="1"/>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════════════
+                             IVA GENERAL  (visible solo si régimen = general)
+                             ══════════════════════════════════════════════════ -->
+                        <page string="IVA General  (SAT-2237)"
+                              invisible="company_iva_regime != 'general'">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Período</b>
+                                        <group class="mt-1">
+                                            <field name="iva_period_type" widget="radio"
+                                                   options="{'horizontal': True}" nolabel="1"/>
+                                        </group>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1"
+                                             invisible="iva_period_type == 'personalizado'">
+                                            <button name="action_iva_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="iva_period_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;"/>
+                                            <button name="action_iva_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <group invisible="iva_period_type != 'personalizado'">
+                                            <field name="iva_date_from"/>
+                                            <field name="iva_date_to"/>
+                                        </group>
+                                        <div style="font-size:11px;color:#64748b;margin-top:8px;">
+                                            Los remanentes de crédito fiscal y de retenciones de IVA del
+                                            período anterior se obtienen automáticamente del saldo de las
+                                            cuentas configuradas en Configuración Fiscal por Empresa.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_iva_general" nolabel="1"/>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════════════
+                             ISR MENSUAL — Opcional Simplificado
+                             ══════════════════════════════════════════════════ -->
+                        <page string="ISR Mensual"
+                              invisible="company_iva_regime != 'general' or company_isr_regime != 'opcional'">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Período</b>
+                                        <group class="mt-1">
+                                            <field name="isr_men_period_type" widget="radio"
+                                                   options="{'horizontal': True}" nolabel="1"/>
+                                        </group>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1"
+                                             invisible="isr_men_period_type == 'personalizado'">
+                                            <button name="action_isr_men_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="isr_men_period_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;"/>
+                                            <button name="action_isr_men_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <group invisible="isr_men_period_type != 'personalizado'">
+                                            <field name="isr_men_date_from"/>
+                                            <field name="isr_men_date_to"/>
+                                        </group>
+                                        <div style="font-size:11px;color:#64748b;margin-top:8px;">
+                                            Los ingresos exentos se obtienen de las cuentas marcadas como
+                                            <b>Ingreso Exento ISR</b> en el Plan de Cuentas.
+                                            El remanente y las retenciones del período se calculan
+                                            automáticamente del saldo de la cuenta
+                                            <b>Cuenta Retenciones ISR</b> configurada por empresa.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_isr_mensual" nolabel="1"/>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════════════
+                             ISR TRIMESTRAL — Sobre Utilidades (SAT-1361)
+                             T1=Ene-Mar, T2=Ene-Jun (acum.), T3=Ene-Sep (acum.)
+                             ══════════════════════════════════════════════════ -->
+                        <page string="ISR Trimestral  (SAT-1361)"
+                              invisible="company_iva_regime != 'general' or company_isr_regime != 'utilidades'">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Período</b>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+                                            <button name="action_isr_trim_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="isr_trim_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;flex:1;"/>
+                                            <button name="action_isr_trim_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <div style="border-top:1px solid #e2e8f0;margin:10px 0 8px;"/>
+                                        <group>
+                                            <field name="isr_trim_incentivos"/>
+                                        </group>
+                                        <div style="font-size:11px;color:#64748b;margin-top:4px;">
+                                            El ISR del trimestre anterior, los gastos no deducibles y el
+                                            ISO a acreditar se obtienen automáticamente de las cuentas
+                                            contables configuradas. Solo los incentivos fiscales son manuales.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_isr_trim" nolabel="1"/>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════════════
+                             ISR ANUAL — Liquidación Definitiva
+                             ══════════════════════════════════════════════════ -->
+                        <page string="ISR Anual"
+                              invisible="company_iva_regime != 'general' or not company_isr_regime">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Año Fiscal</b>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+                                            <button name="action_isr_anual_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="isr_anual_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;flex:1;"/>
+                                            <button name="action_isr_anual_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <div style="border-top:1px solid #e2e8f0;margin:10px 0 8px;"/>
+                                        <group>
+                                            <field name="isr_anual_incentivos"/>
+                                        </group>
+                                        <div style="font-size:11px;color:#64748b;margin-top:4px;">
+                                            Los pagos trimestrales de ISR, los gastos no deducibles y el
+                                            ISO a acreditar se obtienen automáticamente de las cuentas
+                                            contables configuradas. Solo los incentivos fiscales son manuales.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_isr_anual" nolabel="1"/>
+                        </page>
+
+                        <!-- ══════════════════════════════════════════════════
+                             ISO TRIMESTRAL (SAT-1608)
+                             Trimestres independientes (no acumulativos)
+                             ══════════════════════════════════════════════════ -->
+                        <page string="ISO Trimestral  (SAT-1608)"
+                              invisible="not company_apply_iso">
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <div style="background:#f8fafc;border:1px solid #e2e8f0;
+                                                border-radius:8px;padding:14px 18px;margin-bottom:12px;">
+                                        <b style="color:#0369a1;">Período</b>
+                                        <div class="d-flex align-items-center justify-content-between mt-2 mb-1">
+                                            <button name="action_iso_prev" type="object"
+                                                    string="&#9664;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                            <field name="iso_label" readonly="1" nolabel="1"
+                                                   style="text-align:center;font-weight:700;font-size:13px;
+                                                          border:none;background:transparent;pointer-events:none;flex:1;"/>
+                                            <button name="action_iso_next" type="object"
+                                                    string="&#9654;" class="btn btn-sm btn-outline-secondary"
+                                                    style="width:34px;font-size:13px;"/>
+                                        </div>
+                                        <div style="font-size:11px;color:#64748b;margin-top:6px;">
+                                            Use las flechas para cambiar de trimestre y año. El ISO se
+                                            calcula sobre los activos netos e ingresos brutos del trimestre.
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <field name="html_iso_trim" nolabel="1"/>
+                        </page>
+
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_satgt_decl" model="ir.actions.act_window">
+        <field name="name">Declaración Sombra</field>
+        <field name="res_model">ktx.satgt.decl.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+    </record>
+</odoo>

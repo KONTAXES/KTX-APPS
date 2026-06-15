@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_res_company_list_satgt" model="ir.ui.view">
+        <field name="name">res.company.list.satgt</field>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <list string="Empresas - Configuracion Fiscal">
+                <field name="name"/>
+                <field name="ktx_iva_regime"/>
+                <field name="ktx_isr_regime"/>
+                <field name="ktx_iva_sale_account_id"       optional="hide"/>
+                <field name="ktx_iva_purchase_account_id"   optional="hide"/>
+                <field name="ktx_iva_ret_account_id"        optional="hide"/>
+                <field name="ktx_iva_rem_account_id"        optional="hide"/>
+                <field name="ktx_isr_account_id"            optional="hide"/>
+                <field name="ktx_isr_ret_account_id"        optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_satgt_ajustes_empresas" model="ir.actions.act_window">
+        <field name="name">Configuracion Fiscal por Empresa</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_res_company_list_satgt')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('base.view_company_form')})]"/>
+        <field name="target">current</field>
+    </record>
+
+    <record id="action_satgt_auto_detect" model="ir.actions.server">
+        <field name="name">Auto-detectar Impuestos SAT GT</field>
+        <field name="model_id" ref="model_ktx_satgt_tax_config"/>
+        <field name="state">code</field>
+        <field name="code">action = env['ktx.satgt.tax.config'].action_auto_detect()</field>
+    </record>
+
+    <record id="view_satgt_tax_config_list" model="ir.ui.view">
+        <field name="name">ktx.satgt.tax.config.list</field>
+        <field name="model">ktx.satgt.tax.config</field>
+        <field name="arch" type="xml">
+            <list string="Categorias SAT GT - Impuestos Configurados"
+                  editable="bottom"
+                  default_order="company_id,category">
+                <header>
+                    <button name="%(action_satgt_auto_detect)d"
+                            type="action"
+                            string="Auto-detectar Impuestos"
+                            class="btn-secondary"/>
+                </header>
+                <field name="company_id" optional="show"/>
+                <field name="category"/>
+                <field name="tax_id"
+                       domain="[('company_id', '=', company_id)]"
+                       options="{'no_create': True}"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_satgt_tax_config_form" model="ir.ui.view">
+        <field name="name">ktx.satgt.tax.config.form</field>
+        <field name="model">ktx.satgt.tax.config</field>
+        <field name="arch" type="xml">
+            <form string="Categoria SAT GT">
+                <sheet>
+                    <group>
+                        <field name="company_id"/>
+                        <field name="category"/>
+                        <field name="tax_id"
+                               domain="[('company_id', '=', company_id)]"
+                               options="{'no_create': True}"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_satgt_ajustes_impuestos" model="ir.actions.act_window">
+        <field name="name">Categorias SAT por Impuesto</field>
+        <field name="res_model">ktx.satgt.tax.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_ids" eval="[(5, 0, 0),
+            (0, 0, {'view_mode': 'list', 'view_id': ref('view_satgt_tax_config_list')}),
+            (0, 0, {'view_mode': 'form', 'view_id': ref('view_satgt_tax_config_form')})]"/>
+        <field name="target">current</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ── Reportes Fiscales GT ──────────────────────────────────────────────
+         Menú agrupador ubicado en la sección de reportes contables, junto al
+         Libro Mayor y Balance de Comprobación nativos de Odoo. Reúne todos los
+         libros SAT GT y la Declaración Sombra en un solo lugar. -->
+    <menuitem
+        id="menu_satgt_reportes_fiscales"
+        name="Reportes Fiscales GT"
+        parent="account.menu_finance_reports"
+        sequence="45"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <menuitem
+        id="menu_satgt_libro_compras"
+        name="Libro de Compras"
+        parent="menu_satgt_reportes_fiscales"
+        action="action_satgt_book_compras"
+        sequence="10"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <menuitem
+        id="menu_satgt_libro_ventas"
+        name="Libro de Ventas"
+        parent="menu_satgt_reportes_fiscales"
+        action="action_satgt_book_ventas"
+        sequence="20"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <menuitem
+        id="menu_satgt_libro_diario"
+        name="Libro Diario"
+        parent="menu_satgt_reportes_fiscales"
+        action="action_satgt_book_diario"
+        sequence="30"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <menuitem
+        id="menu_satgt_libro_mayor"
+        name="Libro Mayor"
+        parent="menu_satgt_reportes_fiscales"
+        action="action_satgt_book_mayor"
+        sequence="40"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <menuitem
+        id="menu_satgt_decl"
+        name="Declaración Sombra SAT GT"
+        parent="menu_satgt_reportes_fiscales"
+        action="action_satgt_decl"
+        sequence="50"
+        groups="ktx_satgt_reports.group_satgt_user"/>
+
+    <!-- ── Raíz: Impuestos GT (solo configuración, manager) ─────────────── -->
+    <menuitem
+        id="menu_satgt_root"
+        name="Impuestos GT"
+        parent="account.menu_finance_reports"
+        sequence="95"
+        groups="ktx_satgt_reports.group_satgt_manager"/>
+</odoo>

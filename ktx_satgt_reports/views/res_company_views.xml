@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tab "Información Fiscal" en el formulario de empresa -->
+    <record id="view_company_form_fiscal_tab" model="ir.ui.view">
+        <field name="name">res.company.fiscal.tab.satgt</field>
+        <field name="model">res.company</field>
+        <field name="inherit_id" ref="base.view_company_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Información Fiscal" name="ktx_fiscal_info"
+                      groups="ktx_satgt_reports.group_satgt_manager">
+
+                    <group string="Régimen Tributario">
+                        <group>
+                            <field name="ktx_iva_regime" widget="radio"/>
+                        </group>
+                        <group invisible="ktx_iva_regime == 'pequeno'">
+                            <field name="ktx_isr_regime" widget="radio"/>
+                        </group>
+                    </group>
+
+                    <!-- Opciones ISR Sobre Utilidades: solo si régimen general + utilidades -->
+                    <group string="Opciones ISR — Sobre Utilidades"
+                           invisible="ktx_iva_regime == 'pequeno' or ktx_isr_regime != 'utilidades'">
+                        <group>
+                            <field name="ktx_apply_iso"/>
+                            <field name="ktx_apply_inventory"/>
+                        </group>
+                    </group>
+
+                    <!-- Cuentas IVA: saldos para remanentes de período anterior -->
+                    <group string="Cuentas IVA"
+                           invisible="ktx_iva_regime == 'pequeno'">
+                        <group>
+                            <field name="ktx_iva_sale_account_id"     options="{'no_create': True}"/>
+                            <field name="ktx_iva_purchase_account_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="ktx_iva_rem_account_id" options="{'no_create': True}"
+                                   help="Su saldo al cierre del período anterior es el remanente de crédito fiscal."/>
+                            <field name="ktx_iva_ret_account_id" options="{'no_create': True}"
+                                   help="Su saldo al cierre del período anterior es el remanente de retenciones de IVA."/>
+                            <field name="ktx_iva_exencion_account_id" options="{'no_create': True}"
+                                   help="IVA conforme constancias de exención recibidas. Los cargos al debe del período se suman al crédito fiscal."/>
+                        </group>
+                    </group>
+
+                    <!-- Impuestos de combustibles -->
+                    <group string="Impuestos de Combustibles"
+                           invisible="ktx_iva_regime == 'pequeno'">
+                        <field name="ktx_fuel_tax_ids" nolabel="1"
+                               widget="many2many_tags"
+                               options="{'no_create': True}"
+                               placeholder="Seleccione los impuestos que identifican compras de combustibles"/>
+                    </group>
+
+                    <!-- Cuentas ISR: visible solo cuando hay régimen ISR configurado -->
+                    <group string="Cuentas ISR"
+                           invisible="ktx_iva_regime == 'pequeno' or not ktx_isr_regime">
+                        <group>
+                            <field name="ktx_isr_account_id"     options="{'no_create': True}"/>
+                            <field name="ktx_isr_ret_account_id" options="{'no_create': True}"/>
+                        </group>
+                        <group invisible="ktx_isr_regime != 'utilidades'">
+                            <field name="ktx_isr_trim_account_id" options="{'no_create': True}"/>
+                            <field name="ktx_iso_trim_account_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <group string="Contador y Representante Legal">
+                        <group>
+                            <field name="ktx_contador_id" options="{'no_create': True}"/>
+                            <field name="ktx_contador_reg"/>
+                        </group>
+                        <group>
+                            <field name="ktx_rep_legal_id" options="{'no_create': True}"/>
+                        </group>
+                    </group>
+
+                    <separator string="Resumen de Impuestos Aplicables"/>
+                    <field name="ktx_fiscal_summary_html" nolabel="1"/>
+
+                    <separator string="Impuestos Adicionales (RTU)"
+                               invisible="ktx_iva_regime != 'general'"/>
+                    <field name="ktx_extra_tax_ids" nolabel="1"
+                           invisible="ktx_iva_regime != 'general'">
+                        <list editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="name"/>
+                            <field name="tax_id"/>
+                            <field name="account_id"/>
+                        </list>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>
