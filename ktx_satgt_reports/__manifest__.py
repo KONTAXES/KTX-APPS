@@ -19,7 +19,7 @@
     "author": "KONTAXES",
     "website": "https://app.kontaxes.com",
     "license": "OPL-1",
-    "price": 1.00,
+    "price": 0.00,
     "currency": "USD",
     "depends": ["account"],
     "assets": {
