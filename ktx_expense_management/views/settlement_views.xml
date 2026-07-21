@@ -99,16 +99,30 @@
 
                     <group>
                         <group string="Información General">
+                            <field name="kind" readonly="state != 'draft'"
+                                widget="radio" options="{'horizontal': True}"/>
                             <field name="date" readonly="state != 'draft'"/>
-                            <field name="journal_id" readonly="state != 'draft'" required="1"/>
-                            <field name="account_id" readonly="state != 'draft'" required="1"/>
+                            <field name="journal_id" readonly="state != 'draft'" required="1"
+                                domain="[('type', 'in', ['general', 'sale'] if kind == 'sale' else ['general', 'purchase']), ('company_id', '=', company_id)]"/>
+                            <field name="account_id" string="Cuenta por Pagar"
+                                readonly="state != 'draft'"
+                                required="kind != 'sale'"
+                                invisible="kind == 'sale'"
+                                domain="[('account_type', 'in', ['liability_payable', 'liability_current']), ('company_ids', 'in', [company_id])]"/>
+                            <field name="account_id" string="Cuenta por Cobrar"
+                                readonly="state != 'draft'"
+                                required="kind == 'sale'"
+                                invisible="kind != 'sale'"
+                                domain="[('account_type', 'in', ['asset_receivable', 'asset_current']), ('company_ids', 'in', [company_id])]"/>
                             <field name="company_id"
                                 readonly="state != 'draft'"
                                 groups="base.group_multi_company"/>
                         </group>
                         <group string="Responsables y Moneda">
                             <field name="employee_id" string="Empleado / Beneficiario"
-                                readonly="state != 'draft'"/>
+                                readonly="state != 'draft'" invisible="kind == 'sale'"/>
+                            <field name="employee_id" string="Cliente"
+                                readonly="state != 'draft'" invisible="kind != 'sale'"/>
                             <field name="approver_id" readonly="state != 'draft'"/>
                             <field name="company_currency_id" invisible="1"/>
                             <field name="currency_id" readonly="state != 'draft'"/>
@@ -122,7 +136,7 @@
                     <notebook>
                         <page string="Líneas de Liquidación" name="lines">
                             <button name="action_open_staging_selector"
-                                string="Agregar Gastos..."
+                                string="Agregar Documentos..."
                                 type="object"
                                 class="btn-secondary mb-2"
                                 invisible="state not in ('draft', 'confirmed')"/>
@@ -234,8 +248,10 @@
                 decoration-danger="state in ('rejected', 'cancelled')">
                 <field name="name" string="Referencia"/>
                 <field name="description" string="Descripción"/>
+                <field name="kind_color" column_invisible="1"/>
+                <field name="kind" string="Clase" widget="badge" options="{'color_field': 'kind_color'}"/>
                 <field name="date" string="Fecha"/>
-                <field name="employee_id" string="Empleado"/>
+                <field name="employee_id" string="Empleado / Cliente"/>
                 <field name="approver_id" string="Aprobador"/>
                 <field name="currency_id" string="Moneda" groups="base.group_multi_currency"/>
                 <field name="amount_total" string="Total" sum="Total General"/>
@@ -252,8 +268,11 @@
         <field name="arch" type="xml">
             <search string="Buscar Liquidaciones">
                 <field name="name" string="Referencia"/>
-                <field name="employee_id" string="Empleado"/>
+                <field name="employee_id" string="Empleado / Cliente"/>
                 <field name="approver_id" string="Aprobador"/>
+                <filter name="filter_expense" string="Gastos" domain="[('kind','=','expense')]"/>
+                <filter name="filter_sale" string="Ventas" domain="[('kind','=','sale')]"/>
+                <separator/>
                 <filter name="filter_draft" string="Borrador" domain="[('state','=','draft')]"/>
                 <filter name="filter_confirmed" string="Por Autorizar" domain="[('state','=','confirmed')]"/>
                 <filter name="filter_approved" string="Aprobadas" domain="[('state','=','approved')]"/>
@@ -261,6 +280,10 @@
                 <filter name="filter_in_payment" string="En Proceso de Pago" domain="[('state','=','in_payment')]"/>
                 <filter name="filter_paid" string="Pagadas" domain="[('state','=','paid')]"/>
                 <filter name="filter_rejected" string="Rechazadas" domain="[('state','=','rejected')]"/>
+                <group>
+                    <filter name="group_kind" string="Clase" domain="[]" context="{'group_by': 'kind'}"/>
+                    <filter name="group_state" string="Estado" domain="[]" context="{'group_by': 'state'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -292,7 +315,7 @@
                 <field name="name" string="Referencia"/>
                 <field name="description" string="Descripción"/>
                 <field name="date" string="Fecha"/>
-                <field name="employee_id" string="Empleado"/>
+                <field name="employee_id" string="Empleado / Cliente"/>
                 <field name="approver_id" string="Aprobador"/>
                 <field name="currency_id" string="Moneda" groups="base.group_multi_currency"/>
                 <field name="amount_total" string="Total" sum="Total General"/>

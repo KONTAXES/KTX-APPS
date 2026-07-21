@@ -1,9 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+    <!-- Usuario base: acceso completo a liquidaciones -->
+    <record id="group_expense_user" model="res.groups">
+        <field name="name">Liquidaciones / Usuario</field>
+    </record>
+
+    <!-- Aprobador: puede aprobar y registrar pagos -->
+    <record id="group_expense_approver" model="res.groups">
+        <field name="name">Liquidaciones / Aprobador</field>
+        <field name="implied_ids" eval="[(4, ref('group_expense_user'))]"/>
+    </record>
+
+    <!-- Administrador: acceso total + configuración -->
+    <record id="group_expense_manager" model="res.groups">
+        <field name="name">Liquidaciones / Administrador</field>
+        <field name="implied_ids" eval="[(4, ref('group_expense_approver'))]"/>
+    </record>
+
     <!--
-        Company isolation is handled in Python (_search overrides) on both
-        ktx.settlement.staging and ktx.settlement, so that the
-        "Asignación Multiempresa" config parameter can bypass the filter
-        without needing to remove/recreate ir.rules at runtime.
+        Al instalar, todos los usuarios internos (base.group_user) pasan a tener
+        automáticamente el grupo de Usuario de Liquidaciones.
+        Este es el patrón estándar de Odoo para módulos que deben estar
+        disponibles para toda la organización desde el inicio.
     -->
+    <record id="base.group_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_expense_user'))]"/>
+    </record>
+
+    <!-- Contabilidad / Usuario → Aprobador de Liquidaciones -->
+    <record id="account.group_account_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_expense_approver'))]"/>
+    </record>
+
+    <!-- Contabilidad / Administrador → Administrador de Liquidaciones -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_expense_manager'))]"/>
+    </record>
+
 </odoo>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Herencia del formulario de account.payment — no invasivo -->
+    <record id="view_account_payment_form_inherit_ktx_check" model="ir.ui.view">
+        <field name="name">account.payment.form.ktx.check</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+
+            <!-- Declara ktx_is_check_journal para que OWL lo cargue y evalúe invisible -->
+            <xpath expr="//field[@name='amount']" position="after">
+                <field name="ktx_is_check_journal" invisible="True"/>
+            </xpath>
+
+            <!-- Botones en la cabecera — después de action_post (mismo patrón que account_check_printing) -->
+            <xpath expr="//button[@name='action_post']" position="after">
+                <button name="action_ktx_save_check"
+                        string="Adjuntar al Chatter"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="state == 'draft'"/>
+                <button name="action_ktx_print_check"
+                        string="Imprimir Cheque"
+                        type="object"
+                        class="btn-primary"
+                        invisible="state == 'draft'"/>
+            </xpath>
+
+            <!-- Opciones de Cheque al final del sheet — visible solo cuando el método de pago es cheque -->
+            <xpath expr="//sheet" position="inside">
+                <group string="Opciones de Cheque" invisible="not ktx_is_check_journal">
+                    <field name="ktx_non_negotiable" string="No Negociable"/>
+                </group>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>

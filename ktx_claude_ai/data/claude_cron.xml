@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_claude_gc" model="ir.cron">
+        <field name="name">Claude AI: limpieza de tokens y bitácora</field>
+        <field name="model_id" ref="model_claude_oauth_token"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_gc()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="nextcall"
+               eval="(DateTime.now() + timedelta(days=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

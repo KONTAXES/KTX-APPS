@@ -1,0 +1,430 @@
+.o_claude_systray {
+    display: flex;
+    align-items: center;
+
+    .o_claude_systray_btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: transparent;
+        border: 0;
+        color: #FF6B35;
+        padding: 0 8px;
+        height: 100%;
+        cursor: pointer;
+        filter: drop-shadow(0 0 3px rgba(255, 107, 53, 0.45));
+
+        &:hover {
+            color: #e8703a;
+            filter: drop-shadow(0 0 5px rgba(255, 107, 53, 0.7));
+        }
+    }
+
+    // Minimized floating bubble (FAB)
+    .o_claude_fab {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 54px;
+        height: 54px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #FF6B35, #7C3AED);
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 1080;
+        box-shadow: 0 4px 20px rgba(124, 58, 237, 0.45);
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+        border: 0;
+        outline: none;
+
+        &:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 28px rgba(124, 58, 237, 0.65);
+        }
+    }
+
+    // Docked floating chat panel (bottom-right).
+    .o_claude_panel {
+        position: fixed;
+        bottom: 12px;
+        right: 12px;
+        width: 380px;
+        max-width: calc(100vw - 24px);
+        height: 70vh;
+        max-height: 600px;
+        background: #ffffff;
+        border: 1px solid #e4e6fb;
+        border-radius: 12px;
+        box-shadow: 0 18px 48px rgba(15, 23, 42, 0.28);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        z-index: 1080;
+
+        .o_claude_panel_header {
+            flex: 0 0 auto;
+            background: linear-gradient(135deg, #FF6B35, #7C3AED);
+            color: #ffffff;
+
+            // Row 1: branding + minimize/close
+            .o_claude_header_top {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 7px 10px 4px;
+
+                .o_claude_panel_title {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                    font-weight: 700;
+                    font-size: 13px;
+                    white-space: nowrap;
+                    flex: 1 1 auto;
+                    min-width: 0;
+                }
+
+                .o_claude_token_badge {
+                    font-size: 10px;
+                    background: rgba(255, 255, 255, 0.2);
+                    border-radius: 4px;
+                    padding: 2px 5px;
+                    white-space: nowrap;
+                    letter-spacing: 0.02em;
+                    flex-shrink: 0;
+                }
+
+                .o_claude_win_controls {
+                    display: flex;
+                    gap: 3px;
+                    flex-shrink: 0;
+
+                    button {
+                        background: rgba(255, 255, 255, 0.18);
+                        border: 0;
+                        color: #ffffff;
+                        width: 24px;
+                        height: 24px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        font-size: 11px;
+
+                        &:hover { background: rgba(255, 255, 255, 0.35); }
+                    }
+                }
+            }
+
+            // Row 2: conversation + company selects
+            .o_claude_header_controls {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 4px 10px 7px;
+
+                .o_claude_company_select {
+                    flex: 0 1 100px;
+                    min-width: 0;
+                    font-size: 11px;
+                    border: 0;
+                    border-radius: 5px;
+                    padding: 3px 4px;
+                    background: rgba(255, 255, 255, 0.28);
+                    color: #ffffff;
+                    font-weight: 600;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    option { color: #1f2937; }
+                }
+
+                .o_claude_conv_select {
+                    flex: 1 1 0;
+                    min-width: 0;
+                    font-size: 11px;
+                    border: 0;
+                    border-radius: 5px;
+                    padding: 3px 4px;
+                    background: rgba(255, 255, 255, 0.18);
+                    color: #ffffff;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+
+                    option { color: #1f2937; }
+                }
+
+                button {
+                    flex-shrink: 0;
+                    background: rgba(255, 255, 255, 0.18);
+                    border: 0;
+                    color: #ffffff;
+                    width: 26px;
+                    height: 26px;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 12px;
+
+                    &:hover { background: rgba(255, 255, 255, 0.32); }
+                    &.o_claude_btn_danger:hover { background: rgba(239, 68, 68, 0.5); }
+                }
+            }
+        }
+
+        .o_claude_thread {
+            flex: 1 1 auto;
+            overflow-y: auto;
+            padding: 12px;
+            background: #f8f9ff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .o_claude_empty {
+                color: #5b5b78;
+                font-size: 13px;
+                margin: auto 0;
+
+                ul { padding-left: 18px; margin: 6px 0 0; }
+                li { margin: 2px 0; }
+            }
+
+            .o_claude_msg {
+                display: flex;
+
+                .o_claude_bubble {
+                    padding: 8px 12px;
+                    border-radius: 12px;
+                    font-size: 13px;
+                    max-width: 85%;
+                    white-space: pre-wrap;
+                    word-break: break-word;
+                }
+
+                &.o_claude_user {
+                    justify-content: flex-end;
+                    .o_claude_bubble { background: #FF6B35; color: #ffffff; }
+                }
+
+                &.o_claude_assistant {
+                    justify-content: flex-start;
+                    .o_claude_bubble {
+                        background: #ffffff;
+                        color: #1f2937;
+                        border: 1px solid #e4e6fb;
+                    }
+                    .o_claude_md {
+                        white-space: normal;
+                        p { margin: 0 0 6px; }
+                        p:last-child { margin-bottom: 0; }
+                        ul, ol { margin: 4px 0 6px 16px; padding: 0; }
+                        li { margin-bottom: 2px; }
+                        code {
+                            background: #f3f4f6;
+                            padding: 1px 3px;
+                            border-radius: 3px;
+                            font-size: 0.85em;
+                        }
+                        pre {
+                            background: #f3f4f6;
+                            padding: 8px;
+                            border-radius: 5px;
+                            overflow-x: auto;
+                            margin: 4px 0;
+                            code { background: none; padding: 0; }
+                        }
+                        h3, h4, h5, h6 { margin: 6px 0 3px; font-size: 0.95em; font-weight: 700; }
+                        a { color: #7C3AED; text-decoration: underline; }
+                        strong { font-weight: 700; }
+                        em { font-style: italic; }
+                    }
+                }
+            }
+
+            .o_claude_thinking {
+                font-size: 12px;
+                font-style: italic;
+                color: #6b7280;
+                display: flex;
+                gap: 6px;
+                white-space: pre-wrap;
+            }
+
+            .o_claude_tool {
+                font-size: 12px;
+                background: #f3eeff;
+                border: 1px solid #ddd6fe;
+                color: #5b21b6;
+                padding: 6px 10px;
+                border-radius: 8px;
+                display: flex;
+                gap: 6px;
+                align-items: baseline;
+
+                &.o_claude_tool_err {
+                    background: #fef2f2;
+                    border-color: #fecaca;
+                    color: #b91c1c;
+                }
+            }
+
+            .o_claude_err {
+                font-size: 12px;
+                color: #b91c1c;
+                display: flex;
+                gap: 6px;
+            }
+
+            .o_claude_typing {
+                display: flex;
+                gap: 4px;
+                padding: 4px 2px;
+
+                .o_claude_dot {
+                    width: 7px;
+                    height: 7px;
+                    border-radius: 50%;
+                    background: #FF6B35;
+                    animation: oClaudeBlink 1.2s infinite;
+
+                    &:nth-child(2) { animation-delay: 0.2s; }
+                    &:nth-child(3) { animation-delay: 0.4s; }
+                }
+            }
+        }
+
+        // Image preview strip above composer
+        .o_claude_image_previews {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            padding: 6px 8px 0;
+            background: #ffffff;
+            border-top: 1px solid #e4e6fb;
+
+            .o_claude_image_thumb {
+                position: relative;
+                width: 56px;
+                height: 56px;
+                border-radius: 6px;
+                overflow: visible;
+
+                img {
+                    width: 56px;
+                    height: 56px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                    border: 1px solid #e4e6fb;
+                    display: block;
+                }
+
+                .o_claude_image_remove {
+                    position: absolute;
+                    top: -6px;
+                    right: -6px;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 50%;
+                    background: #ef4444;
+                    border: 0;
+                    color: #ffffff;
+                    font-size: 10px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1;
+                }
+            }
+        }
+
+        .o_claude_composer {
+            flex: 0 0 auto;
+            display: flex;
+            align-items: flex-end;
+            gap: 4px;
+            padding: 8px;
+            border-top: 1px solid #e4e6fb;
+            background: #ffffff;
+
+            textarea {
+                flex: 1 1 auto;
+                resize: none;
+                border: 1px solid #d1d5db;
+                border-radius: 8px;
+                padding: 8px 10px;
+                font-size: 13px;
+                max-height: 120px;
+
+                &:focus {
+                    outline: none;
+                    border-color: #7C3AED;
+                }
+            }
+
+            // Small icon buttons (image attach, mic)
+            .o_claude_icon_btn {
+                flex: 0 0 auto;
+                background: transparent;
+                border: 1px solid #d1d5db;
+                color: #6b7280;
+                border-radius: 8px;
+                width: 34px;
+                height: 34px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 14px;
+
+                &:hover {
+                    background: #f3eeff;
+                    border-color: #7C3AED;
+                    color: #7C3AED;
+                }
+
+                // Microphone active state
+                &.o_claude_mic_active {
+                    background: #fef2f2;
+                    border-color: #ef4444;
+                    color: #ef4444;
+                    animation: oClaudeMicPulse 1s infinite;
+                }
+            }
+
+            .o_claude_send {
+                flex: 0 0 auto;
+                background: linear-gradient(135deg, #FF6B35, #7C3AED);
+                color: #ffffff;
+                border: 0;
+                border-radius: 8px;
+                width: 36px;
+                height: 34px;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                &:hover { opacity: 0.9; }
+                &:disabled { opacity: 0.5; cursor: default; }
+            }
+        }
+    }
+}
+
+@keyframes oClaudeBlink {
+    0%, 80%, 100% { opacity: 0.2; }
+    40% { opacity: 1; }
+}
+
+@keyframes oClaudeMicPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+    50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}

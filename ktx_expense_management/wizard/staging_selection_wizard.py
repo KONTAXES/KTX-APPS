@@ -51,7 +51,12 @@ class StagingSelectionWizard(models.TransientModel):
 
     def _get_available_stagings(self, settlement):
         already_used = settlement.line_ids.staging_id.ids
-        domain = [("state", "=", "pending"), ("id", "not in", already_used)]
+        domain = [
+            ("state", "=", "pending"),
+            ("id", "not in", already_used),
+            # Solo documentos de la misma clase (gasto/venta) que la liquidación
+            ("kind", "=", settlement.kind),
+        ]
         # Company filtering is handled transparently by ktx.settlement.staging._search
         # based on the multi_company config parameter.
         return self.env["ktx.settlement.staging"].search(domain)
@@ -59,7 +64,7 @@ class StagingSelectionWizard(models.TransientModel):
     @api.model
     def default_get(self, fields_list):
         result = super().default_get(fields_list)
-        settlement_id = self._context.get("default_settlement_id")
+        settlement_id = self.env.context.get("default_settlement_id")
         if settlement_id and "line_ids" in fields_list:
             settlement = self.env["ktx.settlement"].browse(settlement_id)
             available = self._get_available_stagings(settlement)

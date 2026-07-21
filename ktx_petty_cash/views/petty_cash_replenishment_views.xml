@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── FORM ─── -->
+    <record id="view_ktx_petty_cash_replenishment_form" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.replenishment.form</field>
+        <field name="model">ktx.petty.cash.replenishment</field>
+        <field name="arch" type="xml">
+            <form string="Solicitud de Reposición">
+                <header>
+                    <button name="action_confirm" string="Confirmar" type="object"
+                        class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_approve" string="Aprobar" type="object"
+                        class="btn-primary" invisible="state != 'confirmed'"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_post" string="Publicar" type="object"
+                        class="btn-primary" invisible="state != 'approved'"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_load_approved_expenses"
+                        string="Cargar Gastos Aprobados" type="object"
+                        class="btn-secondary" invisible="state != 'draft'"/>
+                    <button name="action_open_move" string="Ver Asiento" type="object"
+                        class="btn-secondary" invisible="not move_id"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                        class="btn-danger"
+                        invisible="state in ('posted','cancelled')"
+                        groups="ktx_petty_cash.group_petty_cash_manager"
+                        confirm="¿Cancelar esta solicitud de reposición?"/>
+                    <button name="action_reset_draft" string="Restablecer" type="object"
+                        invisible="state not in ('confirmed','approved','cancelled')"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,confirmed,approved,posted"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="state != 'draft'"/></h1>
+                    </div>
+                    <group>
+                        <group string="Información General">
+                            <field name="fund_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="notes" readonly="state != 'draft'" placeholder="Notas u observaciones..."/>
+                        </group>
+                        <group string="Importes">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="amount" class="fw-bold"/>
+                            <field name="journal_id" readonly="state != 'draft'"/>
+                            <field name="move_id" readonly="1" invisible="not move_id"/>
+                            <field name="approved_lines_count" string="Gastos aprobados disponibles"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Gastos a Reembolsar" name="lines">
+                            <field name="line_ids"
+                                readonly="state != 'draft'"
+                                domain="[('fund_id','=',fund_id),('move_type','=','expense'),('state','=','approved')]">
+                                <list string="Gastos" create="0"
+                                    decoration-success="state == 'reimbursed'"
+                                    decoration-warning="state == 'approved'">
+                                    <field name="date"/>
+                                    <field name="name"/>
+                                    <field name="partner_id"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="amount" sum="Total"/>
+                                    <field name="ref"/>
+                                    <field name="account_id" optional="hide"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── LIST ─── -->
+    <record id="view_ktx_petty_cash_replenishment_list" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.replenishment.list</field>
+        <field name="model">ktx.petty.cash.replenishment</field>
+        <field name="arch" type="xml">
+            <list string="Reposiciones"
+                decoration-primary="state == 'posted'"
+                decoration-warning="state == 'confirmed'"
+                decoration-info="state == 'approved'"
+                decoration-muted="state == 'cancelled'">
+                <field name="name"/>
+                <field name="fund_id"/>
+                <field name="date"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount" sum="Total"/>
+                <field name="journal_id" optional="hide"/>
+                <field name="state" widget="badge"
+                    decoration-primary="state == 'posted'"
+                    decoration-warning="state == 'confirmed'"
+                    decoration-info="state == 'approved'"
+                    decoration-muted="state == 'cancelled'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ─── SEARCH ─── -->
+    <record id="view_ktx_petty_cash_replenishment_search" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.replenishment.search</field>
+        <field name="model">ktx.petty.cash.replenishment</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Reposiciones">
+                <field name="name"/>
+                <field name="fund_id"/>
+                <filter name="draft" string="Borrador" domain="[('state','=','draft')]"/>
+                <filter name="confirmed" string="Confirmadas" domain="[('state','=','confirmed')]"/>
+                <filter name="approved" string="Aprobadas" domain="[('state','=','approved')]"/>
+                <filter name="posted" string="Publicadas" domain="[('state','=','posted')]"/>
+                <filter name="cancelled" string="Canceladas" domain="[('state','=','cancelled')]"/>
+                <filter name="pending" string="Pendientes"
+                    domain="[('state','in',['confirmed','approved'])]"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ─── ACTION ─── -->
+    <record id="action_ktx_petty_cash_replenishment" model="ir.actions.act_window">
+        <field name="name">Reposiciones</field>
+        <field name="res_model">ktx.petty.cash.replenishment</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ktx_petty_cash_replenishment_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay solicitudes de reposición.</p>
+            <p>Crea una nueva reposición para reponer el saldo de un fondo de caja chica.</p>
+        </field>
+    </record>
+
+</odoo>

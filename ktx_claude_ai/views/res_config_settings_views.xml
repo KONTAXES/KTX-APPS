@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.claude</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Claude AI" string="Claude AI" name="ktx_claude_ai">
+                    <block title="Conexión" name="claude_connection">
+                        <setting string="Activar Claude AI"
+                                 help="Interruptor general del módulo.">
+                            <field name="claude_enabled"/>
+                        </setting>
+                        <setting string="API Key de Anthropic"
+                                 help="Generada en console.anthropic.com.">
+                            <field name="claude_api_key" password="True"
+                                   placeholder="sk-ant-..."/>
+                        </setting>
+                        <setting string="Modelo" help="Modelo de Claude a utilizar.">
+                            <field name="claude_model"/>
+                        </setting>
+                        <setting string="Razonamiento adaptativo">
+                            <field name="claude_thinking"/>
+                        </setting>
+                    </block>
+                    <block title="Comportamiento" name="claude_behavior">
+                        <setting string="Tokens máximos por respuesta">
+                            <field name="claude_max_tokens"/>
+                        </setting>
+                        <setting string="Pasos máximos del agente">
+                            <field name="claude_max_steps"/>
+                        </setting>
+                        <setting string="Instrucciones del sistema (opcional)">
+                            <field name="claude_system_prompt" widget="text"/>
+                        </setting>
+                    </block>
+                    <block title="Seguridad y permisos" name="claude_security">
+                        <setting string="Confirmar operaciones destructivas/masivas">
+                            <field name="claude_require_confirmation"/>
+                        </setting>
+                        <setting string="Umbral de operación masiva">
+                            <field name="claude_max_batch_size"/>
+                        </setting>
+                        <setting string="Registrar auditoría">
+                            <field name="claude_log_enabled"/>
+                        </setting>
+                        <setting string="Días de retención de bitácora">
+                            <field name="claude_log_retention_days"/>
+                        </setting>
+                        <setting string="Modelos habilitados"
+                                 help="Elige qué modelos puede tocar Claude.">
+                            <button name="action_open_claude_models" type="object"
+                                    string="Configurar modelos" class="btn-link"
+                                    icon="fa-arrow-right"/>
+                        </setting>
+                    </block>
+                    <block title="Conector remoto (Claude.ai web / escritorio)"
+                           name="claude_connector">
+                        <setting string="Activar conector remoto"
+                                 help="Usa esta Odoo como conector personalizado en Claude.ai.">
+                            <field name="claude_connector_enabled"/>
+                        </setting>
+                        <setting string="URL pública (HTTPS)"
+                                 help="Odoo debe ser accesible por HTTPS público; Anthropic llama al endpoint. Vacío = web.base.url.">
+                            <field name="claude_connector_base_url"
+                                   placeholder="https://miempresa.odoo.com"/>
+                        </setting>
+                        <setting string="URL del conector (pegar en Claude)">
+                            <field name="claude_connector_url" readonly="1"/>
+                        </setting>
+                        <setting string="Límite de peticiones/min por token">
+                            <field name="claude_connector_rate_limit"/>
+                        </setting>
+                        <setting string="Vida del access token (seg)">
+                            <field name="claude_connector_token_ttl"/>
+                        </setting>
+                        <setting string="Cliente OAuth para Claude.ai web"
+                                 help="Registra esta Odoo como conector en Claude.ai. Si el registro automático falla, usa este botón para crear el cliente y obtener el Client ID.">
+                            <button name="action_register_claude_client" type="object"
+                                    string="Registrar / ver Client ID" class="btn-secondary"
+                                    icon="fa-plug"/>
+                        </setting>
+                        <setting string="Tokens estáticos (escritorio / API)"
+                                 help="Para usar el conector sin OAuth.">
+                            <button name="action_open_connector_tokens" type="object"
+                                    string="Gestionar tokens" class="btn-link"
+                                    icon="fa-arrow-right"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_claude_config_settings" model="ir.actions.act_window">
+        <field name="name">Ajustes de Claude AI</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'ktx_claude_ai'}</field>
+    </record>
+</odoo>

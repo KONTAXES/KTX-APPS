@@ -1,0 +1,35 @@
+/* Login Studio - backend (settings/theme form) styles only */
+
+.ktx-preview-container {
+    width: calc(1280px * 0.6);
+    height: calc(800px * 0.6);
+    overflow: hidden;
+    position: relative;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.ktx-preview-iframe {
+    width: 1280px;
+    height: 800px;
+    transform: scale(0.6);
+    transform-origin: top left;
+    border: none;
+    background: #fff;
+    pointer-events: none;
+}
+
+.o_ktx_login_theme_form .o_form_sheet {
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+.o_ktx_login_theme_form .row {
+    align-items: flex-start;
+}
+
+.o_ktx_login_theme_form .col-md-7 {
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+}

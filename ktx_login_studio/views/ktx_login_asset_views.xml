@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ktx_login_asset_view_list" model="ir.ui.view">
+        <field name="name">ktx.login.asset.view.list</field>
+        <field name="model">ktx.login.asset</field>
+        <field name="arch" type="xml">
+            <list string="Extensiones de Login">
+                <field name="sequence" widget="handle"/>
+                <field name="theme_id"/>
+                <field name="name"/>
+                <field name="asset_type"/>
+                <field name="scope"/>
+                <field name="file_size" string="Tamano (bytes)"/>
+                <field name="version"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_login_asset_view_form" model="ir.ui.view">
+        <field name="name">ktx.login.asset.view.form</field>
+        <field name="model">ktx.login.asset</field>
+        <field name="arch" type="xml">
+            <form string="Login Studio - Extension">
+                <header>
+                    <button name="action_publish" string="Publicar" type="object"
+                            class="oe_highlight" invisible="state == 'published'"/>
+                    <button name="action_unpublish" string="Pasar a Borrador" type="object"
+                            invisible="state != 'published'"/>
+                    <button name="action_rollback" string="Revertir a version anterior" type="object"
+                            invisible="not previous_version"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="theme_id"/>
+                        <field name="asset_type"/>
+                        <field name="scope"/>
+                        <field name="target"/>
+                        <field name="datas" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                        <field name="mimetype" readonly="1"/>
+                        <field name="file_size" readonly="1"/>
+                        <field name="checksum" readonly="1"/>
+                        <field name="version" readonly="1"/>
+                    </group>
+                    <div class="alert alert-warning" role="alert" invisible="asset_type != 'js'">
+                        Este archivo JavaScript se ejecuta directamente en la pagina publica
+                        de login. Revisalo cuidadosamente antes de confirmar el riesgo y publicarlo.
+                    </div>
+                    <group invisible="asset_type != 'js'">
+                        <field name="risk_ack"/>
+                    </group>
+                    <p class="text-muted">
+                        <field name="help_text" readonly="1"/>
+                    </p>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>

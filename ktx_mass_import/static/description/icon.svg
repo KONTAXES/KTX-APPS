@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <!-- Fondo: pastel fuerte turquesa/menta -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5EE6D0"/>
+      <stop offset="1" stop-color="#2BB7C9"/>
+    </linearGradient>
+    <!-- Documento XML -->
+    <linearGradient id="docGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EAF7F8"/>
+    </linearGradient>
+    <!-- Flecha import: pastel coral fuerte -->
+    <linearGradient id="arrowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FF8A75"/>
+      <stop offset="1" stop-color="#FF6B57"/>
+    </linearGradient>
+    <!-- Bandeja / destino Odoo: pastel morado fuerte -->
+    <linearGradient id="trayGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9B8CFF"/>
+      <stop offset="1" stop-color="#7B6BE8"/>
+    </linearGradient>
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#0B5C66" flood-opacity="0.28"/>
+    </filter>
+  </defs>
+
+  <!-- Fondo redondeado -->
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="url(#bgGrad)"/>
+  <rect x="8" y="8" width="240" height="240" rx="52" fill="#FFFFFF" opacity="0.06"/>
+
+  <!-- Stack de documentos (representa MASIVO = varios archivos) -->
+  <g filter="url(#softShadow)">
+    <!-- doc trasero 2 -->
+    <rect x="78" y="36" width="92" height="118" rx="12" fill="#CFEFF2" transform="rotate(-9 124 95)"/>
+    <!-- doc trasero 1 -->
+    <rect x="82" y="40" width="92" height="118" rx="12" fill="#E6F7F9" transform="rotate(-4 128 99)"/>
+    <!-- doc frontal -->
+    <g>
+      <rect x="86" y="42" width="92" height="118" rx="12" fill="url(#docGrad)"/>
+      <!-- esquina doblada -->
+      <path d="M154 42 h24 v24 z" fill="#BFE9ED"/>
+      <!-- chip XML -->
+      <rect x="98" y="58" width="46" height="20" rx="6" fill="#2BB7C9"/>
+      <text x="121" y="73" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF" text-anchor="middle">XML</text>
+      <!-- lineas de texto -->
+      <rect x="98" y="92"  width="68" height="7" rx="3.5" fill="#CBD7DB"/>
+      <rect x="98" y="106" width="68" height="7" rx="3.5" fill="#CBD7DB"/>
+      <rect x="98" y="120" width="52" height="7" rx="3.5" fill="#CBD7DB"/>
+      <rect x="98" y="134" width="40" height="7" rx="3.5" fill="#9FD8DE"/>
+    </g>
+  </g>
+
+  <!-- Flecha de importacion hacia la bandeja -->
+  <g filter="url(#softShadow)">
+    <path d="M128 152
+             v20
+             h22
+             l-22 30
+             l-22 -30
+             h22 z"
+          fill="url(#arrowGrad)"/>
+  </g>
+
+  <!-- Bandeja destino (Odoo / base de datos) -->
+  <g filter="url(#softShadow)">
+    <path d="M58 214
+             a14 14 0 0 1 14 -14
+             h112
+             a14 14 0 0 1 14 14
+             v6
+             a16 16 0 0 1 -16 16
+             H74
+             a16 16 0 0 1 -16 -16 z"
+          fill="url(#trayGrad)"/>
+    <rect x="58" y="200" width="140" height="10" rx="5" fill="#B6ABFF" opacity="0.85"/>
+  </g>
+</svg>

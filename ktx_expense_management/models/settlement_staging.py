@@ -6,9 +6,15 @@ from odoo.exceptions import UserError, ValidationError
 _logger = logging.getLogger(__name__)
 
 
+# Tipos de documento que corresponden a VENTAS (por cobrar). El resto
+# (facturas/recibos de proveedor, notas de crédito de proveedor y asientos
+# contables con cuenta por pagar) se tratan como GASTOS (por pagar).
+SALE_MOVE_TYPES = ("out_invoice", "out_refund", "out_receipt")
+
+
 class SettlementStaging(models.Model):
     _name = "ktx.settlement.staging"
-    _description = "Gasto por Liquidar"
+    _description = "Documento por Liquidar"
     _order = "invoice_date desc, id desc"
     _rec_name = "move_id"
     _check_company_auto = True
@@ -24,6 +30,14 @@ class SettlementStaging(models.Model):
         related="move_id.move_type",
         store=True,
         readonly=True,
+    )
+    kind = fields.Selection(
+        selection=[("expense", "Gasto"), ("sale", "Venta")],
+        string="Clase",
+        compute="_compute_kind",
+        store=True,
+        index=True,
+        help="Gasto (por pagar) o Venta (por cobrar), según el tipo de documento.",
     )
     partner_id = fields.Many2one(
         comodel_name="res.partner",
@@ -80,7 +94,6 @@ class SettlementStaging(models.Model):
         string="Estado",
         default="pending",
         required=True,
-        tracking=True,
         index=True,
     )
     state_color = fields.Integer(compute="_compute_state_color")
@@ -96,10 +109,10 @@ class SettlementStaging(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         """Apply company filter unless multi-company staging is enabled."""
         if not self.env.su:
-            multi = self.env["ir.config_parameter"].sudo().get_param(
-                "ktx_expense_management.multi_company_staging", "False"
+            multi = self.env['ir.config_parameter'].sudo().get_param(
+                'ktx_expense_management.multi_company_staging', 'False'
             )
-            if multi not in ("True", "1", "true"):
+            if multi not in ('True', '1', 'true'):
                 domain = [("company_id", "in", self.env.companies.ids)] + list(domain)
         return super()._search(domain, offset=offset, limit=limit, order=order, **kwargs)
 
@@ -116,6 +129,11 @@ class SettlementStaging(models.Model):
                 raise ValidationError(
                     _("Este documento ya fue agregado al staging de liquidaciones.")
                 )
+
+    @api.depends("move_type")
+    def _compute_kind(self):
+        for rec in self:
+            rec.kind = "sale" if rec.move_type in SALE_MOVE_TYPES else "expense"
 
     @api.depends("state")
     def _compute_state_color(self):
@@ -148,16 +166,50 @@ class SettlementStaging(models.Model):
                 if rec.partner_id:
                     name = f"{name} - {rec.partner_id.name}"
             else:
-                name = _("Nuevo Gasto")
+                name = _("Nueva Venta") if rec.kind == "sale" else _("Nuevo Gasto")
             rec.display_name = name
 
-    def action_create_settlement(self):
-        """Crea una nueva liquidación con los gastos seleccionados (solo pendientes)."""
+    def action_open_assign_wizard(self):
+        """Abre el wizard para asignar los documentos seleccionados a una
+        liquidación ABIERTA (borrador/confirmada) existente de la misma clase."""
         eligible = self.filtered(lambda r: r.state == "pending")
         if not eligible:
             raise UserError(
-                _("Seleccione al menos un gasto en estado 'Pendiente' para crear una liquidación.")
+                _("Seleccione al menos un documento en estado 'Pendiente' para asignar.")
             )
+        kinds = set(eligible.mapped("kind"))
+        if len(kinds) > 1:
+            raise UserError(
+                _("No se puede mezclar gastos y ventas. Seleccione documentos de una sola clase.")
+            )
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "ktx.settlement.assign.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {
+                "default_staging_ids": eligible.ids,
+                "default_kind": (kinds.pop() if kinds else "expense"),
+            },
+        }
+
+    def action_create_settlement(self):
+        """Crea una nueva liquidación con los documentos seleccionados (solo pendientes)."""
+        eligible = self.filtered(lambda r: r.state == "pending")
+        if not eligible:
+            raise UserError(
+                _("Seleccione al menos un documento en estado 'Pendiente' para crear una liquidación.")
+            )
+
+        # Una liquidación es de gastos O de ventas, nunca mixta: todo el lote
+        # debe ser de la misma clase.
+        kinds = set(eligible.mapped("kind"))
+        if len(kinds) > 1:
+            raise UserError(
+                _("No se puede mezclar gastos y ventas en una misma liquidación. "
+                  "Seleccione solo documentos de la misma clase.")
+            )
+        kind = kinds.pop() if kinds else "expense"
 
         # Detectar si hay registros ya en uso activo para advertir al usuario
         already_used = self - eligible
@@ -169,11 +221,11 @@ class SettlementStaging(models.Model):
             )
 
         # Validar que todos los gastos sean de la misma empresa (solo si multi-empresa está desactivado)
-        multi = self.env["ir.config_parameter"].sudo().get_param(
-            "ktx_expense_management.multi_company_staging", "False"
+        multi = self.env['ir.config_parameter'].sudo().get_param(
+            'ktx_expense_management.multi_company_staging', 'False'
         )
         companies = eligible.mapped("company_id")
-        if multi not in ("True", "1", "true") and len(companies) > 1:
+        if multi not in ('True', '1', 'true') and len(companies) > 1:
             raise UserError(
                 _("Los gastos seleccionados pertenecen a diferentes empresas (%s). "
                   "Seleccione gastos de una sola empresa.")
@@ -184,6 +236,7 @@ class SettlementStaging(models.Model):
         settlement = self.env["ktx.settlement"].create({
             "date": fields.Date.context_today(self),
             "company_id": companies[0].id if companies else self.env.company.id,
+            "kind": kind,
         })
 
         # Crear las líneas usando el saldo pendiente de la factura
@@ -216,6 +269,23 @@ class SettlementStaging(models.Model):
             "target": "current",
             "context": {
                 "default_move_type": "in_invoice",
+                "default_invoice_date": fields.Date.context_today(self),
+                "ktx_auto_staging": True,
+            },
+        }
+
+    def action_create_customer_invoice(self):
+        """Abre una nueva factura de venta para agregar al staging de ventas."""
+        empty = self.filtered(lambda r: not r.move_id)
+        if empty:
+            empty.sudo().unlink()
+        return {
+            "type": "ir.actions.act_window",
+            "res_model": "account.move",
+            "view_mode": "form",
+            "target": "current",
+            "context": {
+                "default_move_type": "out_invoice",
                 "default_invoice_date": fields.Date.context_today(self),
                 "ktx_auto_staging": True,
             },

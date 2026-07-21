@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_planilla_pago_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.planilla.pago.wizard.form</field>
+        <field name="model">ktx.planilla.pago.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Registrar Pago">
+                <group>
+                    <group>
+                        <field name="planilla_id" invisible="1"/>
+                        <field name="liquidacion_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="currency_id" invisible="1"/>
+                        <field name="metodo_disponible_ids" invisible="1"/>
+                        <field name="journal_id"/>
+                        <field name="payment_method_line_id"/>
+                        <field name="payment_date"/>
+                    </group>
+                    <group>
+                        <field name="communication" placeholder="Planilla de septiembre…"/>
+                        <field name="payment_reference" placeholder="No. de cheque o transferencia…"/>
+                        <field name="generar_recibos"/>
+                        <field name="total_a_pagar" class="fw-bold"/>
+                    </group>
+                </group>
+                <group string="Líneas a Pagar (un pago por empleado)">
+                    <field name="linea_ids" nolabel="1" colspan="2">
+                        <list>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="planilla_id"/>
+                            <field name="total_liquido"/>
+                            <field name="monto_pagado"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </list>
+                    </field>
+                </group>
+                <footer>
+                    <button name="action_pagar" string="Crear Pagos"
+                            type="object" class="btn-primary"/>
+                    <button string="Cancelar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

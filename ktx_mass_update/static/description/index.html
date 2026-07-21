@@ -1,0 +1,207 @@
+<!--
+  Pagina de presentacion KTX Asignacion Masiva.
+  Estructura Bootstrap + colores hex inline + <img> (sobrevive el sanitizador de
+  apps.odoo.com). Banner GIF animado. El <style> es mejora solo para el backend.
+  Sin <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(67,56,202,.18); }
+  .ktx-pg .ktx-stat { transition: transform .2s; }
+  .ktx-pg .ktx-stat:hover { transform: translateY(-4px); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(99,102,241,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(22px);} to {opacity:1; transform:none;} }
+  .ktx-pg .ktx-card { animation: ktxRise .6s ease both; }
+</style>
+
+<div class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2937; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.gif" alt="Asignacion Masiva de Facturas"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+    </div>
+
+    <!-- STATS -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#4338ca; color:#fff;"><div style="font-size:32px; font-weight:800; line-height:1;">1</div><div style="font-size:13px; margin-top:6px;">Sola ventana</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#6366f1; color:#fff;"><div style="font-size:32px; font-weight:800; line-height:1;">4</div><div style="font-size:13px; margin-top:6px;">Acciones masivas</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#818cf8; color:#fff;"><div style="font-size:32px; font-weight:800; line-height:1;">&#8734;</div><div style="font-size:13px; margin-top:6px;">Facturas a la vez</div></div></div>
+      <div class="col-6 col-md-3"><div class="ktx-stat rounded p-4 h-100" style="background-color:#10b981; color:#fff;"><div style="font-size:32px; font-weight:800; line-height:1;">1&nbsp;clic</div><div style="font-size:13px; margin-top:6px;">Aplica los cambios</div></div></div>
+    </div>
+
+    <!-- INTRO -->
+    <div class="text-center py-4">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">PRODUCTIVIDAD CONTABLE</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Edita muchas facturas a la vez</h2>
+      <p class="mx-auto" style="color:#5b5b78; font-size:17px; max-width:770px; margin-top:12px;">
+        Corregir la cuenta de gasto, el impuesto o la cuenta por pagar factura por factura es lento
+        y propenso a errores. <strong style="color:#1f2937;">Asignacion Masiva</strong> unifica todas
+        esas acciones en un unico wizard accesible desde la lista de facturas: seleccionas, eliges
+        el cambio y se aplica a todas de una sola vez.
+      </p>
+    </div>
+
+    <!-- COMPARATIVA -->
+    <div class="row g-4 py-3">
+      <div class="col-12 col-md-6">
+        <div class="rounded p-4 h-100" style="background-color:#fff5f3; border:1px solid #ffd9d1;">
+          <h3 style="color:#c0392b; font-size:19px; font-weight:700;"><i class="fa fa-hand-paper-o"></i> Una por una</h3>
+          <div style="font-size:14px; line-height:2.0; color:#7a4a44; margin-top:8px;">
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Abrir cada factura y editar a mano</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Repetir el mismo cambio decenas de veces</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Riesgo de inconsistencias entre facturas</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Restablecer a borrador una por una</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#eef0ff; border:1px solid #c7ccfb;">
+          <h3 style="color:#4338ca; font-size:19px; font-weight:700;"><i class="fa fa-rocket"></i> Con Asignacion Masiva</h3>
+          <div style="font-size:14px; line-height:2.0; color:#3a3a63; margin-top:8px;">
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Selecciona todas y aplica el cambio una vez</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Cuentas, impuestos, fechas y CxC/CxP desde un wizard</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Resultado uniforme y sin errores de tipeo</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Restablece a borrador en lote</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUNCIONALIDADES -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Todas las acciones, un solo wizard</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-university"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cuentas de gasto/ingreso</h3>
+        <p style="font-size:14px; color:#5b5b78;">Reasigna la cuenta contable de las lineas en multiples facturas seleccionadas.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-percent"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Impuestos</h3>
+        <p style="font-size:14px; color:#5b5b78;">Cambia o corrige los impuestos aplicados en lote, sin abrir factura por factura.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-calendar"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Fecha contable y de factura</h3>
+        <p style="font-size:14px; color:#5b5b78;">Corrige la fecha contable y/o la fecha de factura de varios documentos en borrador a la vez.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-exchange"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cuentas CxP / CxC</h3>
+        <p style="font-size:14px; color:#5b5b78;">Actualiza la cuenta por pagar o por cobrar de varias facturas simultaneamente.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-undo"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Restablecer a borrador</h3>
+        <p style="font-size:14px; color:#5b5b78;">Devuelve a borrador un conjunto de facturas en una sola operacion.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-list-ul"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Desde la lista de facturas</h3>
+        <p style="font-size:14px; color:#5b5b78;">Se abre como accion sobre los registros seleccionados en la vista de lista.</p></div></div>
+      <div class="col-12 col-md-4"><div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#fff; border:1px solid #e4e6fb;">
+        <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-bolt"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Rapido y seguro</h3>
+        <p style="font-size:14px; color:#5b5b78;">Menos clics, menos errores y resultados consistentes en toda la seleccion.</p></div></div>
+    </div>
+
+    <!-- COMPATIBILIDAD -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#4338ca;"><i class="fa fa-bolt"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Odoo 19</h4><p style="font-size:12px; color:#5b5b78;">Community y Enterprise.</p></div></div>
+      <div class="col-6 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#10b981;"><i class="fa fa-puzzle-piece"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Solo account</h4><p style="font-size:12px; color:#5b5b78;">Sin dependencias extra.</p></div></div>
+      <div class="col-12 col-md-4"><div class="rounded p-4 h-100" style="background-color:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#818cf8;"><i class="fa fa-link"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Sin conflictos</h4><p style="font-size:12px; color:#5b5b78;">No altera los flujos nativos.</p></div></div>
+    </div>
+    <!-- CAPTURAS DE PANTALLA -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">EN ACCION</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:28px; margin-top:6px;">Asi se ve en tu Odoo</h2>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12">
+        <img src="sc_01_lista.png" alt="Lista de facturas con menu Acciones - opcion Asignacion Masiva"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_02_gasto.png" alt="Tab Gasto/Venta - reasignar cuenta contable en lote"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_03_impuestos.png" alt="Tab Impuestos - reemplazar, agregar o eliminar impuestos"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_04_cxp.png" alt="Tab CxC/CxP - actualizar cuenta por pagar con opcion de asignar al proveedor"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12 col-md-6">
+        <img src="sc_05_confirmar.png" alt="Tab Confirmar - resumen de documentos en borrador a confirmar"
+             class="img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+    </div>
+
+    <!-- DEMO EN VIVO -->
+    <div class="rounded p-4 my-4 text-center" style="background-color:#0f172a; color:#ffffff;">
+      <div style="color:#818cf8; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase;">Pruebalo sin instalar nada</div>
+      <h2 style="color:#ffffff; font-weight:800; font-size:27px; margin-top:6px;">Demo en vivo, gratis</h2>
+      <p class="mx-auto" style="color:#cbd5e1; max-width:600px; margin-top:8px; font-size:15px;">
+        Entra a nuestra base de datos de demostracion y prueba el modulo con datos reales,
+        sin instalar nada. Disponible las 24 horas.
+      </p>
+      <div class="row g-2 justify-content-center my-3">
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">USUARIO</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+        <div class="col-6 col-sm-4">
+          <div class="rounded p-3 h-100" style="background-color:#1e293b; border:1px solid #334155;">
+            <div style="font-size:12px; color:#94a3b8; letter-spacing:1px;">CONTRASENA</div>
+            <div style="font-size:22px; font-weight:800; color:#ffffff;">Demo</div>
+          </div>
+        </div>
+      </div>
+      <a href="https://www.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background-color:#6366f1; color:#ffffff; font-weight:800; font-size:16px; text-decoration:none; padding:13px 34px; border-radius:999px;">
+        Entrar a www.kontaxes.com &rarr;
+      </a>
+      <div style="color:#94a3b8; font-size:14px; margin-top:14px;">
+        O escribe en tu navegador: <span style="color:#ffffff; font-weight:700;">www.kontaxes.com</span>
+      </div>
+    </div>
+
+    <!-- PRECIO INTRODUCTORIO -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#f0f9ff; border:2px solid #0369a1;">
+      <div style="color:#0369a1; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Lanzamiento</div>
+      <div style="font-size:38px; font-weight:900; color:#0369a1; line-height:1.1; margin-top:6px;">GRATIS</div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$20 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Precio especial por tiempo limitado. Una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+
+
+    <!-- CTA -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#4338ca; color:#fff;">
+      <h2 style="color:#fff; font-weight:800; font-size:26px;">Deja de editar factura por factura</h2>
+      <p class="mx-auto" style="color:#dcdcfb; max-width:620px; margin-top:10px; font-size:15px;">
+        Aplica cuentas, impuestos y CxC/CxP a cientos de facturas en segundos, desde una sola ventana.
+      </p>
+    </div>
+
+    <div class="text-center pb-5" style="color:#9a9ab5; font-size:13px;">
+      <p style="margin-bottom:4px;">Asignacion Masiva &mdash; por Kontaxes</p>
+      <p style="margin:0;">Odoo 19 &bull; Community &amp; Enterprise</p>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form_ktx_pl" model="ir.ui.view">
+        <field name="name">res.config.settings.form.ktx.planilla</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <form position="inside">
+                <app data-string="Planilla GT" string="Planilla GT"
+                     name="ktx_planilla_empleados_gt"
+                     groups="ktx_planilla_empleados_gt.group_planilla_manager">
+
+                    <block title="Tasas Legales Guatemala"
+                           help="Cuotas IGSS, IRTRA, INTECAP y bonificación incentivo. Valores vigentes por defecto; edítelos ante reformas legales.">
+                        <setting string="IGSS Laboral (%)"
+                                 help="Cuota retenida al trabajador (4.83%).">
+                            <field name="ktx_pl_igss_laboral"/>
+                        </setting>
+                        <setting string="IGSS Patronal (%)"
+                                 help="Cuota a cargo del empleador (10.67%).">
+                            <field name="ktx_pl_igss_patronal"/>
+                        </setting>
+                        <setting string="IRTRA (%)" help="Cuota patronal (1%).">
+                            <field name="ktx_pl_irtra"/>
+                        </setting>
+                        <setting string="INTECAP (%)" help="Cuota patronal (1%).">
+                            <field name="ktx_pl_intecap"/>
+                        </setting>
+                        <setting string="Bonificación Incentivo Mensual"
+                                 help="Decreto 78-89: mínimo Q250.00 mensuales.">
+                            <field name="ktx_pl_bonificacion_incentivo"/>
+                        </setting>
+                    </block>
+
+                    <block title="ISR Relación de Dependencia"
+                           help="Decreto 10-2012, arts. 72-75. Proyección anual y retención mensual.">
+                        <setting string="Deducción Fija Anual"
+                                 help="Q48,000 anuales sin comprobación.">
+                            <field name="ktx_pl_isr_deduccion_fija"/>
+                        </setting>
+                        <setting string="Límite Tramo 1"
+                                 help="Hasta Q300,000 de renta imponible anual.">
+                            <field name="ktx_pl_isr_tramo1_limite"/>
+                        </setting>
+                        <setting string="Tasa Tramo 1 (%)">
+                            <field name="ktx_pl_isr_tramo1_tasa"/>
+                        </setting>
+                        <setting string="Tasa Tramo 2 (%)"
+                                 help="Sobre el excedente del límite.">
+                            <field name="ktx_pl_isr_tramo2_tasa"/>
+                        </setting>
+                        <setting string="Cuota Fija Tramo 2"
+                                 help="Q15,000 fijos del segundo tramo.">
+                            <field name="ktx_pl_isr_tramo2_cuota_fija"/>
+                        </setting>
+                    </block>
+
+                    <block title="Provisiones de Prestaciones"
+                           help="Provisión mensual de indemnización, aguinaldo, Bono 14 y vacaciones.">
+                        <setting string="Frecuencia de Provisión"
+                                 help="Por defecto mensual: cada planilla de sueldos provisiona prestaciones.">
+                            <field name="ktx_pl_provision_frecuencia"/>
+                        </setting>
+                        <setting string="Indemnización (%)" help="9.72% (incluye incidencia de aguinaldo y Bono 14).">
+                            <field name="ktx_pl_prov_indemnizacion"/>
+                        </setting>
+                        <setting string="Aguinaldo (%)">
+                            <field name="ktx_pl_prov_aguinaldo"/>
+                        </setting>
+                        <setting string="Bono 14 (%)">
+                            <field name="ktx_pl_prov_bono14"/>
+                        </setting>
+                        <setting string="Vacaciones (%)">
+                            <field name="ktx_pl_prov_vacaciones"/>
+                        </setting>
+                    </block>
+
+                    <block title="Cuentas Contables"
+                           help="Cuentas por defecto para las partidas de planilla. La cuenta de gasto y de por pagar pueden personalizarse por empleado en su contacto.">
+                        <setting string="Diario de Planilla">
+                            <field name="ktx_pl_journal_id"/>
+                        </setting>
+                        <setting string="Gasto Sueldos y Salarios">
+                            <field name="ktx_pl_account_gasto_sueldo_id"/>
+                        </setting>
+                        <setting string="Gasto Bonificación Incentivo">
+                            <field name="ktx_pl_account_gasto_bonificacion_id"/>
+                        </setting>
+                        <setting string="Gasto Cuotas Patronales">
+                            <field name="ktx_pl_account_gasto_patronal_id"/>
+                        </setting>
+                        <setting string="Gasto Prestaciones Laborales">
+                            <field name="ktx_pl_account_gasto_prestaciones_id"/>
+                        </setting>
+                        <setting string="Por Pagar Sueldos y Salarios">
+                            <field name="ktx_pl_account_pagar_sueldos_id"/>
+                        </setting>
+                        <setting string="IGSS por Pagar">
+                            <field name="ktx_pl_account_igss_pagar_id"/>
+                        </setting>
+                        <setting string="ISR Retenido por Pagar">
+                            <field name="ktx_pl_account_isr_pagar_id"/>
+                        </setting>
+                        <setting string="Descuentos Judiciales por Pagar">
+                            <field name="ktx_pl_account_judicial_pagar_id"/>
+                        </setting>
+                        <setting string="Otros Descuentos por Pagar">
+                            <field name="ktx_pl_account_otros_desc_id"/>
+                        </setting>
+                        <setting string="Anticipos a Empleados">
+                            <field name="ktx_pl_account_anticipos_id"/>
+                        </setting>
+                        <setting string="Provisión Indemnización (Pasivo)">
+                            <field name="ktx_pl_account_prov_indemnizacion_id"/>
+                        </setting>
+                        <setting string="Provisión Aguinaldo (Pasivo)">
+                            <field name="ktx_pl_account_prov_aguinaldo_id"/>
+                        </setting>
+                        <setting string="Provisión Bono 14 (Pasivo)">
+                            <field name="ktx_pl_account_prov_bono14_id"/>
+                        </setting>
+                        <setting string="Provisión Vacaciones (Pasivo)">
+                            <field name="ktx_pl_account_prov_vacaciones_id"/>
+                        </setting>
+                    </block>
+
+                    <block title="Firmas de Reportes">
+                        <setting string="Nombre del Contador"
+                                 help="Firma la planilla impresa.">
+                            <field name="ktx_pl_contador_nombre"/>
+                        </setting>
+                        <setting string="No. Registro Perito Contador">
+                            <field name="ktx_pl_contador_registro"/>
+                        </setting>
+                    </block>
+
+                </app>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ktx_pl_config" model="ir.actions.act_window">
+        <field name="name">Ajustes de Planilla GT</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'ktx_planilla_empleados_gt'}</field>
+    </record>
+
+</odoo>

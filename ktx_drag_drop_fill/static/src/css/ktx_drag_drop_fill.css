@@ -1,0 +1,238 @@
+/* ---- Floating overlay layer (never injected into table cells, so it can
+   never disturb column width / text truncation on narrow columns) --------- */
+
+.o_ddf_overlay_root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1050;
+}
+
+.o_ddf_selection_box,
+.o_ddf_fill_preview {
+    position: fixed;
+    box-sizing: border-box;
+    border: var(--ddf-thickness, 2px) solid var(--ddf-color, #1a73e8);
+    background: color-mix(in srgb, var(--ddf-color, #1a73e8) 8%, transparent);
+    pointer-events: none;
+}
+
+.o_ddf_fill_preview {
+    border-style: dashed;
+    background: color-mix(in srgb, var(--ddf-color, #1a73e8) 14%, transparent);
+}
+
+/* "Marching ants" copy feedback, like Excel/Sheets after Ctrl+C: the solid
+   selection border switches to a pulsing dashed one. */
+.o_ddf_selection_box.o_ddf_marching {
+    border-style: dashed;
+    background: transparent;
+    animation: ddf-ants-pulse 0.9s ease-in-out infinite;
+}
+@keyframes ddf-ants-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* fill handle: small, square, thick border, positioned at the bottom-right
+   corner of the active selection box. Configurable color/thickness via CSS
+   vars set from JS (ktx_drag_drop_fill_state.js). The crosshair cursor is on
+   the element itself so it appears on hover, not only once you press. */
+.o_ddf_handle {
+    position: fixed;
+    width: 9px;
+    height: 9px;
+    margin: -5px 0 0 -5px;
+    background: var(--ddf-color, #1a73e8);
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.3);
+    cursor: crosshair;
+    pointer-events: auto;
+    z-index: 1051;
+}
+.o_ddf_handle:hover {
+    width: 11px;
+    height: 11px;
+    margin: -6px 0 0 -6px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .o_ddf_selection_box.o_ddf_marching,
+    .o_ddf_selection_box.o_ddf_marching::after {
+        animation: none;
+    }
+}
+
+/* ---- While dragging, lock the cursor/selection globally ------------ */
+
+body.o_ddf_dragging,
+body.o_ddf_dragging * {
+    cursor: var(--ddf-cursor, cell) !important;
+    user-select: none !important;
+}
+
+body.o_ddf_dragging.o_ddf_axis_row,
+body.o_ddf_dragging.o_ddf_axis_row * {
+    cursor: row-resize !important;
+}
+
+body.o_ddf_dragging.o_ddf_axis_col,
+body.o_ddf_dragging.o_ddf_axis_col * {
+    cursor: col-resize !important;
+}
+
+/* ---- Systray toggle -------------------------------------------------- */
+
+.o_ktx_ddf_toggle {
+    background: transparent;
+    border: none;
+    line-height: 1;
+    padding: 0 4px;
+    color: inherit;
+}
+
+.o_ktx_ddf_toggle .o_ktx_ddf_icon {
+    opacity: 0.75;
+    transition: opacity 0.15s ease, color 0.15s ease;
+}
+
+.o_ktx_ddf_toggle:hover .o_ktx_ddf_icon {
+    opacity: 1;
+}
+
+.o_ktx_ddf_toggle.o_ktx_ddf_active .o_ktx_ddf_icon {
+    opacity: 1;
+}
+
+.o_ktx_ddf_gear {
+    background: transparent;
+    border: none;
+    color: inherit;
+    opacity: 0.55;
+    padding: 0 2px 0 0;
+}
+
+.o_ktx_ddf_gear:hover {
+    opacity: 0.9;
+}
+
+/* ---- Settings popover -------------------------------------------------- */
+
+.o_ktx_ddf_settings {
+    padding: 14px 16px;
+    min-width: 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.o_ktx_ddf_settings .o_ktx_ddf_row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 13px;
+}
+
+.o_ktx_ddf_settings input[type="color"] {
+    width: 36px;
+    height: 24px;
+    padding: 0;
+    border: 1px solid var(--border-color, #ccc);
+    border-radius: 4px;
+    background: none;
+}
+
+.o_ktx_ddf_settings input[type="range"] {
+    width: 110px;
+}
+
+/* ---- Hover cross-highlight (feature OFF) ---------------------------- */
+/* Translucent green tint adapts to both light and dark themes. The
+   hovered cell layers an inset shadow on top so it always reads stronger
+   than its row/column, regardless of selector specificity. */
+
+.o_list_renderer tr.o_ddf_hl_row > td,
+.o_list_renderer td.o_ddf_hl_col {
+    background-color: rgba(29, 111, 66, 0.07);
+}
+
+.o_list_renderer td.o_ddf_hl_cell {
+    box-shadow: inset 0 0 0 100px rgba(29, 111, 66, 0.12);
+}
+
+/* ---- Hover copy buttons (cell / row / column / form field) --------- */
+
+.o_ddf_copy_btn {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1px 4px;
+    font-size: 11px;
+    line-height: 1;
+    color: inherit;
+    background: rgba(127, 127, 127, 0.16);
+    border: 1px solid rgba(127, 127, 127, 0.4);
+    border-radius: 4px;
+    cursor: pointer;
+    z-index: 6;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.o_ddf_copy_btn:hover {
+    color: #ffffff;
+    background: #1d6f42;
+    border-color: #1d6f42;
+}
+
+.o_ddf_copy_btn.o_ddf_copied {
+    color: #ffffff;
+    background: #2a9d5c;
+    border-color: #2a9d5c;
+}
+
+/* Cell button: top-left, lifted slightly so it clears the text. */
+.o_list_renderer td.o_data_cell {
+    position: relative;
+}
+.o_ddf_copy_cell {
+    top: 1px;
+    left: 2px;
+}
+
+/* Row button: top-right of the last cell, out of the cell button's way. */
+.o_ddf_copy_row {
+    top: 1px;
+    right: 2px;
+}
+
+/* Column button: inline in the header, shown on header hover. */
+.o_ddf_copy_col {
+    position: static;
+    margin-right: 4px;
+    box-shadow: none;
+    display: none;
+}
+.o_list_renderer thead th[data-name]:hover .o_ddf_copy_col {
+    display: inline-flex;
+}
+
+/* Form field button: top-right of the hovered field. */
+.o_form_view .o_field_widget[name] {
+    position: relative;
+}
+.o_ddf_copy_form {
+    top: 2px;
+    right: 2px;
+    display: none;
+}
+.o_form_view .o_field_widget[name]:hover .o_ddf_copy_form {
+    display: inline-flex;
+}
+
+@media print {
+    .o_ddf_copy_btn {
+        display: none !important;
+    }
+}

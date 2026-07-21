@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ─── FORM ─── -->
+    <record id="view_ktx_petty_cash_move_form" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.move.form</field>
+        <field name="model">ktx.petty.cash.move</field>
+        <field name="arch" type="xml">
+            <form string="Movimiento de Caja Chica">
+                <header>
+                    <button name="action_request_approval" string="Solicitar Aprobación" type="object"
+                        class="btn-primary"
+                        invisible="state != 'draft' or not fund_authorizer_id"/>
+                    <button name="action_approve" string="Aprobar" type="object"
+                        class="btn-primary"
+                        invisible="state not in ('draft', 'pending') or not can_approve"/>
+                    <button name="action_reimburse" string="Confirmar Pago" type="object"
+                        class="btn-primary"
+                        invisible="state != 'approved'"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_reject" string="Rechazar" type="object"
+                        class="btn-danger"
+                        invisible="state not in ('draft', 'pending')"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_reset_draft" string="Restablecer" type="object"
+                        invisible="state not in ('rejected', 'cancelled', 'pending')"
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <button name="action_cancel" string="Cancelar" type="object"
+                        class="btn-danger"
+                        invisible="state in ('cancelled', 'draft', 'pending')"
+                        confirm="¿Cancelar este gasto? Se revertirá el asiento contable si existe."
+                        groups="ktx_petty_cash.group_petty_cash_manager"/>
+                    <field name="state" widget="statusbar"
+                        statusbar_visible="draft,pending,approved,reimbursed"/>
+                </header>
+                <sheet>
+                    <field name="can_approve" invisible="1"/>
+                    <field name="fund_authorizer_id" invisible="1"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_accounting_entry" type="object"
+                            class="oe_stat_button" icon="fa-book"
+                            invisible="not accounting_move_id">
+                            <span class="o_stat_text">Asiento</span>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="Información General">
+                            <field name="fund_id" readonly="state != 'draft'"/>
+                            <field name="date" readonly="state != 'draft'"/>
+                            <field name="move_type" readonly="state != 'draft'"/>
+                            <field name="name" readonly="state != 'draft'"/>
+                            <field name="ref" readonly="state != 'draft'"/>
+                            <field name="period_label" readonly="1" invisible="not period_label"/>
+                            <field name="period_closed" readonly="1"
+                                invisible="not period_closed"/>
+                        </group>
+                        <group string="Importes y Cuentas">
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="amount" readonly="state != 'draft'"/>
+                            <field name="balance_after" readonly="1"/>
+                            <field name="partner_id" readonly="state != 'draft'"/>
+                            <field name="account_id" readonly="state != 'draft'"/>
+                            <field name="payment_method" readonly="state not in ('draft', 'approved')" invisible="move_type not in ('expense', 'manual_expense', 'manual_income')"/>
+                            <field name="payment_ref" readonly="state not in ('draft', 'approved')" invisible="move_type not in ('expense', 'manual_expense', 'manual_income')"/>
+                            <field name="analytic_account_id" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+                    <group string="Documento de Origen" invisible="move_type != 'expense'">
+                        <group>
+                            <field name="source_move_id" readonly="state != 'draft'"
+                                domain="[('state','=','posted'),('move_type','in',['in_invoice','in_receipt','entry'])]"/>
+                            <field name="source_move_ref" readonly="1"
+                                invisible="not source_move_id"/>
+                            <field name="source_move_partner_id" readonly="1"
+                                invisible="not source_move_id"/>
+                        </group>
+                        <group>
+                            <field name="accounting_move_id" readonly="1"
+                                invisible="not accounting_move_id"/>
+                            <field name="replenishment_id" readonly="1"
+                                invisible="not replenishment_id"/>
+                        </group>
+                    </group>
+                    <group invisible="move_type == 'expense' or not accounting_move_id">
+                        <group string="Asiento Contable">
+                            <field name="accounting_move_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Motivo de Rechazo" invisible="state != 'rejected'">
+                        <field name="rejection_note" readonly="1" nolabel="1"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ─── LIST ─── -->
+    <record id="view_ktx_petty_cash_move_list" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.move.list</field>
+        <field name="model">ktx.petty.cash.move</field>
+        <field name="arch" type="xml">
+            <list string="Movimientos de Caja Chica"
+                decoration-success="state == 'reimbursed'"
+                decoration-warning="state in ('approved', 'pending')"
+                decoration-danger="state == 'rejected'"
+                decoration-muted="period_closed == True">
+                <field name="date"/>
+                <field name="fund_id"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="move_type" widget="badge"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="amount" sum="Total"/>
+                <field name="balance_after" optional="show"/>
+                <field name="period_label" optional="hide"/>
+                <field name="source_move_id" optional="hide" string="Doc. Origen"/>
+                <field name="accounting_move_id" optional="hide" string="Asiento"/>
+                <field name="ref" optional="hide"/>
+                <field name="account_id" optional="hide"/>
+                <field name="period_closed" optional="hide" string="Cerrado"/>
+                <field name="state" widget="badge"
+                    decoration-success="state == 'reimbursed'"
+                    decoration-warning="state == 'approved'"
+                    decoration-danger="state == 'rejected'"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ─── SEARCH ─── -->
+    <record id="view_ktx_petty_cash_move_search" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.move.search</field>
+        <field name="model">ktx.petty.cash.move</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Movimientos">
+                <field name="name"/>
+                <field name="fund_id"/>
+                <field name="partner_id"/>
+                <field name="ref"/>
+                <field name="source_move_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <filter name="expenses" string="Gastos"
+                    domain="[('move_type','=','expense')]"/>
+                <filter name="replenishments" string="Reposiciones"
+                    domain="[('move_type','=','replenishment')]"/>
+                <filter name="draft" string="Borrador" domain="[('state','=','draft')]"/>
+                <filter name="pending" string="Pendientes Aprobación" domain="[('state','=','pending')]"/>
+                <filter name="approved" string="Aprobados" domain="[('state','=','approved')]"/>
+                <filter name="reimbursed" string="Reembolsados" domain="[('state','=','reimbursed')]"/>
+                <filter name="rejected" string="Rechazados" domain="[('state','=','rejected')]"/>
+                <filter name="period_open" string="Período Abierto"
+                    domain="[('period_closed','=',0)]"/>
+                <filter name="period_closed_filter" string="Período Cerrado"
+                    domain="[('period_closed','=',1)]"/>
+                <separator/>
+                <filter name="by_company" string="Por Compañía"
+                        groups="base.group_multi_company"
+                        context="{'group_by': 'company_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- ─── ACTION ─── -->
+    <record id="action_ktx_petty_cash_move" model="ir.actions.act_window">
+        <field name="name">Movimientos de Caja Chica</field>
+        <field name="res_model">ktx.petty.cash.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ktx_petty_cash_move_search"/>
+        <field name="context">{'search_default_expenses': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No hay movimientos registrados.</p>
+        </field>
+    </record>
+
+    <!-- ACTION: Gastos Pendientes Aprobación -->
+    <record id="action_ktx_petty_cash_move_pending" model="ir.actions.act_window">
+        <field name="name">Gastos Pendientes de Aprobación</field>
+        <field name="res_model">ktx.petty.cash.move</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('state','in',['draft','pending']),('move_type','=','expense')]</field>
+        <field name="search_view_id" ref="view_ktx_petty_cash_move_search"/>
+    </record>
+
+</odoo>

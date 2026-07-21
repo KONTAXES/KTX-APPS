@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Formulario directo sobre res.company — sin usar el framework de
+         res.config.settings para evitar errores de componentes OWL en Odoo 19.
+         Abre la empresa activa con solo los campos de configuración de cheques. -->
+
+    <record id="view_res_company_ktx_check_form" model="ir.ui.view">
+        <field name="name">res.company.ktx.check.form</field>
+        <field name="model">res.company</field>
+        <field name="arch" type="xml">
+            <form string="Configuración de Cheques KTX">
+                <sheet>
+
+                    <div class="oe_title mb16">
+                        <h1>Configuración de Impresión de Cheques</h1>
+                        <p class="text-muted">
+                            Ajuste los parámetros para que el texto impreso
+                            alinee con su formato de cheque físico.
+                        </p>
+                    </div>
+
+                    <group string="Formato de Papel">
+                        <group>
+                            <field name="ktx_check_paper_format" widget="radio"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info" role="alert">
+                                <strong>Apariencia:</strong> Clásico<br/>
+                                <small class="text-muted">
+                                    Próximamente se añadirán más apariencias.
+                                </small>
+                            </div>
+                        </group>
+                    </group>
+
+                    <group string="Calibración de Márgenes">
+                        <group>
+                            <field name="ktx_check_margin_top"/>
+                            <field name="ktx_check_margin_left"/>
+                            <field name="ktx_check_margin_right"/>
+                        </group>
+                        <group>
+                            <field name="ktx_check_blank_height"/>
+                            <div colspan="2" class="alert alert-info" role="alert"
+                                 style="margin-top:8px;">
+                                <strong>¿Cómo calibrar?</strong><br/>
+                                Imprima una prueba sobre papel blanco, colóquela sobre
+                                el cheque físico y verifique el alineamiento.
+                                Modifique <em>Altura Área en Blanco</em> hasta que
+                                el voucher quede en la posición correcta.
+                                Valor predeterminado: <strong>70 mm</strong>.
+                            </div>
+                        </group>
+                    </group>
+
+                    <group string="Posiciones de Impresión (mm)">
+                        <div colspan="2" class="alert alert-info mb8" role="alert">
+                            Ajuste los valores hasta que el texto impreso coincida con
+                            las líneas del cheque físico. Todos los valores son en
+                            milímetros contados desde el borde superior/izquierdo del
+                            área de cheque. Los valores predeterminados corresponden al
+                            formato Bancos de Guatemala.
+                        </div>
+                        <group string="Área del Cheque">
+                            <field name="ktx_check_height"/>
+                        </group>
+                        <group/>
+                        <group string="Fecha">
+                            <field name="ktx_check_date_top"/>
+                            <field name="ktx_check_date_left"/>
+                        </group>
+                        <group string="Monto Numérico">
+                            <field name="ktx_check_amount_top"/>
+                            <field name="ktx_check_amount_left"/>
+                        </group>
+                        <group string="Beneficiario">
+                            <field name="ktx_check_payee_top"/>
+                            <field name="ktx_check_payee_left"/>
+                        </group>
+                        <group string="Monto en Letras">
+                            <field name="ktx_check_words_top"/>
+                            <field name="ktx_check_words_left"/>
+                        </group>
+                        <group string="NO NEGOCIABLE">
+                            <field name="ktx_check_nonneg_top"/>
+                            <field name="ktx_check_nonneg_left"/>
+                        </group>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Server action: abre la empresa activa con la vista de cheques -->
+    <record id="action_server_ktx_check_config" model="ir.actions.server">
+        <field name="name">Configuración de Cheques KTX</field>
+        <field name="model_id" ref="base.model_res_company"/>
+        <field name="state">code</field>
+        <field name="code">
+action = {
+    'type': 'ir.actions.act_window',
+    'name': 'Configuración de Cheques',
+    'res_model': 'res.company',
+    'view_mode': 'form',
+    'view_id': env.ref('ktx_check_print.view_res_company_ktx_check_form').id,
+    'res_id': env.company.id,
+    'target': 'current',
+}
+        </field>
+    </record>
+
+    <!-- Menú en Contabilidad > Configuración -->
+    <menuitem id="menu_ktx_check_print_config"
+              name="Configuración de Cheques"
+              parent="account.menu_account_config"
+              action="action_server_ktx_check_config"
+              sequence="99"
+              groups="account.group_account_manager"/>
+
+</odoo>

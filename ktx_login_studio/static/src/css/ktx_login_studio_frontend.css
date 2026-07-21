@@ -1,0 +1,414 @@
+/* Login Studio - public login/signup/reset frontend styles.
+   All values are driven by CSS custom properties injected per-request by
+   /ktx_login_studio/theme.css (or inline for the backend live preview).
+
+   Everything is scoped under .ktx-login-wrap: the wrapper div Login Studio
+   fully owns (it replaces website's own oe_website_login_container, see
+   views/login_templates.xml), never the page's <body> -- with the
+   "website" app installed, /web/login is wrapped in the site's own
+   layout (navbar, footer), so body-level selectors would either miss the
+   real content entirely or bleed into unrelated site chrome. */
+
+:root {
+    --ktx-primary: #714B67;
+    --ktx-secondary: #FFFFFF;
+    --ktx-bg-color: #f8f9fa;
+    --ktx-grad-start: #714B67;
+    --ktx-grad-end: #2B124C;
+    --ktx-grad-dir: to bottom right;
+    --ktx-overlay-color: #000000;
+    --ktx-overlay-opacity: 0.3;
+    --ktx-font: system-ui, -apple-system, sans-serif;
+    --ktx-text-color: #212529;
+    --ktx-link-color: #714B67;
+    --ktx-card-bg: #FFFFFF;
+    --ktx-card-width: 400px;
+    --ktx-card-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    --ktx-logo-height: 80px;
+    --ktx-glass-blur: 10px;
+    --ktx-glass-opacity: 0.2;
+    --ktx-input-radius: 6px;
+    --ktx-btn-radius: 6px;
+    --ktx-btn-color: #714B67;
+    --ktx-btn-text: #FFFFFF;
+}
+
+.ktx-login-wrap {
+    position: relative;
+}
+
+/* Optional: hide the website's own navbar AND footer (only on pages where
+   this theme is active, via the "Ocultar menu del sitio web" toggle) so
+   the theme can take over the full screen. #wrapwrap > header / > footer
+   is the stable structural wrapper Odoo's frontend layouts consistently
+   use (the "Powered by Odoo" band lives in that footer), regardless of
+   which navbar/footer style is configured, so this is safe scoped that
+   way rather than by any specific template's own classes, which do vary.
+   A selector that doesn't match here is simply a no-op, unlike an XPath
+   mismatch. */
+body:has(.ktx-login-wrap.ktx-hide-header) #wrapwrap > header,
+body:has(.ktx-login-wrap.ktx-hide-header) #wrapwrap > footer {
+    display: none !important;
+}
+
+/* Everything below only ever matches when a ktx-template-* class is also
+   present, i.e. the built-in "styled" theme engine (see login_templates.xml:
+   in "custom" render mode ktx-login-wrap never gets a template class, so
+   none of this can compete with the admin's own custom_css). */
+.ktx-login-wrap[class*="ktx-template-"] {
+    font-family: var(--ktx-font) !important;
+    color: var(--ktx-text-color) !important;
+}
+
+.ktx-login-wrap[class*="ktx-template-"] .ktx-login-card {
+    border-radius: var(--ktx-input-radius) !important;
+    overflow: hidden;
+    border: none !important;
+    box-shadow: var(--ktx-card-shadow) !important;
+    background-color: var(--ktx-secondary) !important;
+    max-width: var(--ktx-card-width);
+    width: 100%;
+}
+
+.ktx-login-wrap[class*="ktx-template-"] .form-control {
+    border-radius: var(--ktx-input-radius) !important;
+    border-color: #dee2e6;
+    padding: 0.75rem 1rem;
+}
+
+.ktx-login-wrap[class*="ktx-template-"] .form-control:focus {
+    border-color: var(--ktx-primary);
+    box-shadow: 0 0 0 0.25rem rgba(113, 75, 103, 0.25);
+}
+
+.ktx-login-wrap[class*="ktx-template-"] .btn-primary {
+    background-color: var(--ktx-btn-color) !important;
+    border-color: var(--ktx-btn-color) !important;
+    color: var(--ktx-btn-text) !important;
+    border-radius: var(--ktx-btn-radius) !important;
+    padding: 0.6rem 1rem;
+    font-weight: 500;
+}
+
+.ktx-login-wrap[class*="ktx-template-"] .btn-primary:hover {
+    filter: brightness(0.9);
+}
+
+.ktx-login-wrap[class*="ktx-template-"] a:not(.btn) {
+    color: var(--ktx-link-color) !important;
+}
+
+/* Centered / fullbleed: center the card within the available page area
+   (the site's own navbar/footer still take their own space above/below,
+   so this is not a literal 100vh takeover). */
+.ktx-login-wrap.ktx-template-centered,
+.ktx-login-wrap.ktx-template-fullbleed {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65vh;
+    padding: 3rem 1rem;
+    background: var(--ktx-bg-color) !important;
+}
+.ktx-login-wrap[class*="ktx-template-"] .ktx-logo {
+    max-height: var(--ktx-logo-height);
+    max-width: 100%;
+    margin-bottom: 20px;
+}
+.ktx-template-centered .ktx-card-header {
+    border-bottom: none !important;
+}
+
+/* Split screen */
+.ktx-login-wrap.ktx-template-split {
+    display: flex;
+    align-items: stretch;
+    min-height: 65vh;
+    background: var(--ktx-bg-color) !important;
+}
+
+.ktx-login-wrap.ktx-template-split .ktx-split-aside {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    color: var(--ktx-secondary);
+    background: linear-gradient(var(--ktx-grad-dir), var(--ktx-grad-start), var(--ktx-grad-end));
+    position: relative;
+    overflow: hidden;
+}
+
+.ktx-login-wrap.ktx-template-split .ktx-login-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--ktx-bg-color) !important;
+    box-shadow: none !important;
+    max-width: none;
+    border-radius: 0 !important;
+}
+
+.ktx-login-wrap.ktx-template-split .ktx-login-card .card-body {
+    max-width: 400px;
+    width: 100%;
+}
+
+.ktx-template-split .ktx-branding-content {
+    text-align: center;
+    max-width: 80%;
+    position: relative;
+    z-index: 2;
+}
+
+.ktx-template-split .ktx-logo {
+    max-height: var(--ktx-logo-height);
+    max-width: 100%;
+}
+
+.ktx-template-split .ktx-tagline {
+    font-size: 1.5rem;
+    font-weight: 300;
+    opacity: 0.9;
+    color: var(--ktx-secondary);
+}
+
+.ktx-portal-name {
+    opacity: 0.75;
+}
+
+.ktx-template-split .ktx-portal-name {
+    color: var(--ktx-secondary);
+}
+
+@media (max-width: 768px) {
+    .ktx-login-wrap.ktx-template-split {
+        flex-direction: column;
+    }
+    .ktx-login-wrap.ktx-template-split .ktx-split-aside {
+        flex: 0 0 auto;
+        padding: 2rem 1rem;
+    }
+    .ktx-login-wrap.ktx-template-split .ktx-login-card {
+        flex: 1 0 auto;
+        padding: 2rem 1rem;
+    }
+}
+
+/* Fullbleed background overlay */
+.ktx-background-overlay {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: var(--ktx-overlay-color);
+    pointer-events: none;
+    z-index: 0;
+    display: none;
+}
+.ktx-template-fullbleed .ktx-background-overlay {
+    opacity: var(--ktx-overlay-opacity);
+    display: block;
+}
+.ktx-login-wrap.ktx-template-fullbleed .ktx-login-card {
+    position: relative;
+    z-index: 1;
+}
+
+/* Background video. z-index:0 (not -1): a negative z-index would paint the
+   video BEHIND the wrapper's own solid background, hiding it. At 0 the video
+   sits just above that background; the overlay (1) and the card/aside (2)
+   stack on top of it. When a video is present the wrapper background is made
+   transparent so the video is what shows through. */
+.ktx-bg-video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+.ktx-login-wrap:has(> .ktx-bg-video) {
+    background: transparent !important;
+}
+.ktx-login-wrap:has(> .ktx-bg-video) > .ktx-background-overlay {
+    display: block;
+    z-index: 1;
+}
+.ktx-login-wrap:has(> .ktx-bg-video) .ktx-login-card,
+.ktx-login-wrap:has(> .ktx-bg-video) .ktx-split-aside {
+    position: relative;
+    z-index: 2;
+}
+
+/* Glassmorphism card */
+.ktx-login-wrap.ktx-glass .ktx-login-card {
+    background: rgba(255, 255, 255, var(--ktx-glass-opacity)) !important;
+    backdrop-filter: blur(var(--ktx-glass-blur)) !important;
+    -webkit-backdrop-filter: blur(var(--ktx-glass-blur)) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+}
+.ktx-login-wrap:not(.ktx-glass) .ktx-login-card {
+    background-color: var(--ktx-card-bg) !important;
+}
+
+/* Animated gradient */
+@keyframes ktxGradientAnim {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+.ktx-login-wrap.ktx-template-centered.ktx-bg-animated,
+.ktx-login-wrap.ktx-template-fullbleed.ktx-bg-animated {
+    background-size: 400% 400% !important;
+    animation: ktxGradientAnim 15s ease infinite !important;
+}
+.ktx-login-wrap.ktx-template-split.ktx-bg-animated .ktx-split-aside {
+    background-size: 400% 400% !important;
+    animation: ktxGradientAnim 15s ease infinite !important;
+}
+
+/* Split alignment */
+.ktx-login-wrap.ktx-template-split.ktx-split-right {
+    flex-direction: row-reverse;
+}
+
+.o_database_list .list-group-item {
+    background: transparent !important;
+}
+
+/* ============================================================
+   Card entrance animations
+   ============================================================ */
+@keyframes ktxCardFade {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes ktxCardSlideUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes ktxCardZoom {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+}
+@keyframes ktxCardBounce {
+    0%   { opacity: 0; transform: scale(0.3); }
+    50%  { opacity: 1; transform: scale(1.05); }
+    70%  { transform: scale(0.95); }
+    100% { transform: scale(1); }
+}
+.ktx-login-wrap.ktx-anim-fade .ktx-login-card { animation: ktxCardFade 0.6s ease both; }
+.ktx-login-wrap.ktx-anim-slide_up .ktx-login-card { animation: ktxCardSlideUp 0.6s cubic-bezier(.2,.8,.2,1) both; }
+.ktx-login-wrap.ktx-anim-zoom .ktx-login-card { animation: ktxCardZoom 0.5s cubic-bezier(.2,.8,.2,1) both; }
+.ktx-login-wrap.ktx-anim-bounce .ktx-login-card { animation: ktxCardBounce 0.7s cubic-bezier(.34,1.56,.64,1) both; }
+
+/* ============================================================
+   Ambient glow (spotlight halo behind the card)
+   ============================================================ */
+.ktx-ambient-glow-blob {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: 900px; height: 900px;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+    filter: blur(60px);
+    animation: ktxGlowPulse 6s ease-in-out infinite;
+}
+.ktx-login-wrap.ktx-glow-soft .ktx-ambient-glow-blob { opacity: 0.18; }
+.ktx-login-wrap.ktx-glow-medium .ktx-ambient-glow-blob { opacity: 0.32; }
+.ktx-login-wrap.ktx-glow-strong .ktx-ambient-glow-blob { opacity: 0.5; }
+@keyframes ktxGlowPulse {
+    0%, 100% { transform: translate(-50%, -50%) scale(1); }
+    50%      { transform: translate(-50%, -50%) scale(1.12); }
+}
+.ktx-login-wrap.ktx-ambient-glow .ktx-login-card,
+.ktx-login-wrap.ktx-ambient-glow .ktx-split-aside {
+    position: relative;
+    z-index: 1;
+}
+
+/* ============================================================
+   Input field styles
+   ============================================================ */
+.ktx-login-wrap.ktx-input-outlined .form-control {
+    border: 1px solid #dee2e6 !important;
+    background: #fff !important;
+    border-radius: var(--ktx-input-radius) !important;
+}
+.ktx-login-wrap.ktx-input-filled .form-control {
+    border: 1px solid transparent !important;
+    background: #f1f3f5 !important;
+    border-radius: var(--ktx-input-radius) !important;
+}
+.ktx-login-wrap.ktx-input-filled .form-control:focus {
+    background: #fff !important;
+}
+.ktx-login-wrap.ktx-input-underline .form-control {
+    border: none !important;
+    border-bottom: 2px solid #dee2e6 !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    padding-left: 2px !important;
+}
+.ktx-login-wrap.ktx-input-underline .form-control:focus {
+    border-bottom-color: var(--ktx-primary) !important;
+    box-shadow: none !important;
+}
+
+/* Focus glow */
+.ktx-login-wrap.ktx-input-glow .form-control:focus {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--ktx-primary) 22%, transparent) !important;
+    border-color: var(--ktx-primary) !important;
+}
+
+/* Icons inside the real login/password inputs -- targeted by their stable
+   HTML ids (used for label association & the show-password JS), not by
+   theme-dependent wrapper classes. */
+.ktx-login-wrap.ktx-input-icons input#login,
+.ktx-login-wrap.ktx-input-icons input#password {
+    padding-left: 2.4rem !important;
+    background-repeat: no-repeat !important;
+    background-position: 0.8rem center !important;
+    background-size: 1.1rem !important;
+}
+.ktx-login-wrap.ktx-input-icons input#login {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='2' y='4' width='20' height='16' rx='2'/%3E%3Cpath d='m22 6-10 7L2 6'/%3E%3C/svg%3E") !important;
+}
+.ktx-login-wrap.ktx-input-icons input#password {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E") !important;
+}
+
+/* ============================================================
+   Button hover effects
+   ============================================================ */
+.ktx-login-wrap.ktx-btn-hover-scale .btn-primary {
+    transition: transform 0.15s ease, filter 0.15s ease;
+}
+.ktx-login-wrap.ktx-btn-hover-scale .btn-primary:hover {
+    transform: scale(1.03);
+}
+.ktx-login-wrap.ktx-btn-hover-glow .btn-primary {
+    transition: box-shadow 0.2s ease;
+}
+.ktx-login-wrap.ktx-btn-hover-glow .btn-primary:hover {
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--ktx-btn-color) 30%, transparent);
+}
+.ktx-login-wrap.ktx-btn-hover-shine .btn-primary {
+    position: relative;
+    overflow: hidden;
+}
+.ktx-login-wrap.ktx-btn-hover-shine .btn-primary::after {
+    content: "";
+    position: absolute;
+    top: 0; left: -75%;
+    width: 50%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.5s ease;
+}
+.ktx-login-wrap.ktx-btn-hover-shine .btn-primary:hover::after {
+    left: 125%;
+}

@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_asistencia_user,ktx.planilla.asistencia user,model_ktx_planilla_asistencia,group_planilla_user,1,1,1,0
+access_asistencia_officer,ktx.planilla.asistencia officer,model_ktx_planilla_asistencia,group_planilla_officer,1,1,1,1
+access_planilla_user,ktx.planilla user,model_ktx_planilla,group_planilla_user,1,0,0,0
+access_planilla_officer,ktx.planilla officer,model_ktx_planilla,group_planilla_officer,1,1,1,1
+access_planilla_linea_user,ktx.planilla.linea user,model_ktx_planilla_linea,group_planilla_user,1,0,0,0
+access_planilla_linea_officer,ktx.planilla.linea officer,model_ktx_planilla_linea,group_planilla_officer,1,1,1,1
+access_liquidacion_user,ktx.planilla.liquidacion user,model_ktx_planilla_liquidacion,group_planilla_user,1,0,0,0
+access_liquidacion_officer,ktx.planilla.liquidacion officer,model_ktx_planilla_liquidacion,group_planilla_officer,1,1,1,1
+access_liquidacion_pago_user,ktx.planilla.liquidacion.pago user,model_ktx_planilla_liquidacion_pago,group_planilla_user,1,0,0,0
+access_liquidacion_pago_officer,ktx.planilla.liquidacion.pago officer,model_ktx_planilla_liquidacion_pago,group_planilla_officer,1,1,1,1
+access_asistencia_masiva_wizard,ktx.planilla.asistencia.masiva wizard,model_ktx_planilla_asistencia_masiva,group_planilla_user,1,1,1,1
+access_planilla_pago_wizard,ktx.planilla.pago.wizard,model_ktx_planilla_pago_wizard,group_planilla_officer,1,1,1,1
+access_enviar_recibo_wizard,ktx.planilla.enviar.recibo.wizard,model_ktx_planilla_enviar_recibo_wizard,group_planilla_user,1,1,1,1

@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================ -->
+    <!--  KANBAN (Home del modulo)                                    -->
+    <!-- ============================================================ -->
+    <record id="ktx_import_session_view_kanban" model="ir.ui.view">
+        <field name="name">ktx.import.session.kanban</field>
+        <field name="model">ktx.import.session</field>
+        <field name="arch" type="xml">
+            <kanban default_order="create_date desc" class="o_kanban_mobile">
+                <field name="name"/>
+                <field name="import_type"/>
+                <field name="state"/>
+                <field name="create_date"/>
+                <field name="total_count"/>
+                <field name="valid_count"/>
+                <field name="anulado_count"/>
+                <field name="cais_count"/>
+                <field name="civa_count"/>
+                <field name="imported_count"/>
+                <field name="duplicate_count"/>
+                <field name="incompatible_count"/>
+                <field name="wrong_nit_count"/>
+                <field name="error_count"/>
+                <field name="journal_id"/>
+                <field name="journal_receipts_id"/>
+                <templates>
+                    <t t-name="card">
+                        <div style="min-height:160px">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <span t-if="record.import_type.raw_value == 'purchase'"
+                                              class="badge text-bg-info">Compras</span>
+                                        <span t-else="" class="badge text-bg-success">Ventas</span>
+                                        <span t-attf-class="badge ms-1 #{
+                                            record.state.raw_value == 'done' ? 'text-bg-success' :
+                                            record.state.raw_value == 'tested' ? 'text-bg-warning' :
+                                            record.state.raw_value == 'loaded' ? 'text-bg-info' :
+                                            'text-bg-secondary'}">
+                                            <field name="state"/>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content mt-2">
+                                <div class="row g-1 text-center">
+                                    <div class="col-4">
+                                        <div class="fw-bold text-success fs-5"><field name="imported_count"/></div>
+                                        <small class="text-muted">Importados</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-primary fs-5"><field name="valid_count"/></div>
+                                        <small class="text-muted">Vigentes</small>
+                                    </div>
+                                    <div class="col-4">
+                                        <div class="fw-bold text-secondary fs-5"><field name="total_count"/></div>
+                                        <small class="text-muted">Total</small>
+                                    </div>
+                                </div>
+                                <div class="row g-1 text-center mt-1"
+                                     t-if="record.anulado_count.raw_value or record.cais_count.raw_value or record.civa_count.raw_value or record.duplicate_count.raw_value or record.incompatible_count.raw_value or record.wrong_nit_count.raw_value">
+                                    <div class="col-2" t-if="record.anulado_count.raw_value">
+                                        <span class="badge text-bg-secondary"><field name="anulado_count"/> Anul</span>
+                                    </div>
+                                    <div class="col-2" t-if="record.cais_count.raw_value">
+                                        <span class="badge text-bg-secondary"><field name="cais_count"/> CAIS</span>
+                                    </div>
+                                    <div class="col-2" t-if="record.civa_count.raw_value">
+                                        <span class="badge text-bg-secondary"><field name="civa_count"/> CIVA</span>
+                                    </div>
+                                    <div class="col-2" t-if="record.duplicate_count.raw_value">
+                                        <span class="badge text-bg-warning"><field name="duplicate_count"/> Dup</span>
+                                    </div>
+                                    <div class="col-2" t-if="record.incompatible_count.raw_value">
+                                        <span class="badge text-bg-danger"><field name="incompatible_count"/> NC</span>
+                                    </div>
+                                    <div class="col-2" t-if="record.wrong_nit_count.raw_value">
+                                        <span class="badge text-bg-danger"><field name="wrong_nit_count"/> NIT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_footer mt-2">
+                                <small class="text-muted">
+                                    <field name="journal_id"/>
+                                    <t t-if="record.journal_receipts_id.raw_value">
+                                        / <field name="journal_receipts_id"/>
+                                    </t>
+                                    &#8226; <field name="create_date" widget="date"/>
+                                </small>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  LISTA                                                       -->
+    <!-- ============================================================ -->
+    <record id="ktx_import_session_view_list" model="ir.ui.view">
+        <field name="name">ktx.import.session.list</field>
+        <field name="model">ktx.import.session</field>
+        <field name="arch" type="xml">
+            <list string="Importaciones FEL"
+                  decoration-success="state == 'done'"
+                  decoration-info="state == 'loaded' or state == 'tested'"
+                  decoration-muted="state == 'draft'">
+                <field name="name"/>
+                <field name="import_type"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'done'"
+                       decoration-warning="state == 'tested'"
+                       decoration-info="state == 'loaded'"
+                       decoration-muted="state == 'draft'"/>
+                <field name="journal_id" string="Diario Facturas"/>
+                <field name="journal_receipts_id" string="Diario Recibos" optional="hide"/>
+                <field name="total_count" string="Total"/>
+                <field name="imported_count" string="Import."/>
+                <field name="valid_count" string="Vigentes"/>
+                <field name="anulado_count" string="Anul."
+                       decoration-muted="anulado_count == 0"/>
+                <field name="cais_count" string="CAIS" optional="hide"
+                       decoration-muted="cais_count == 0"/>
+                <field name="civa_count" string="CIVA" optional="hide"
+                       decoration-muted="civa_count == 0"/>
+                <field name="duplicate_count" string="Dup."
+                       decoration-danger="duplicate_count &gt; 0"/>
+                <field name="incompatible_count" string="N.C."
+                       decoration-danger="incompatible_count &gt; 0"/>
+                <field name="wrong_nit_count" string="NIT"
+                       decoration-danger="wrong_nit_count &gt; 0"/>
+                <field name="error_count" string="Error"
+                       decoration-danger="error_count &gt; 0"/>
+                <field name="create_date" string="Fecha"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  FORMULARIO                                                  -->
+    <!-- ============================================================ -->
+    <record id="ktx_import_session_view_form" model="ir.ui.view">
+        <field name="name">ktx.import.session.form</field>
+        <field name="model">ktx.import.session</field>
+        <field name="arch" type="xml">
+            <form string="Importacion FEL">
+                <header>
+                    <button name="action_load_files" string="Cargar Archivos XML" type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft' or not attachment_ids"/>
+                    <button name="action_test" string="Probar Importacion" type="object"
+                            class="btn-primary"
+                            invisible="state not in ['loaded', 'tested']"/>
+                    <button name="action_delete_anulados" string="Eliminar Anulados" type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['tested', 'loaded'] or anulado_count == 0"/>
+                    <button name="action_delete_cais" string="Eliminar CAIS" type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['tested', 'loaded'] or cais_count == 0"/>
+                    <button name="action_delete_civa" string="Eliminar CIVA" type="object"
+                            class="btn-secondary"
+                            invisible="state not in ['tested', 'loaded'] or civa_count == 0"/>
+                    <button name="action_delete_duplicates" string="Eliminar Duplicados" type="object"
+                            class="btn-warning"
+                            invisible="state not in ['tested', 'loaded'] or duplicate_count == 0"/>
+                    <button name="action_delete_incompatible" string="Eliminar No Compatibles" type="object"
+                            class="btn-warning"
+                            invisible="state not in ['tested', 'loaded'] or incompatible_count == 0"/>
+                    <button name="action_delete_wrong_nit" string="Eliminar NIT Incorrecto" type="object"
+                            class="btn-warning"
+                            invisible="state not in ['tested', 'loaded'] or wrong_nit_count == 0"/>
+                    <button name="action_create_invoices" string="Crear Facturas" type="object"
+                            class="btn-success"
+                            invisible="state not in ['tested', 'loaded'] or valid_count == 0"
+                            confirm="Se crearan las facturas para todos los documentos vigentes. Los anulados se omiten. Continuar?"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,loaded,tested,done"/>
+                </header>
+
+                <sheet>
+                    <div class="alert alert-success" role="alert" invisible="state != 'done'">
+                        <strong>Importacion completada.</strong>
+                        <field name="imported_count"/> facturas creadas correctamente.
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'tested' or anulado_count == 0">
+                        <strong>&#9432; Documentos anulados detectados:</strong>
+                        <field name="anulado_count"/> documento(s) estan anulados ante la SAT y
+                        <strong>no se importaran</strong>. Puede quitarlos de la lista con el boton
+                        "Eliminar Anulados".
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'tested' or cais_count == 0">
+                        <strong>&#9432; Constancias CAIS detectadas:</strong>
+                        <field name="cais_count"/> documento(s) son Constancias de Adquisicion de Insumos y Servicios (CAIS) y
+                        <strong>no se importaran</strong>. Puede quitarlos de la lista con el boton
+                        "Eliminar CAIS".
+                    </div>
+                    <div class="alert alert-info" role="alert"
+                         invisible="state != 'tested' or civa_count == 0">
+                        <strong>&#9432; Constancias CIVA detectadas:</strong>
+                        <field name="civa_count"/> documento(s) son Constancias de Exencion de IVA (CIVA) y
+                        <strong>no se importaran</strong>. Puede quitarlos de la lista con el boton
+                        "Eliminar CIVA".
+                    </div>
+                    <div class="alert alert-warning" role="alert"
+                         invisible="state != 'tested' or (duplicate_count == 0 and incompatible_count == 0 and wrong_nit_count == 0)">
+                        <strong>Se detectaron problemas:</strong>
+                        <span invisible="duplicate_count == 0"><field name="duplicate_count"/> duplicados </span>
+                        <span invisible="incompatible_count == 0"> | <field name="incompatible_count"/> no compatibles</span>
+                        <span invisible="wrong_nit_count == 0"> | <field name="wrong_nit_count"/> NIT incorrecto</span>
+                        Use los botones de limpiar antes de crear facturas.
+                    </div>
+                    <div class="alert alert-success" role="alert"
+                         invisible="state != 'tested' or duplicate_count != 0 or incompatible_count != 0 or wrong_nit_count != 0">
+                        <strong>Todo parece correcto.</strong>
+                        <field name="valid_count"/> documentos vigentes listos para importar.
+                        <span invisible="new_contact_count == 0">
+                            Se crearon <field name="new_contact_count"/> contactos nuevos:
+                            configure sus cuentas en la pestana "Contactos Nuevos".
+                        </span>
+                    </div>
+
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <group>
+                        <group string="Configuracion">
+                            <field name="import_type" widget="radio" readonly="state != 'draft'"/>
+                            <field name="journal_id" options="{'no_create': True}" readonly="state == 'done'"
+                                   required="1"/>
+                            <field name="journal_receipts_id" options="{'no_create': True}" readonly="state == 'done'"
+                                   placeholder="(mismo que Diario Facturas)"/>
+                            <field name="company_id" groups="base.group_multi_company"
+                                   options="{'no_create': True}" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Resumen" invisible="state == 'draft'">
+                            <field name="total_count" string="Total documentos"/>
+                            <field name="valid_count" string="Vigentes (a importar)"/>
+                            <field name="anulado_count" string="Anulados (se omiten)"
+                                   decoration-muted="anulado_count == 0"/>
+                            <field name="imported_count" string="Importados"/>
+                            <field name="new_contact_count" string="Contactos nuevos"/>
+                            <field name="duplicate_count" string="Duplicados"
+                                   decoration-danger="duplicate_count &gt; 0"/>
+                            <field name="incompatible_count" string="No compatibles"
+                                   decoration-danger="incompatible_count &gt; 0"/>
+                            <field name="wrong_nit_count" string="NIT incorrecto"
+                                   decoration-danger="wrong_nit_count &gt; 0"/>
+                            <field name="error_count" string="Errores"
+                                   decoration-danger="error_count &gt; 0"/>
+                        </group>
+                    </group>
+
+                    <group string="Archivos XML" invisible="state != 'draft'">
+                        <field name="attachment_ids" widget="many2many_binary"
+                               string="Seleccionar archivos XML (sin limite, multiples a la vez)"
+                               nolabel="1" readonly="state == 'done'"/>
+                    </group>
+
+                    <notebook invisible="state == 'draft'">
+                        <page string="Documentos" name="documents">
+                            <field name="document_ids" nolabel="1">
+                                <list string="Documentos XML"
+                                      decoration-success="state == 'imported'"
+                                      decoration-info="state == 'valid'"
+                                      decoration-muted="state in ('anulado', 'pending')"
+                                      decoration-warning="state in ('duplicate', 'wrong_nit')"
+                                      decoration-danger="state in ('incompatible', 'error')">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="filename" string="Archivo"/>
+                                    <field name="tipo_documento" string="Tipo" optional="show"/>
+                                    <field name="serie" optional="show"/>
+                                    <field name="numero_autorizacion" string="No. Autorizacion" optional="show"/>
+                                    <field name="fecha_emision" string="Fecha" optional="show"/>
+                                    <field name="nombre_emisor" string="Emisor" optional="show"/>
+                                    <field name="nit_emisor" string="NIT Emisor" optional="hide"/>
+                                    <field name="nombre_receptor" string="Receptor" optional="hide"/>
+                                    <field name="nit_receptor" string="NIT Receptor" optional="show"/>
+                                    <field name="moneda" optional="hide"/>
+                                    <field name="gran_total" string="Total" optional="show"/>
+                                    <field name="state" widget="badge"
+                                           decoration-success="state == 'imported'"
+                                           decoration-info="state == 'valid'"
+                                           decoration-muted="state in ('anulado', 'pending')"
+                                           decoration-warning="state in ('duplicate','wrong_nit')"
+                                           decoration-danger="state in ('incompatible','error')"/>
+                                    <field name="invoice_id" optional="show"/>
+                                    <field name="error_message" string="Error" optional="show"/>
+                                    <field name="frases_resumen" string="Frases SAT" optional="hide"/>
+                                </list>
+                            </field>
+                        </page>
+
+                        <page string="Contactos Nuevos" name="new_contacts"
+                              invisible="new_contact_count == 0">
+                            <div class="alert alert-info mb-3" role="alert">
+                                <strong>&#9432; Contactos nuevos detectados</strong><br/>
+                                Estos contactos no existian en Odoo y se crearon al probar la
+                                importacion. Asigne la <strong>Cuenta por Cobrar</strong> y
+                                <strong>Cuenta por Pagar</strong> de su empresa antes de importar.
+                                Las cuentas se guardan en la ficha del contacto (pestana Contabilidad).
+                            </div>
+                            <field name="contact_ids" nolabel="1">
+                                <list string="Contactos Nuevos" editable="bottom" create="false">
+                                    <field name="partner_id" string="Contacto" readonly="1"/>
+                                    <field name="vat" string="NIT" readonly="1"/>
+                                    <field name="account_receivable_id" string="Cuenta por Cobrar"
+                                           options="{'no_create': True}"/>
+                                    <field name="account_payable_id" string="Cuenta por Pagar"
+                                           options="{'no_create': True}"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ============================================================ -->
+    <!--  BUSQUEDA                                                    -->
+    <!-- ============================================================ -->
+    <record id="ktx_import_session_view_search" model="ir.ui.view">
+        <field name="name">ktx.import.session.search</field>
+        <field name="model">ktx.import.session</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Importaciones">
+                <field name="name" string="Referencia"/>
+                <field name="journal_id" string="Diario Facturas"/>
+                <field name="journal_receipts_id" string="Diario Recibos"/>
+                <field name="search_index" string="NIT / Serie / Autorizacion"/>
+                <filter string="Compras" name="compras" domain="[('import_type','=','purchase')]"/>
+                <filter string="Ventas" name="ventas" domain="[('import_type','=','sale')]"/>
+                <separator/>
+                <filter string="Nuevo" name="draft" domain="[('state','=','draft')]"/>
+                <filter string="Cargado" name="loaded" domain="[('state','=','loaded')]"/>
+                <filter string="Probado" name="tested" domain="[('state','=','tested')]"/>
+                <filter string="Importado" name="done" domain="[('state','=','done')]"/>
+                <separator/>
+                <filter string="Con problemas" name="with_issues"
+                        domain="['|','|',('duplicate_count','>',0),('incompatible_count','>',0),('wrong_nit_count','>',0)]"/>
+                <filter string="Con anulados" name="with_anulados"
+                        domain="[('anulado_count','>',0)]"/>
+                <group>
+                    <filter string="Tipo" name="gb_type" domain="[]" context="{'group_by':'import_type'}"/>
+                    <filter string="Estado" name="gb_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Mes" name="gb_month" domain="[]" context="{'group_by':'create_date:month'}"/>
+                    <filter string="Diario" name="gb_journal" domain="[]" context="{'group_by':'journal_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ktx_import_session_action" model="ir.actions.act_window">
+        <field name="name">Importaciones FEL</field>
+        <field name="res_model">ktx.import.session</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="ktx_import_session_view_search"/>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crear nueva importacion de facturas FEL</p>
+            <p>Cargue archivos XML de la SAT Guatemala (DTE FEL) para importarlos masivamente a Odoo.</p>
+        </field>
+    </record>
+
+</odoo>

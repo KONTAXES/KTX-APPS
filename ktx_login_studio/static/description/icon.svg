@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="4" dy="6" stdDeviation="8" flood-color="#4c2a6b" flood-opacity="0.35"/>
+    </filter>
+    <filter id="badgeShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="3" stdDeviation="4" flood-color="#2a6b5e" flood-opacity="0.4"/>
+    </filter>
+    <!-- Browser window (purple, KTX brand) -->
+    <linearGradient id="winGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <linearGradient id="barGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
+    </linearGradient>
+    <!-- Login card (screen) -->
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#f3ecff"/>
+    </linearGradient>
+    <!-- Wand/customize badge (teal) -->
+    <linearGradient id="wandGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#a8e6d4"/>
+      <stop offset="100%" stop-color="#4dc98a"/>
+    </linearGradient>
+    <!-- Upload badge (amber) -->
+    <linearGradient id="uploadGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fde3a7"/>
+      <stop offset="100%" stop-color="#f5a623"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Browser window -->
+  <rect x="26" y="34" width="148" height="132" rx="16" fill="url(#winGrad)" filter="url(#shadow)"/>
+  <!-- Browser top bar -->
+  <path d="M26 50 a16 16 0 0 1 16 -16 h116 a16 16 0 0 1 16 16 v14 H26 Z" fill="url(#barGrad)"/>
+  <circle cx="40" cy="50" r="4" fill="#f87171"/>
+  <circle cx="52" cy="50" r="4" fill="#fbbf24"/>
+  <circle cx="64" cy="50" r="4" fill="#34d399"/>
+
+  <!-- Login card (screen content) -->
+  <rect x="44" y="76" width="112" height="76" rx="10" fill="url(#cardGrad)"/>
+  <!-- Avatar -->
+  <circle cx="100" cy="96" r="10" fill="#c4b5fd"/>
+  <path d="M86 116 a14 14 0 0 1 28 0 z" fill="#c4b5fd"/>
+  <!-- Input fields -->
+  <rect x="60" y="122" width="80" height="7" rx="3.5" fill="#e9e1fb"/>
+  <rect x="60" y="133" width="80" height="7" rx="3.5" fill="#e9e1fb"/>
+  <!-- Submit button -->
+  <rect x="70" y="143" width="60" height="9" rx="4.5" fill="#4dc98a"/>
+
+  <!-- Customize badge (magic wand) top-right -->
+  <circle cx="152" cy="46" r="22" fill="#eafff6" filter="url(#badgeShadow)"/>
+  <circle cx="152" cy="46" r="19" fill="url(#wandGrad)"/>
+  <g stroke="#0b5e46" stroke-width="2.6" stroke-linecap="round">
+    <line x1="144" y1="54" x2="158" y2="40"/>
+    <line x1="158" y1="40" x2="161" y2="37"/>
+  </g>
+  <g fill="#0b5e46">
+    <path d="M160 33 l1.6 3.3 3.3 1.6 -3.3 1.6 -1.6 3.3 -1.6 -3.3 -3.3 -1.6 3.3 -1.6 z"/>
+    <circle cx="147" cy="52" r="1.4"/>
+    <circle cx="153" cy="58" r="1.2"/>
+  </g>
+
+  <!-- Upload badge (extensions) bottom-left -->
+  <circle cx="42" cy="150" r="20" fill="#fff7e6" filter="url(#badgeShadow)"/>
+  <circle cx="42" cy="150" r="17" fill="url(#uploadGrad)"/>
+  <path d="M42 143 v13 M35 149 l7 -7 7 7" fill="none" stroke="#7a4a06" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="34" y="158" width="16" height="3" rx="1.5" fill="#7a4a06"/>
+</svg>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ktx_settlement_assign_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.settlement.assign.wizard.form</field>
+        <field name="model">ktx.settlement.assign.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Asignar a Liquidación">
+                <field name="kind" invisible="1"/>
+                <div class="alert alert-info" role="alert">
+                    Se agregarán <field name="staging_count" class="oe_inline"/>
+                    documento(s) a la liquidación
+                    <strong><field name="kind" class="oe_inline" readonly="1"/></strong>
+                    que seleccione a continuación.
+                </div>
+                <group>
+                    <field name="settlement_id"
+                        options="{'no_create': True, 'no_open': True}"/>
+                </group>
+                <field name="staging_ids" readonly="1">
+                    <list string="Documentos">
+                        <field name="move_id" string="Factura / Asiento"/>
+                        <field name="ref" string="Referencia"/>
+                        <field name="partner_id" string="Contacto"/>
+                        <field name="invoice_date" string="Fecha"/>
+                        <field name="amount_total" string="Total"/>
+                    </list>
+                </field>
+                <footer>
+                    <button name="action_assign"
+                        string="Asignar"
+                        type="object"
+                        class="btn-primary"/>
+                    <button string="Cancelar"
+                        class="btn-secondary"
+                        special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

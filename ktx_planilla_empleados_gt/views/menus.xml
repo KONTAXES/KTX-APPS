@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="menu_ktx_planilla_root"
+        name="Planilla GT"
+        web_icon="ktx_planilla_empleados_gt,static/description/icon.png"
+        sequence="85"
+        groups="ktx_planilla_empleados_gt.group_planilla_user"/>
+
+    <!-- ══════════════ Asistencias ══════════════ -->
+    <menuitem
+        id="menu_ktx_pl_asistencias"
+        name="Asistencias"
+        parent="menu_ktx_planilla_root"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_ktx_pl_asistencia_calendario"
+        name="Calendario"
+        parent="menu_ktx_pl_asistencias"
+        action="action_asistencia"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_ktx_pl_asistencia_masiva"
+        name="Captura Masiva"
+        parent="menu_ktx_pl_asistencias"
+        action="action_asistencia_masiva"
+        sequence="20"/>
+
+    <!-- ══════════════ Planillas ══════════════ -->
+    <menuitem
+        id="menu_ktx_pl_planillas"
+        name="Planillas"
+        parent="menu_ktx_planilla_root"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_ktx_pl_planilla_batches"
+        name="Planillas"
+        parent="menu_ktx_pl_planillas"
+        action="action_planilla"
+        sequence="10"
+        groups="ktx_planilla_empleados_gt.group_planilla_officer"/>
+
+    <menuitem
+        id="menu_ktx_pl_linea_captura"
+        name="Sueldo por Empleado"
+        parent="menu_ktx_pl_planillas"
+        action="action_planilla_linea_captura"
+        sequence="15"/>
+
+    <menuitem
+        id="menu_ktx_pl_planilla_pivot"
+        name="Planilla"
+        parent="menu_ktx_pl_planillas"
+        action="action_planilla_pivot"
+        sequence="20"/>
+
+    <menuitem
+        id="menu_ktx_pl_historial"
+        name="Historial por Empleado"
+        parent="menu_ktx_pl_planillas"
+        action="action_planilla_linea_historial"
+        sequence="30"/>
+
+    <!-- ══════════════ Liquidaciones ══════════════ -->
+    <menuitem
+        id="menu_ktx_pl_liquidaciones"
+        name="Liquidaciones"
+        parent="menu_ktx_planilla_root"
+        action="action_liquidacion"
+        sequence="30"
+        groups="ktx_planilla_empleados_gt.group_planilla_officer"/>
+
+    <!-- ══════════════ Configuración ══════════════ -->
+    <menuitem
+        id="menu_ktx_pl_config"
+        name="Configuración"
+        parent="menu_ktx_planilla_root"
+        sequence="100"
+        groups="ktx_planilla_empleados_gt.group_planilla_manager"/>
+
+    <menuitem
+        id="menu_ktx_pl_ajustes"
+        name="Ajustes"
+        parent="menu_ktx_pl_config"
+        action="action_ktx_pl_config"
+        sequence="10"/>
+
+    <menuitem
+        id="menu_ktx_pl_empleados"
+        name="Empleados"
+        parent="menu_ktx_pl_config"
+        action="hr.open_view_employee_list_my"
+        sequence="20"/>
+
+</odoo>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_tax_form_satgt" model="ir.ui.view">
+        <field name="name">account.tax.form.satgt</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="active" eval="True"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Clasificación SAT GT" name="satgt_classification">
+                    <group col="2">
+                        <field name="ktx_include_in_report" widget="boolean_toggle"
+                               string="Incluir en Libros SAT"/>
+                        <field name="ktx_is_iva" widget="boolean_toggle"
+                               string="Es IVA (12%) — monto → col. IVA"
+                               invisible="not ktx_include_in_report or ktx_is_pequeno or ktx_is_exento"/>
+                        <field name="ktx_is_pequeno" widget="boolean_toggle"
+                               string="Pequeño Contribuyente"
+                               invisible="not ktx_include_in_report"/>
+                        <field name="ktx_is_import" widget="boolean_toggle"
+                               string="Importación / Exportación"
+                               invisible="not ktx_include_in_report or ktx_is_pequeno"/>
+                        <field name="ktx_is_exento" widget="boolean_toggle"
+                               string="Exento / No Gravado"
+                               invisible="not ktx_include_in_report or ktx_is_pequeno"/>
+                        <field name="ktx_is_combustible" widget="boolean_toggle"
+                               string="Combustible / IPCN"
+                               invisible="not ktx_include_in_report or ktx_is_pequeno or ktx_is_exento or ktx_is_otro"/>
+                        <field name="ktx_is_otro" widget="boolean_toggle"
+                               string="Otro cargo adicional"
+                               invisible="not ktx_include_in_report or ktx_is_pequeno or ktx_is_exento or ktx_is_combustible"/>
+                    </group>
+                    <group col="1" invisible="not ktx_include_in_report">
+                        <div style="font-size:11px;color:#64748b;padding:4px 0;">
+                            <span invisible="ktx_is_pequeno or ktx_is_exento">
+                                Base →
+                                <span invisible="ktx_is_import">Local </span>
+                                <span invisible="not ktx_is_import">Importación/Export. </span>
+                                Gravada.
+                                <span invisible="not ktx_is_iva"> · IVA → col. IVA.</span>
+                                <span invisible="not ktx_is_combustible"> · IPCN → col. Exenta (no crédito).</span>
+                                <span invisible="not ktx_is_otro"> · Cargo adicional → col. Exenta.</span>
+                            </span>
+                            <span invisible="not (ktx_is_exento and not ktx_is_pequeno)">
+                                Base →
+                                <span invisible="ktx_is_import">Local </span>
+                                <span invisible="not ktx_is_import">Importación/Export. </span>
+                                Exenta. Sin IVA.
+                            </span>
+                            <span invisible="not ktx_is_pequeno">
+                                Base → columna Pequeño Contribuyente.
+                            </span>
+                        </div>
+                    </group>
+                    <group string="Clasificación legacy (respaldo)" col="1"
+                          invisible="ktx_include_in_report">
+                        <field name="ktx_satgt_category" string="Categoría SAT GT (legacy)"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ktx_login_theme_view_list" model="ir.ui.view">
+        <field name="name">ktx.login.theme.view.list</field>
+        <field name="model">ktx.login.theme</field>
+        <field name="arch" type="xml">
+            <list string="Temas de Login">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="is_default" widget="boolean_toggle" string="Predeterminado"/>
+                <field name="user_ids" widget="many2many_tags" placeholder="Ninguno"/>
+                <field name="render_mode"/>
+                <field name="template"/>
+                <field name="state" widget="badge" decoration-success="state == 'published'"/>
+                <field name="asset_count" string="Extensiones"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_login_theme_view_form" model="ir.ui.view">
+        <field name="name">ktx.login.theme.view.form</field>
+        <field name="model">ktx.login.theme</field>
+        <field name="arch" type="xml">
+            <form string="Login Studio - Tema" class="o_ktx_login_theme_form">
+                <header>
+                    <button name="action_publish" string="Publicar" type="object"
+                            class="oe_highlight" invisible="state == 'published'"/>
+                    <button name="action_unpublish" string="Pasar a Borrador" type="object"
+                            invisible="state != 'published'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,published"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_assets" type="object" class="oe_stat_button" icon="fa-code">
+                            <field name="asset_count" widget="statinfo" string="Extensiones"/>
+                        </button>
+                    </div>
+                    <div class="d-flex align-items-center mb-4">
+                        <div class="flex-grow-1">
+                            <field name="name" class="fw-bold fs-4" placeholder="Nombre del tema"/>
+                            <group>
+                                <field name="is_default" widget="boolean_toggle"/>
+                            </group>
+                            <group invisible="is_default">
+                                <field name="user_ids" widget="many2many_tags"
+                                       placeholder="Asigna usuarios para darle a este tema un enlace de acceso personal"/>
+                                <field name="slug" placeholder="ej. gutrust" invisible="not user_ids"/>
+                            </group>
+                            <div class="text-muted small mt-1" invisible="not id or not is_default">
+                                Este es el tema predeterminado: al publicarlo se aplica de
+                                inmediato en <code>/web/login</code> (y en registro y
+                                recuperacion de contrasena) para todos los visitantes que no
+                                tengan un tema personal propio, sin necesidad de ningun enlace
+                                ni token. Por eso la asignacion de usuarios y el enlace
+                                personalizado quedan desactivados arriba.
+                            </div>
+                            <div class="text-muted small mt-1" invisible="not id or is_default or not user_ids">
+                                Enlace de acceso personalizado:
+                                <field name="login_url" readonly="1" class="fw-bold"/>
+                                <br/>
+                                Compartelo con los usuarios asignados arriba: siempre les
+                                mostrara este tema al iniciar sesion, sin importar el tema
+                                predeterminado de la base de datos. Si alguno de ellos llega a
+                                la pantalla de login con su correo ya identificado (por ejemplo
+                                desde una invitacion), tambien vera este tema automaticamente.
+                                Escribe un "Enlace corto" arriba para que sea
+                                .../web/login/tu-enlace en vez de un token largo.
+                            </div>
+                            <div class="text-muted small mt-1" invisible="not id or is_default or user_ids">
+                                Asigna usuarios arriba para darle a este tema un enlace de
+                                acceso personal, o activa "Login predeterminado" para que se
+                                aplique a todos los visitantes.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            <notebook>
+                                <page string="Diseno">
+                                    <group>
+                                        <field name="render_mode" widget="radio"/>
+                                        <field name="template" invisible="render_mode != 'styled'"/>
+                                        <field name="split_alignment" invisible="render_mode != 'styled' or template != 'split'"/>
+                                        <field name="custom_body_class"/>
+                                    </group>
+                                    <group string="Tarjeta y Efectos" invisible="render_mode != 'styled'">
+                                        <field name="card_background_color" widget="color"/>
+                                        <field name="card_width"/>
+                                        <field name="card_shadow"/>
+                                        <field name="glassmorphism" widget="boolean_toggle"/>
+                                        <field name="glassmorphism_blur" invisible="not glassmorphism"/>
+                                        <field name="glassmorphism_opacity" invisible="not glassmorphism"/>
+                                        <field name="card_entrance_animation"/>
+                                    </group>
+                                    <group string="Iluminacion Ambiental" invisible="render_mode != 'styled'">
+                                        <field name="ambient_glow" widget="boolean_toggle"/>
+                                        <field name="ambient_glow_color" widget="color" invisible="not ambient_glow"/>
+                                        <field name="ambient_glow_intensity" invisible="not ambient_glow"/>
+                                    </group>
+                                </page>
+                                <page string="Marca">
+                                    <group>
+                                        <field name="company_logo" widget="image" options="{'size': [0, 90]}"/>
+                                        <field name="logo_max_height" invisible="render_mode != 'styled'"/>
+                                        <field name="favicon" widget="image" options="{'size': [0, 40]}"/>
+                                        <field name="tagline"/>
+                                        <field name="show_portal_name" widget="boolean_toggle" invisible="render_mode != 'styled'"/>
+                                    </group>
+                                    <div class="text-muted small mt-1" invisible="render_mode != 'custom'">
+                                        En modo "HTML 100% personalizado" este Logo y Favicon se
+                                        sirven en URLs fijas que puedes referenciar directo en tu
+                                        CSS/HTML: <code>/ktx_login_studio/active_logo</code> y
+                                        <code>/ktx_login_studio/active_favicon</code> (resuelven
+                                        automaticamente al logo/favicon de este tema si tiene uno
+                                        propio, o al del tema predeterminado si no, sin necesidad
+                                        de subir el logo por separado ni copiar ninguna URL
+                                        generada). Para la frase "Accede al portal de: &lt;nombre&gt;"
+                                        escribe <code>{{ktx_portal_name}}</code> donde la quieras
+                                        dentro de la Cabecera o el Pie de Pagina (pestaña "HTML
+                                        Personalizado"); se reemplaza por el campo Nombre de este
+                                        tema.
+                                    </div>
+                                </page>
+                                <page string="Colores y Fondo" invisible="render_mode != 'styled'">
+                                    <group>
+                                        <field name="primary_color" widget="color"/>
+                                        <field name="secondary_color" widget="color"/>
+                                        <field name="background_type"/>
+                                        <field name="background_color" widget="color" invisible="background_type != 'solid'"/>
+                                        <field name="gradient_start" widget="color" invisible="background_type not in ('gradient', 'animated_gradient')"/>
+                                        <field name="gradient_end" widget="color" invisible="background_type not in ('gradient', 'animated_gradient')"/>
+                                        <field name="gradient_direction" invisible="background_type not in ('gradient', 'animated_gradient')"/>
+                                        <field name="background_image" widget="image" invisible="background_type != 'image'"/>
+                                        <field name="background_video" filename="background_video_filename" invisible="background_type != 'video'"/>
+                                        <field name="background_video_filename" invisible="1"/>
+                                        <field name="background_video_asset_id" invisible="background_type != 'video'"/>
+                                        <field name="background_overlay_color" widget="color" invisible="background_type not in ('image', 'video')"/>
+                                        <field name="background_overlay_opacity" invisible="background_type not in ('image', 'video')"/>
+                                    </group>
+                                    <div class="text-muted small" invisible="background_type != 'video'">
+                                        Sube un video corto y ligero (mp4 o webm reproducen en
+                                        todos los navegadores). Se reproduce solo, en silencio y
+                                        en bucle como fondo. Si subes uno aqui, tiene prioridad
+                                        sobre el video por Extension de abajo.
+                                    </div>
+                                </page>
+                                <page string="Tipografia" invisible="render_mode != 'styled'">
+                                    <group>
+                                        <field name="font_family"/>
+                                        <field name="custom_font_asset_id" invisible="font_family != 'custom'"/>
+                                        <field name="custom_font_css_name" invisible="font_family != 'custom'"/>
+                                        <field name="text_color" widget="color"/>
+                                        <field name="link_color" widget="color"/>
+                                        <field name="input_border_radius"/>
+                                        <field name="button_border_radius"/>
+                                        <field name="button_color" widget="color"/>
+                                        <field name="button_text_color" widget="color"/>
+                                    </group>
+                                    <group string="Campos y Boton" invisible="render_mode != 'styled'">
+                                        <field name="input_style"/>
+                                        <field name="input_focus_glow" widget="boolean_toggle"/>
+                                        <field name="input_icons" widget="boolean_toggle"/>
+                                        <field name="button_hover_effect"/>
+                                    </group>
+                                </page>
+                                <page string="Contenido y Pie de Pagina">
+                                    <group string="Textos" invisible="render_mode != 'styled'">
+                                        <field name="login_welcome_title"/>
+                                        <field name="login_welcome_subtitle"/>
+                                        <field name="custom_footer_text"/>
+                                    </group>
+                                    <group string="Enlaces Legales">
+                                        <field name="terms_url"/>
+                                        <field name="terms_label"/>
+                                        <field name="privacy_url"/>
+                                        <field name="privacy_label"/>
+                                    </group>
+                                    <group string="Elementos Odoo" invisible="render_mode != 'styled'">
+                                        <field name="show_database_domain" widget="boolean_toggle"/>
+                                        <field name="show_powered_by_odoo" widget="boolean_toggle"/>
+                                    </group>
+                                    <group string="Sitio Web">
+                                        <field name="hide_website_header" widget="boolean_toggle"/>
+                                    </group>
+                                </page>
+                                <page string="HTML Personalizado" invisible="render_mode != 'custom'">
+                                    <p class="text-muted">
+                                        Este contenido reemplaza la cabecera y el pie de pagina del
+                                        login. El formulario real (campos de usuario/contrasena,
+                                        boton y proteccion CSRF) siempre lo renderiza Odoo y nunca se
+                                        ve afectado por este HTML.
+                                    </p>
+                                    <group string="Cabecera">
+                                        <field name="custom_header_html" nolabel="1"/>
+                                    </group>
+                                    <group string="Pie de Pagina">
+                                        <field name="custom_footer_html" nolabel="1"/>
+                                    </group>
+                                </page>
+                                <page string="CSS Adicional">
+                                    <field name="custom_css" widget="ace" options="{'mode': 'css'}"/>
+                                </page>
+                                <page string="Extensiones">
+                                    <div class="mb-2">
+                                        <button name="%(ktx_login_theme_import_wizard_action)d"
+                                                type="action" string="Importar paquete .zip"
+                                                class="btn-secondary"
+                                                context="{'default_theme_id': id}"/>
+                                        <field name="max_asset_size_mb" class="ms-4 d-inline-block"
+                                               string="Tamano maximo por archivo (MB)"/>
+                                    </div>
+                                    <field name="asset_ids" context="{'default_theme_id': id}">
+                                        <list editable="bottom">
+                                            <field name="sequence" widget="handle"/>
+                                            <field name="name"/>
+                                            <field name="asset_type"/>
+                                            <field name="scope"/>
+                                            <field name="datas" filename="file_name"/>
+                                            <field name="file_name" column_invisible="1"/>
+                                            <field name="version"/>
+                                            <field name="state" widget="badge" decoration-success="state == 'published'"/>
+                                            <field name="risk_ack" invisible="asset_type != 'js'"/>
+                                            <button name="action_publish" string="Publicar" type="object"
+                                                    invisible="state == 'published'"/>
+                                            <button name="action_rollback" string="Revertir" type="object"
+                                                    invisible="not previous_version"/>
+                                        </list>
+                                    </field>
+                                </page>
+                                <page string="Acceso">
+                                    <group>
+                                        <field name="auth_signup_uninvited" widget="radio" options="{'horizontal': true}"/>
+                                        <field name="auth_signup_reset_password" widget="boolean_toggle"/>
+                                    </group>
+                                </page>
+                            </notebook>
+                        </div>
+                        <div class="col-md-7">
+                            <widget name="ktx_login_studio_preview"/>
+                        </div>
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_login_theme_action" model="ir.actions.act_window">
+        <field name="name">Login Studio - Temas</field>
+        <field name="res_model">ktx.login.theme</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Crea tu primer tema de login</p>
+        </field>
+    </record>
+</odoo>

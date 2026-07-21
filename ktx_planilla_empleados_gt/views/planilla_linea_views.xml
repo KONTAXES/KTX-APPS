@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════ Pivot (menú «Planilla», formato de impresión) ══════════════ -->
+    <record id="view_planilla_linea_pivot" model="ir.ui.view">
+        <field name="name">ktx.planilla.linea.pivot</field>
+        <field name="model">ktx.planilla.linea</field>
+        <field name="arch" type="xml">
+            <pivot string="Planilla">
+                <field name="employee_id" type="row"/>
+                <field name="sueldo_ordinario" type="measure"/>
+                <field name="sueldo_extraordinario" type="measure"/>
+                <field name="comisiones" type="measure"/>
+                <field name="bonificacion_incentivo" type="measure"/>
+                <field name="otros_ingresos" type="measure"/>
+                <field name="total_devengado" type="measure"/>
+                <field name="igss_laboral" type="measure"/>
+                <field name="isr" type="measure"/>
+                <field name="anticipos" type="measure"/>
+                <field name="judiciales" type="measure"/>
+                <field name="otros_descuentos" type="measure"/>
+                <field name="total_descuentos" type="measure"/>
+                <field name="total_liquido" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ══════════════ Lista ══════════════ -->
+    <record id="view_planilla_linea_list" model="ir.ui.view">
+        <field name="name">ktx.planilla.linea.list</field>
+        <field name="model">ktx.planilla.linea</field>
+        <field name="arch" type="xml">
+            <list string="Líneas de Planilla" create="0"
+                  decoration-success="pagada"
+                  decoration-muted="state == 'cancel'">
+                <field name="planilla_id"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="tipo" widget="badge" optional="show"/>
+                <field name="mes" optional="show"/>
+                <field name="anio" optional="show"/>
+                <field name="date_to" optional="hide"/>
+                <field name="puesto" optional="hide"/>
+                <field name="total_devengado" sum="Total"/>
+                <field name="total_descuentos" sum="Total"/>
+                <field name="total_liquido" sum="Total"/>
+                <field name="monto_pagado" sum="Total" optional="show"/>
+                <field name="pagada" widget="boolean_toggle" readonly="1"/>
+                <field name="move_id" optional="show"/>
+                <field name="state" widget="badge" optional="show"
+                       decoration-warning="state == 'posted'"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <button name="action_imprimir_recibo" type="object"
+                        icon="fa-print" title="Imprimir recibo"/>
+                <button name="action_enviar_recibo" type="object"
+                        icon="fa-paper-plane" title="Enviar recibo"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════ Formulario ══════════════ -->
+    <record id="view_planilla_linea_form" model="ir.ui.view">
+        <field name="name">ktx.planilla.linea.form</field>
+        <field name="model">ktx.planilla.linea</field>
+        <field name="arch" type="xml">
+            <form string="Línea de Planilla">
+                <header>
+                    <button name="action_recalcular" string="Recalcular"
+                            type="object" class="btn-secondary"
+                            invisible="state not in ('draft', 'calculated')"/>
+                    <button name="action_registrar_pago" string="Registrar Pago"
+                            type="object" class="btn-primary"
+                            invisible="pagada or state != 'posted'"/>
+                    <button name="action_imprimir_recibo" string="Imprimir Recibo"
+                            type="object" class="btn-secondary"/>
+                    <button name="action_enviar_recibo" string="Enviar Recibo"
+                            type="object" class="btn-secondary"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Pagada" bg_color="text-bg-success"
+                            invisible="not pagada"/>
+                    <widget name="web_ribbon" title="Anticipo" bg_color="text-bg-info"
+                            invisible="not es_anticipo"/>
+                    <div class="oe_title">
+                        <h1><field name="employee_id" widget="many2one_avatar_employee"
+                                   readonly="planilla_id and state not in ('draft', 'calculated')"
+                                   placeholder="Seleccione el empleado…"/></h1>
+                        <h3><field name="planilla_id"
+                                   readonly="planilla_id and state not in ('draft', 'calculated')"
+                                   placeholder="Se asigna automáticamente al guardar"/></h3>
+                    </div>
+                    <group>
+                        <group string="Datos">
+                            <field name="secuencia"/>
+                            <field name="puesto"/>
+                            <field name="department_id"/>
+                            <field name="tipo"/>
+                            <field name="es_anticipo" invisible="1"/>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                        </group>
+                        <group string="Asistencias del Período">
+                            <field name="dias_periodo"/>
+                            <field name="dias_laborados"/>
+                            <field name="dias_falta"/>
+                            <field name="dias_vacaciones"/>
+                            <field name="horas_extra" widget="float_time"/>
+                            <field name="llamadas_atencion"/>
+                            <field name="felicitaciones"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Devengado">
+                            <field name="sueldo_ordinario"/>
+                            <field name="sueldo_extraordinario"/>
+                            <field name="comisiones"/>
+                            <field name="bonificacion_incentivo"/>
+                            <field name="otros_ingresos"/>
+                            <field name="total_devengado" class="fw-bold"/>
+                        </group>
+                        <group string="Descuentos">
+                            <field name="igss_laboral"/>
+                            <label for="isr"/>
+                            <div class="o_row">
+                                <field name="isr"/>
+                                <field name="isr_manual" class="ms-2"/>
+                                <span class="text-muted">Manual</span>
+                            </div>
+                            <field name="anticipos"/>
+                            <field name="judiciales"/>
+                            <field name="otros_descuentos"/>
+                            <field name="total_descuentos" class="fw-bold"/>
+                            <field name="total_liquido" class="fw-bold text-success"/>
+                        </group>
+                    </group>
+                    <group string="Anticipos Compensados (planillas quincenales / semanales / diarias del mes)"
+                           invisible="es_anticipo or tipo != 'sueldo'">
+                        <field name="anticipo_linea_ids" nolabel="1" colspan="2"
+                               readonly="state in ('posted', 'paid', 'cancel')">
+                            <list>
+                                <field name="planilla_id"/>
+                                <field name="date_from"/>
+                                <field name="date_to"/>
+                                <field name="state" widget="badge"/>
+                                <field name="total_liquido" sum="Total Anticipado"/>
+                                <field name="currency_id" column_invisible="1"/>
+                            </list>
+                        </field>
+                    </group>
+                    <group>
+                        <group string="Cuota Patronal">
+                            <field name="igss_patronal"/>
+                            <field name="irtra"/>
+                            <field name="intecap"/>
+                            <field name="total_patronal" class="fw-bold"/>
+                        </group>
+                        <group string="Provisiones de Prestaciones">
+                            <field name="prov_indemnizacion"/>
+                            <field name="prov_aguinaldo"/>
+                            <field name="prov_bono14"/>
+                            <field name="prov_vacaciones"/>
+                            <field name="total_provisiones" class="fw-bold"/>
+                        </group>
+                    </group>
+                    <group string="Cobro / Pago por Cuenta Ajena" invisible="not cuenta_ajena">
+                        <group>
+                            <field name="cuenta_ajena"/>
+                            <field name="cuenta_ajena_partner_id"/>
+                        </group>
+                        <group>
+                            <field name="cuenta_ajena_monto"/>
+                            <field name="settlement_id"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Contabilidad y Pago">
+                            <field name="move_id"/>
+                            <field name="monto_pagado"/>
+                            <field name="pagada"/>
+                        </group>
+                        <group string="Pagos">
+                            <field name="payment_ids" nolabel="1" colspan="2" readonly="1">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="payment_method_line_id"/>
+                                    <field name="state" widget="badge"/>
+                                </list>
+                            </field>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notas"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════ Búsqueda con filtros empleado / mes / año ══════════════ -->
+    <record id="view_planilla_linea_search" model="ir.ui.view">
+        <field name="name">ktx.planilla.linea.search</field>
+        <field name="model">ktx.planilla.linea</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Líneas de Planilla">
+                <field name="employee_id"/>
+                <field name="planilla_id"/>
+                <field name="anio"/>
+                <field name="department_id"/>
+                <filter name="filter_sueldo" string="Sueldos"
+                        domain="[('tipo', '=', 'sueldo')]"/>
+                <filter name="filter_bono14" string="Bono 14"
+                        domain="[('tipo', '=', 'bono14')]"/>
+                <filter name="filter_aguinaldo" string="Aguinaldo"
+                        domain="[('tipo', '=', 'aguinaldo')]"/>
+                <filter name="filter_vacaciones" string="Vacaciones"
+                        domain="[('tipo', '=', 'vacaciones')]"/>
+                <filter name="filter_liquidacion" string="Liquidación"
+                        domain="[('tipo', '=', 'liquidacion')]"/>
+                <separator/>
+                <filter name="filter_pagadas" string="Pagadas"
+                        domain="[('pagada', '=', True)]"/>
+                <filter name="filter_pendientes" string="Pendientes de Pago"
+                        domain="[('pagada', '=', False), ('state', '=', 'posted')]"/>
+                <separator/>
+                <filter name="filter_anio_actual" string="Año Actual"
+                        domain="[('anio', '=', context_today().strftime('%Y'))]"/>
+                <filter name="filter_periodo" string="Período" date="date_to"/>
+                <group name="groupby">
+                    <filter name="group_employee" string="Empleado"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_planilla" string="Planilla"
+                            context="{'group_by': 'planilla_id'}"/>
+                    <filter name="group_mes" string="Mes"
+                            context="{'group_by': 'mes'}"/>
+                    <filter name="group_anio" string="Año"
+                            context="{'group_by': 'anio'}"/>
+                    <filter name="group_tipo" string="Tipo"
+                            context="{'group_by': 'tipo'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Menú «Planilla»: pivot con filtros por empleado, mes y año -->
+    <record id="action_planilla_pivot" model="ir.actions.act_window">
+        <field name="name">Planilla</field>
+        <field name="res_model">ktx.planilla.linea</field>
+        <field name="view_mode">pivot,list,form</field>
+        <field name="search_view_id" ref="view_planilla_linea_search"/>
+        <field name="context">{"search_default_group_mes": 1, "search_default_filter_anio_actual": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aún no hay líneas de planilla
+            </p>
+            <p>
+                Aquí se consolidan todas las líneas de planilla en vista
+                dinámica (pivot), el formato con el que se imprime. Filtre por
+                empleado, mes o año y expórtelo a Excel.
+            </p>
+        </field>
+    </record>
+
+    <!-- Captura de sueldo por empleado: formulario con montos preingresados -->
+    <record id="action_planilla_linea_captura" model="ir.actions.act_window">
+        <field name="name">Sueldo por Empleado</field>
+        <field name="res_model">ktx.planilla.linea</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_planilla_linea_form"/>
+        <field name="target">current</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Capture el sueldo de un empleado
+            </p>
+            <p>
+                Seleccione el empleado: los montos se preingresan según su
+                configuración (sueldo base, bonificación, frecuencia) y las
+                asistencias del período, todos editables. Al guardar, la línea
+                se estructura automáticamente en la planilla del período según
+                la frecuencia de pago del empleado.
+            </p>
+        </field>
+    </record>
+
+    <!-- Historial por empleado, agrupado como las depreciaciones de activos -->
+    <record id="action_planilla_linea_historial" model="ir.actions.act_window">
+        <field name="name">Historial por Empleado</field>
+        <field name="res_model">ktx.planilla.linea</field>
+        <field name="view_mode">list,pivot,form</field>
+        <field name="search_view_id" ref="view_planilla_linea_search"/>
+        <field name="context">{"search_default_group_employee": 1, "expand": 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Aún no hay historial
+            </p>
+            <p>
+                Cada empleado agrupa sus planillas, partidas contables y pagos
+                relacionados, como en las depreciaciones de activos.
+            </p>
+        </field>
+    </record>
+
+</odoo>

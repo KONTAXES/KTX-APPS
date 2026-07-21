@@ -8,6 +8,7 @@
             <form string="Tablero" create="false" edit="false" delete="false">
                 <sheet>
                     <field name="company_currency_id" invisible="1"/>
+                    <field name="kind_filter" invisible="1"/>
 
                     <!-- Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -16,6 +17,34 @@
                         </h2>
                         <button name="action_open_dashboard" type="object"
                             string="↺ Actualizar" class="btn btn-sm btn-outline-secondary"/>
+                    </div>
+
+                    <!-- Selector de clase (Todas / Gastos / Ventas) -->
+                    <div class="btn-group mb-4" role="group">
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'all'}"
+                            class="btn btn-outline-primary active"
+                            invisible="kind_filter != 'all'" string="Todas"/>
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'all'}"
+                            class="btn btn-outline-primary"
+                            invisible="kind_filter == 'all'" string="Todas"/>
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'expense'}"
+                            class="btn btn-outline-primary active"
+                            invisible="kind_filter != 'expense'" string="Gastos"/>
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'expense'}"
+                            class="btn btn-outline-primary"
+                            invisible="kind_filter == 'expense'" string="Gastos"/>
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'sale'}"
+                            class="btn btn-outline-primary active"
+                            invisible="kind_filter != 'sale'" string="Ventas"/>
+                        <button name="action_open_dashboard" type="object"
+                            context="{'dashboard_kind': 'sale'}"
+                            class="btn btn-outline-primary"
+                            invisible="kind_filter == 'sale'" string="Ventas"/>
                     </div>
 
                     <!-- KPI Cards: Estados -->
@@ -97,7 +126,7 @@
                         <div class="col-6 col-md-3">
                             <div class="card border-0 shadow-sm" style="border-left:4px solid #858796!important">
                                 <div class="card-body p-3">
-                                    <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase">Gastos Pendientes</div>
+                                    <div class="text-muted" style="font-size:0.75rem;font-weight:600;text-transform:uppercase">Documentos Pendientes</div>
                                     <div style="font-size:1.1rem;font-weight:700;color:#858796;margin-top:4px">
                                         <field name="staging_pending"/> pendientes /
                                         <field name="staging_in_settlement"/> en liq.
@@ -113,6 +142,8 @@
                             type="action" string="📋 Ver Liquidaciones" class="btn btn-primary"/>
                         <button name="%(ktx_expense_management.action_ktx_settlement_staging)d"
                             type="action" string="📂 Gastos por Liquidar" class="btn btn-outline-primary"/>
+                        <button name="%(ktx_expense_management.action_ktx_settlement_staging_sales)d"
+                            type="action" string="🧾 Ventas por Liquidar" class="btn btn-outline-primary"/>
                         <button name="%(ktx_expense_management.action_ktx_settlement_approvals)d"
                             type="action" string="✅ Autorizaciones" class="btn btn-outline-warning"/>
                     </div>
@@ -122,7 +153,7 @@
                         <div class="col-12 col-lg-6">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="card-header bg-white border-0 pb-0">
-                                    <h6 class="mb-0" style="color:#4e73df;font-weight:700">👤 Top Empleados por Gasto</h6>
+                                    <h6 class="mb-0" style="color:#4e73df;font-weight:700">👤 Top Empleados / Beneficiarios</h6>
                                     <small class="text-muted">Monto total en liquidaciones aprobadas/pagadas</small>
                                 </div>
                                 <div class="card-body pt-2">
@@ -133,8 +164,8 @@
                         <div class="col-12 col-lg-6">
                             <div class="card border-0 shadow-sm h-100">
                                 <div class="card-header bg-white border-0 pb-0">
-                                    <h6 class="mb-0" style="color:#1cc88a;font-weight:700">🏪 Top Proveedores Liquidados</h6>
-                                    <small class="text-muted">Monto total pagado por proveedor</small>
+                                    <h6 class="mb-0" style="color:#1cc88a;font-weight:700">🏪 Top Contactos Liquidados</h6>
+                                    <small class="text-muted">Monto total por contacto (proveedor o cliente)</small>
                                 </div>
                                 <div class="card-body pt-2">
                                     <field name="top_partners_html" widget="html" readonly="1"/>
@@ -146,7 +177,7 @@
                     <!-- Monthly Chart -->
                     <div class="card border-0 shadow-sm mb-2">
                         <div class="card-header bg-white border-0 pb-0">
-                            <h6 class="mb-0" style="color:#36b9cc;font-weight:700">📈 Gasto Mensual — Últimos 12 Meses</h6>
+                            <h6 class="mb-0" style="color:#36b9cc;font-weight:700">📈 Movimiento Mensual — Últimos 12 Meses</h6>
                             <small class="text-muted">Liquidaciones publicadas y pagadas</small>
                         </div>
                         <div class="card-body">

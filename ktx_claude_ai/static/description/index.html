@@ -1,0 +1,282 @@
+<!--
+  Página de presentación KTX Claude AI para Odoo.
+  Fragmento HTML (sin <html>/<head>/<body>): Odoo lo inyecta.
+  Bootstrap + colores hex inline (sobreviven el sanitizador de apps.odoo.com).
+  El <style> y los SVG animados son mejora visual (animaciones/hover).
+-->
+<style>
+  .ktxc { font-family:'Segoe UI',Arial,sans-serif; color:#1f2937; background:#ffffff; }
+  .ktxc .rise { animation: ktxRise .7s ease both; }
+  @keyframes ktxRise { from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:none;} }
+  .ktxc .card { transition: transform .2s, box-shadow .2s; }
+  .ktxc .card:hover { transform:translateY(-6px); box-shadow:0 18px 44px rgba(99,102,241,.22) !important; }
+  .ktxc .ico { transition: transform .25s; display:inline-block; }
+  .ktxc .card:hover .ico { transform: scale(1.15) rotate(-6deg); }
+  .ktxc .stat:hover { transform: translateY(-4px); }
+  .ktxc .stat { transition: transform .2s; }
+  @keyframes ktxFloat { 0%,100%{ transform:translateY(0);} 50%{ transform:translateY(-9px);} }
+  .ktxc .float { animation: ktxFloat 4s ease-in-out infinite; }
+  @keyframes ktxPop { 0%{opacity:0; transform:translateY(14px) scale(.96);} 100%{opacity:1; transform:none;} }
+  .ktxc .msg { animation: ktxPop .6s ease both; }
+  @keyframes ktxBlink { 0%,80%,100%{ opacity:.2;} 40%{ opacity:1;} }
+  .ktxc .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#818cf8; margin:0 2px; animation: ktxBlink 1.2s infinite; }
+  .ktxc .dot:nth-child(2){ animation-delay:.2s;} .ktxc .dot:nth-child(3){ animation-delay:.4s;}
+  @keyframes ktxGlow { 0%,100%{ box-shadow:0 0 0 0 rgba(217,119,87,.45);} 50%{ box-shadow:0 0 0 14px rgba(217,119,87,0);} }
+  .ktxc .glow { animation: ktxGlow 2.4s infinite; }
+  @keyframes ktxSpin { to { transform: rotate(360deg);} }
+</style>
+
+<div class="ktxc">
+  <div class="container" style="max-width:1080px;">
+
+    <!-- ============ HERO ============ -->
+    <div class="rise" style="position:relative; overflow:hidden; border-radius:20px; margin-top:18px; background:linear-gradient(135deg,#4F46E5 0%,#7C3AED 60%,#9333EA 100%); color:#fff;">
+      <svg viewBox="0 0 1080 340" width="100%" height="340" style="display:block;" preserveAspectRatio="xMidYMid slice">
+        <g fill="#ffffff" opacity="0.16">
+          <g transform="translate(880 90)">
+            <path d="M0,-60 C7,-19 19,-7 60,0 C19,7 7,19 0,60 C-7,19 -19,7 -60,0 C-19,-7 -7,-19 0,-60 Z">
+              <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="22s" repeatCount="indefinite"/>
+            </path>
+          </g>
+          <g transform="translate(960 230)">
+            <path d="M0,-26 C3,-8 8,-3 26,0 C8,3 3,8 0,26 C-3,8 -8,3 -26,0 C-8,-3 -3,-8 0,-26 Z">
+              <animate attributeName="opacity" values="0.3;0.9;0.3" dur="3.5s" repeatCount="indefinite"/>
+            </path>
+          </g>
+          <g transform="translate(150 250)">
+            <path d="M0,-18 C2,-6 6,-2 18,0 C6,2 2,6 0,18 C-2,6 -6,2 -18,0 C-6,-2 -2,-6 0,-18 Z">
+              <animate attributeName="opacity" values="0.2;0.8;0.2" dur="4.2s" repeatCount="indefinite"/>
+            </path>
+          </g>
+        </g>
+      </svg>
+      <div style="position:absolute; top:0; left:0; right:0; bottom:0; display:flex; flex-direction:column; justify-content:center; padding:0 7%;">
+        <div style="font-size:13px; letter-spacing:3px; font-weight:700; color:#e0e7ff;">CLAUDE&nbsp;AI&nbsp;PARA&nbsp;ODOO</div>
+        <h1 style="font-size:40px; font-weight:900; margin:8px 0 6px; line-height:1.05; max-width:620px;">Conecta Odoo directamente con Claude</h1>
+        <p style="font-size:17px; color:#ede9fe; max-width:560px; margin:0;">
+          Chatea y deja que Claude <strong>cree, edite, elimine, restablezca a borrador y cambie de estado</strong>
+          tus registros — individual o masivamente — sin apps de terceros ni instalación local.
+        </p>
+        <div style="margin-top:16px;">
+          <span class="glow" style="display:inline-block; background:#D97757; color:#fff; font-weight:800; font-size:14px; padding:7px 16px; border-radius:999px;">GRATIS por lanzamiento</span>
+          <span style="display:inline-block; background:rgba(255,255,255,.18); color:#fff; font-size:13px; padding:7px 14px; border-radius:999px; margin-left:6px;">Odoo 19</span>
+          <span style="display:inline-block; background:rgba(255,255,255,.18); color:#fff; font-size:13px; padding:7px 14px; border-radius:999px; margin-left:6px;">Sin dependencias</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ STATS ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3"><div class="stat rounded p-4 h-100" style="background:#4338ca; color:#fff;"><div style="font-size:30px; font-weight:800;">2</div><div style="font-size:13px; margin-top:6px;">Modos: chat + conector</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat rounded p-4 h-100" style="background:#6366f1; color:#fff;"><div style="font-size:30px; font-weight:800;">9</div><div style="font-size:13px; margin-top:6px;">Herramientas de Odoo</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat rounded p-4 h-100" style="background:#818cf8; color:#fff;"><div style="font-size:30px; font-weight:800;">&#8734;</div><div style="font-size:13px; margin-top:6px;">Registros a la vez</div></div></div>
+      <div class="col-6 col-md-3"><div class="stat rounded p-4 h-100" style="background:#10b981; color:#fff;"><div style="font-size:30px; font-weight:800;">0</div><div style="font-size:13px; margin-top:6px;">Apps de terceros</div></div></div>
+    </div>
+
+    <!-- ============ INTRO ============ -->
+    <div class="text-center py-3">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">IA DENTRO DE TU ERP</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Pega tu API key y listo</h2>
+      <p class="mx-auto" style="color:#5b5b78; font-size:17px; max-width:780px; margin-top:12px;">
+        Igual que los conectores de ChatGPT o Gemini: pegas tu <strong style="color:#1f2937;">API key de Anthropic</strong>
+        en Ajustes, eliges qué modelos puede tocar Claude y conversas con él dentro de Odoo. Sin Claude de escritorio,
+        sin terminal, sin puentes locales.
+      </p>
+    </div>
+
+    <!-- ============ MAQUETA DE CHAT ANIMADA ============ -->
+    <div class="rise rounded p-2 p-md-3 my-3" style="background:#0f172a;">
+      <div style="display:flex; gap:10px; min-height:300px;">
+        <!-- sidebar -->
+        <div style="width:150px; background:#111827; border-radius:12px; padding:10px;" class="d-none d-md-block">
+          <div style="background:#4f46e5; color:#fff; font-size:12px; font-weight:700; text-align:center; padding:8px; border-radius:8px;">+ Nueva</div>
+          <div style="color:#cbd5e1; font-size:12px; padding:8px 6px; margin-top:6px; background:#1f2937; border-radius:6px;">Facturas a borrador</div>
+          <div style="color:#94a3b8; font-size:12px; padding:8px 6px;">Crear contactos</div>
+          <div style="color:#94a3b8; font-size:12px; padding:8px 6px;">Limpiar impuestos</div>
+        </div>
+        <!-- thread -->
+        <div style="flex:1; background:#0b1220; border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px;">
+          <div class="msg" style="align-self:flex-end; background:#4a4af0; color:#fff; padding:9px 13px; border-radius:12px; max-width:78%; font-size:14px; animation-delay:.1s;">
+            Restablece a borrador las facturas 5 y 7
+          </div>
+          <div class="msg" style="align-self:flex-start; color:#94a3b8; font-size:13px; font-style:italic; animation-delay:.7s;">
+            <i class="fa fa-lightbulb-o"></i> Voy a verificar el estado y aplicar el cambio…
+          </div>
+          <div class="msg" style="align-self:flex-start; background:#0e2a1c; border:1px solid #14532d; color:#86efac; padding:8px 12px; border-radius:10px; font-size:13px; animation-delay:1.3s;">
+            <i class="fa fa-cog"></i>&nbsp; button_draft &rarr; account.move [5, 7] &nbsp;<strong style="color:#22c55e;">&#10003; 2 registros</strong>
+          </div>
+          <div class="msg" style="align-self:flex-start; background:#111827; border:1px solid #1f2937; color:#e5e7eb; padding:9px 13px; border-radius:12px; max-width:80%; font-size:14px; animation-delay:1.9s;">
+            Listo: las facturas 5 y 7 volvieron a borrador. ¿Quieres que también actualice sus impuestos?
+          </div>
+          <div class="msg" style="align-self:flex-start; color:#64748b; font-size:13px; animation-delay:2.5s;">
+            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          </div>
+          <div style="margin-top:auto; display:flex; gap:8px; padding-top:8px;">
+            <div style="flex:1; background:#1f2937; color:#64748b; border-radius:8px; padding:9px 12px; font-size:13px;">Escribe tu instrucción para Claude…</div>
+            <div style="background:#4f46e5; color:#fff; border-radius:8px; padding:9px 14px;"><i class="fa fa-paper-plane"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ ANTES / CON CLAUDE ============ -->
+    <div class="row g-4 py-3">
+      <div class="col-12 col-md-6">
+        <div class="rounded p-4 h-100" style="background:#fff5f3; border:1px solid #ffd9d1;">
+          <h3 style="color:#c0392b; font-size:19px; font-weight:700;"><i class="fa fa-hand-paper-o"></i> A mano</h3>
+          <div style="font-size:14px; line-height:2.0; color:#7a4a44; margin-top:8px;">
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Abrir y editar registro por registro</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Recordar nombres técnicos y filtros</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Apps de terceros o puentes locales</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Tareas repetitivas y propensas a error</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="card rounded p-4 h-100 shadow-sm" style="background:#eef0ff; border:1px solid #c7ccfb;">
+          <h3 style="color:#4338ca; font-size:19px; font-weight:700;"><i class="fa fa-rocket"></i> Con Claude AI</h3>
+          <div style="font-size:14px; line-height:2.0; color:#3a3a63; margin-top:8px;">
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Pides en lenguaje natural y Claude lo hace</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Individual o masivo en una sola orden</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Con tus permisos y todo auditado</div>
+            <div><i class="fa fa-check-circle" style="color:#6366f1;"></i> Dentro de Odoo y desde Claude.ai</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FUNCIONALIDADES ============ -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Todo lo que Claude puede hacer</h2>
+    </div>
+    <div class="row g-4 pb-2">
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-comments"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Chat dentro de Odoo</h3>
+        <p style="font-size:14px; color:#5b5b78;">Un panel de chat nativo. Conversas con Claude y él ejecuta las operaciones por ti.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-magic"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Crear / editar / eliminar</h3>
+        <p style="font-size:14px; color:#5b5b78;">CRUD completo, individual o masivo, sobre los modelos que tú habilites.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-undo"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cambios de estado</h3>
+        <p style="font-size:14px; color:#5b5b78;">Restablecer a borrador, confirmar, cancelar… en lote, con métodos permitidos por modelo.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-plug"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Conector remoto</h3>
+        <p style="font-size:14px; color:#5b5b78;">Úsalo desde Claude.ai web y la app de escritorio como "conector personalizado". Sin instalar nada local.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#e0e7ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4338ca;"><i class="fa fa-shield"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Permisos por modelo</h3>
+        <p style="font-size:14px; color:#5b5b78;">Decides qué modelos y qué operaciones (leer/crear/editar/eliminar/acciones) puede tocar Claude.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rise rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="ico rounded text-center" style="background:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-lock"></i></div>
+        <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Seguro y auditado</h3>
+        <p style="font-size:14px; color:#5b5b78;">Se ejecuta con tus permisos de Odoo. Las operaciones destructivas/masivas piden confirmación y todo queda en bitácora.</p></div></div>
+    </div>
+
+    <!-- ============ CÓMO CONFIGURAR ============ -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">EN 3 PASOS</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Cómo configurarlo</h2>
+    </div>
+    <div class="row g-4 pb-2">
+      <div class="col-12 col-md-4"><div class="card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="rounded-circle text-center float" style="background:#4338ca; color:#fff; width:42px; height:42px; line-height:42px; font-weight:800;">1</div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:12px;">Instala y activa</h3>
+        <p style="font-size:14px; color:#5b5b78;">Instala el módulo y, en <strong>Ajustes &rarr; Claude AI</strong>, actívalo y pega tu <strong>API key de Anthropic</strong>.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="rounded-circle text-center float" style="background:#6366f1; color:#fff; width:42px; height:42px; line-height:42px; font-weight:800;">2</div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:12px;">Habilita modelos</h3>
+        <p style="font-size:14px; color:#5b5b78;">Elige qué modelos puede tocar Claude y con qué operaciones. De fábrica solo lectura de contactos.</p></div></div>
+      <div class="col-12 col-md-4"><div class="card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <div class="rounded-circle text-center float" style="background:#10b981; color:#fff; width:42px; height:42px; line-height:42px; font-weight:800;">3</div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:12px;">Chatea</h3>
+        <p style="font-size:14px; color:#5b5b78;">Abre <strong>Claude AI &rarr; Chat</strong> y pídele lo que necesites en lenguaje natural.</p></div></div>
+    </div>
+
+    <!-- ============ CÓMO USAR ============ -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">DOS FORMAS DE USARLO</div>
+      <h2 style="color:#4338ca; font-weight:800; font-size:30px; margin-top:6px;">Cómo usarlo</h2>
+    </div>
+    <div class="row g-4 pb-2">
+      <div class="col-12 col-md-6"><div class="card rounded p-4 h-100 shadow-sm" style="background:#eef0ff; border:1px solid #c7ccfb;">
+        <h3 style="color:#4338ca; font-size:18px; font-weight:700;"><i class="fa fa-comments"></i> Chat dentro de Odoo</h3>
+        <p style="font-size:14px; color:#3a3a63; margin-top:6px;">Abre <strong>Claude AI &rarr; Chat</strong> y escribe, por ejemplo:</p>
+        <div style="font-size:13px; color:#3a3a63; line-height:2.0;">
+          <div>&#8226; "Crea un contacto Acme con NIT X"</div>
+          <div>&#8226; "Restablece a borrador las facturas 5 y 7"</div>
+          <div>&#8226; "Cambia el cliente de estas 10 facturas a Y"</div>
+        </div>
+      </div></div>
+      <div class="col-12 col-md-6"><div class="card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #e4e6fb;">
+        <h3 style="color:#4338ca; font-size:18px; font-weight:700;"><i class="fa fa-plug"></i> Conector remoto (Claude.ai / escritorio)</h3>
+        <div style="font-size:13px; color:#5b5b78; line-height:1.9; margin-top:6px;">
+          <div>1. Ajustes &rarr; Claude AI &rarr; Conector remoto: actívalo y copia la URL <code>/claude/mcp</code>.</div>
+          <div>2. En Claude.ai &rarr; Settings &rarr; Connectors &rarr; Add custom connector, pega la URL e inicia sesión (OAuth).</div>
+          <div>3. Para escritorio/API: genera un token estático y úsalo como Bearer.</div>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- ============ COMPATIBILIDAD ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3"><div class="rounded p-4 h-100" style="background:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#4338ca;"><i class="fa fa-bolt"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Odoo 19</h4><p style="font-size:12px; color:#5b5b78;">Community y Enterprise.</p></div></div>
+      <div class="col-6 col-md-3"><div class="rounded p-4 h-100" style="background:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#10b981;"><i class="fa fa-puzzle-piece"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Sin dependencias</h4><p style="font-size:12px; color:#5b5b78;">No requiere pip extra.</p></div></div>
+      <div class="col-6 col-md-3"><div class="rounded p-4 h-100" style="background:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#818cf8;"><i class="fa fa-cloud"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">Online / odoo.sh</h4><p style="font-size:12px; color:#5b5b78;">Instala sin complicaciones.</p></div></div>
+      <div class="col-6 col-md-3"><div class="rounded p-4 h-100" style="background:#fff; border:1px solid #e4e6fb;"><div style="font-size:26px; color:#10b981;"><i class="fa fa-lock"></i></div><h4 style="color:#4338ca; font-size:15px; margin-top:8px;">OAuth 2.1</h4><p style="font-size:12px; color:#5b5b78;">Conector seguro con PKCE.</p></div></div>
+    </div>
+
+    <!-- ============ DEMO ============ -->
+    <div class="rounded p-4 my-4 text-center" style="background:#0f172a; color:#fff;">
+      <div style="color:#818cf8; font-weight:700; font-size:13px; letter-spacing:2px; text-transform:uppercase;">Pruébalo</div>
+      <h2 style="color:#fff; font-weight:800; font-size:27px; margin-top:6px;">Demo en vivo, gratis</h2>
+      <p class="mx-auto" style="color:#cbd5e1; max-width:600px; margin-top:8px; font-size:15px;">
+        Entra a nuestra base de demostración y prueba el módulo con datos reales, sin instalar nada.
+      </p>
+      <a href="https://www.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background:#6366f1; color:#fff; font-weight:800; font-size:16px; text-decoration:none; padding:13px 34px; border-radius:999px; margin-top:8px;">
+        Entrar a www.kontaxes.com &rarr;
+      </a>
+    </div>
+
+    <!-- ============ PRECIO ============ -->
+    <div class="rounded text-center p-4 my-4" style="background:#f0f9ff; border:2px solid #0369a1;">
+      <div style="color:#0369a1; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Lanzamiento</div>
+      <div style="font-size:46px; font-weight:900; color:#10b981; line-height:1.1; margin-top:6px;">GRATIS</div>
+      <div style="margin-top:8px;">
+        <span style="color:#64748b; font-size:14px;">Valor real del módulo: <s>$200 USD</s></span>
+      </div>
+      <div style="margin-top:10px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:4px 12px; border-radius:999px;">Gratis por lanzamiento, hasta nuevo aviso</span>
+        <span style="background:#fef9c3; color:#854d0e; font-size:13px; font-weight:700; padding:4px 12px; border-radius:999px; margin-left:6px;">En 2026: 50% de descuento</span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:12px; margin-bottom:0;">
+        Aprovecha el periodo de lanzamiento: instálalo hoy sin costo y consérvalo en tu instancia.
+      </p>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="rounded text-center p-5 my-4" style="background:linear-gradient(135deg,#4338ca,#7C3AED); color:#fff;">
+      <h2 style="color:#fff; font-weight:800; font-size:26px;">Tu ERP, ahora con IA</h2>
+      <p class="mx-auto" style="color:#dcdcfb; max-width:620px; margin-top:10px; font-size:15px;">
+        Conecta Odoo con Claude y opera tu negocio con lenguaje natural — seguro, auditado y sin complicaciones.
+      </p>
+    </div>
+
+    <div class="text-center pb-5" style="color:#9a9ab5; font-size:13px;">
+      <p style="margin-bottom:4px;">Claude AI para Odoo &mdash; por KONTAXES</p>
+      <p style="margin:0;">Odoo 19 &bull; Community &amp; Enterprise &bull; Soporte: admin@kontaxes.com</p>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

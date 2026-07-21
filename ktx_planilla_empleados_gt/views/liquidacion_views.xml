@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════ Formulario ══════════════ -->
+    <record id="view_liquidacion_form" model="ir.ui.view">
+        <field name="name">ktx.planilla.liquidacion.form</field>
+        <field name="model">ktx.planilla.liquidacion</field>
+        <field name="arch" type="xml">
+            <form string="Liquidación de Prestaciones">
+                <header>
+                    <button name="action_calcular" string="Calcular"
+                            type="object" class="btn-primary"
+                            invisible="state not in ('draft', 'calculated')"/>
+                    <button name="action_confirmar" string="Confirmar"
+                            type="object" class="btn-primary"
+                            invisible="state != 'calculated'"
+                            confirm="Se generará la planilla de liquidación. ¿Continuar?"/>
+                    <button name="action_contabilizar" string="Contabilizar"
+                            type="object" class="btn-primary"
+                            invisible="state != 'confirmed'"/>
+                    <button name="action_registrar_pago" string="Registrar Pago"
+                            type="object" class="btn-primary"
+                            invisible="state != 'posted'"/>
+                    <button name="action_imprimir_finiquito" string="Imprimir Finiquito"
+                            type="object" class="btn-secondary"
+                            invisible="state in ('draft',)"/>
+                    <button name="action_enviar_recibo" string="Enviar Finiquito"
+                            type="object" class="btn-secondary"
+                            invisible="state in ('draft', 'calculated')"/>
+                    <button name="action_regresar_borrador" string="Regresar a Borrador"
+                            type="object"
+                            invisible="state not in ('calculated', 'cancel')"/>
+                    <button name="action_cancelar" string="Cancelar"
+                            type="object" class="btn-danger"
+                            invisible="state in ('paid', 'cancel')"
+                            confirm="Se cancelará la liquidación y su planilla. ¿Continuar?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,calculated,confirmed,posted,paid"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Pagada" bg_color="text-bg-success"
+                            invisible="state != 'paid'"/>
+                    <widget name="web_ribbon" title="Cancelada" bg_color="text-bg-danger"
+                            invisible="state != 'cancel'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3><field name="employee_id" widget="many2one_avatar_employee"
+                                   readonly="state != 'draft'"/></h3>
+                    </div>
+                    <group>
+                        <group string="Relación Laboral">
+                            <field name="fecha_inicio" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="fecha_fin" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="dias_relacion"/>
+                            <field name="tipo_finalizacion" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                        <group string="Base de Cálculo">
+                            <field name="salario_promedio" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="vacaciones_gozadas" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="indemnizacion_obligatoria" invisible="1"/>
+                            <field name="incluir_indemnizacion"
+                                   readonly="indemnizacion_obligatoria or state not in ('draft', 'calculated')"
+                                   help="Obligatoria en despido injustificado o si el empleado tiene prestaciones universales."/>
+                            <field name="incluir_bono14" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="incluir_aguinaldo" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="incluir_vacaciones" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="incluir_salario" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="salario_pendiente_desde"
+                                   invisible="not incluir_salario"
+                                   required="incluir_salario"
+                                   readonly="state not in ('draft', 'calculated')"/>
+                        </group>
+                    </group>
+                    <group string="Justificación / Causal"
+                           invisible="tipo_finalizacion not in ('despido_justificado', 'despido_injustificado', 'otro')">
+                        <field name="justificacion" nolabel="1" colspan="2"
+                               placeholder="Detalle la causal legal (art. 77 CdT), hechos y respaldo documental…"
+                               readonly="state not in ('draft', 'calculated')"/>
+                    </group>
+                    <notebook>
+                        <page string="Cálculo de Prestaciones" name="calculo">
+                            <group>
+                                <group string="Prestaciones">
+                                    <label for="salario_monto" string="Salario Pendiente"/>
+                                    <div class="o_row">
+                                        <field name="salario_monto" readonly="state not in ('draft', 'calculated')"/>
+                                        <span class="text-muted">(<field name="salario_dias" class="mx-1"/> días)</span>
+                                    </div>
+                                    <label for="bono14_monto" string="Bono 14"/>
+                                    <div class="o_row">
+                                        <field name="bono14_monto" readonly="state not in ('draft', 'calculated')"/>
+                                        <span class="text-muted">(<field name="bono14_dias" class="mx-1"/> días)</span>
+                                    </div>
+                                    <label for="aguinaldo_monto" string="Aguinaldo"/>
+                                    <div class="o_row">
+                                        <field name="aguinaldo_monto" readonly="state not in ('draft', 'calculated')"/>
+                                        <span class="text-muted">(<field name="aguinaldo_dias" class="mx-1"/> días)</span>
+                                    </div>
+                                    <label for="vacaciones_monto" string="Vacaciones"/>
+                                    <div class="o_row">
+                                        <field name="vacaciones_monto" readonly="state not in ('draft', 'calculated')"/>
+                                        <span class="text-muted">(<field name="vacaciones_dias" class="mx-1"/> días)</span>
+                                    </div>
+                                    <label for="indemnizacion_monto" string="Indemnización"/>
+                                    <div class="o_row">
+                                        <field name="indemnizacion_monto" readonly="state not in ('draft', 'calculated')"/>
+                                        <span class="text-muted">(<field name="indemnizacion_dias" class="mx-1"/> días)</span>
+                                    </div>
+                                </group>
+                                <group string="Total">
+                                    <field name="total" class="fw-bold text-success fs-3"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Plan de Pagos" name="pagos">
+                            <field name="pago_ids" readonly="state in ('paid', 'cancel')">
+                                <list editable="bottom">
+                                    <field name="fecha"/>
+                                    <field name="descripcion"/>
+                                    <field name="monto" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                            <div class="text-muted">
+                                Si la liquidación se paga fraccionada, cada pago
+                                programado se enumera en el finiquito con su fecha.
+                            </div>
+                        </page>
+                        <page string="Contabilidad" name="contabilidad">
+                            <group>
+                                <group>
+                                    <field name="planilla_id"/>
+                                    <field name="linea_id"/>
+                                </group>
+                                <group>
+                                    <field name="payment_ids" nolabel="1" colspan="2" readonly="1">
+                                        <list>
+                                            <field name="name"/>
+                                            <field name="date"/>
+                                            <field name="amount"/>
+                                            <field name="state" widget="badge"/>
+                                        </list>
+                                    </field>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="notas"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════ Lista ══════════════ -->
+    <record id="view_liquidacion_list" model="ir.ui.view">
+        <field name="name">ktx.planilla.liquidacion.list</field>
+        <field name="model">ktx.planilla.liquidacion</field>
+        <field name="arch" type="xml">
+            <list string="Liquidaciones"
+                  decoration-success="state == 'paid'"
+                  decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="tipo_finalizacion" widget="badge"
+                       decoration-danger="tipo_finalizacion == 'despido_injustificado'"
+                       decoration-warning="tipo_finalizacion == 'despido_justificado'"
+                       decoration-info="tipo_finalizacion == 'renuncia'"/>
+                <field name="fecha_inicio"/>
+                <field name="fecha_fin"/>
+                <field name="dias_relacion"/>
+                <field name="salario_promedio" optional="show"/>
+                <field name="total" sum="Total"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'posted'"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════ Búsqueda ══════════════ -->
+    <record id="view_liquidacion_search" model="ir.ui.view">
+        <field name="name">ktx.planilla.liquidacion.search</field>
+        <field name="model">ktx.planilla.liquidacion</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Liquidaciones">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <filter name="filter_injustificado" string="Despido Injustificado"
+                        domain="[('tipo_finalizacion', '=', 'despido_injustificado')]"/>
+                <filter name="filter_justificado" string="Despido Justificado"
+                        domain="[('tipo_finalizacion', '=', 'despido_justificado')]"/>
+                <filter name="filter_renuncia" string="Renuncia"
+                        domain="[('tipo_finalizacion', '=', 'renuncia')]"/>
+                <separator/>
+                <filter name="filter_pendientes" string="Pendientes de Pago"
+                        domain="[('state', '=', 'posted')]"/>
+                <filter name="filter_pagadas" string="Pagadas"
+                        domain="[('state', '=', 'paid')]"/>
+                <group name="groupby">
+                    <filter name="group_employee" string="Empleado"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_tipo" string="Motivo"
+                            context="{'group_by': 'tipo_finalizacion'}"/>
+                    <filter name="group_state" string="Estado"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_liquidacion" model="ir.actions.act_window">
+        <field name="name">Liquidaciones de Prestaciones</field>
+        <field name="res_model">ktx.planilla.liquidacion</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_liquidacion_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree la primera liquidación
+            </p>
+            <p>
+                Indique el empleado, las fechas de la relación laboral y el
+                motivo de finalización: el sistema calcula indemnización,
+                Bono 14, aguinaldo y vacaciones no gozadas con el promedio de
+                los últimos 6 meses, genera la partida contable, el pago y el
+                finiquito listo para firmar.
+            </p>
+        </field>
+    </record>
+
+</odoo>

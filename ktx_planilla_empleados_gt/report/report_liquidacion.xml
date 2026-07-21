@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_liquidacion" model="ir.actions.report">
+        <field name="name">Liquidación y Finiquito</field>
+        <field name="model">ktx.planilla.liquidacion</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_planilla_empleados_gt.report_liquidacion</field>
+        <field name="report_file">ktx_planilla_empleados_gt.report_liquidacion</field>
+        <field name="paperformat_id" ref="paperformat_recibo_carta"/>
+        <field name="binding_model_id" ref="model_ktx_planilla_liquidacion"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">('Liquidacion ' + object.name + ' ' + (object.employee_id.name or '')).replace('/', '-')</field>
+    </record>
+
+    <template id="report_liquidacion">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="liq">
+                <t t-set="emp" t-value="liq.employee_id.sudo()"/>
+                <t t-set="simbolo" t-value="liq.currency_id.symbol or 'Q'"/>
+                <div class="page" style="font-family: 'Helvetica', sans-serif; font-size: 10.5px; color: #222; line-height: 1.45;">
+
+                    <!-- ══ Encabezado ══ -->
+                    <div style="text-align: center; margin-bottom: 14px;">
+                        <div style="font-size: 14px; font-weight: bold;" t-out="liq.company_id.name"/>
+                        <div style="font-size: 13px; font-weight: bold; margin-top: 10px; letter-spacing: 1px;">
+                            LIQUIDACIÓN DE<br/>PRESTACIONES LABORALES
+                        </div>
+                    </div>
+                    <div style="text-align: right; margin-bottom: 12px;">
+                        Guatemala, <t t-out="liq._fecha_texto()"/>
+                    </div>
+
+                    <!-- ══ Datos ══ -->
+                    <table style="font-size: 10.5px; margin-bottom: 12px;">
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Empleado:</td>
+                            <td t-out="emp.name"/></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">DPI:</td>
+                            <td t-out="emp.identification_id or ''"/></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Puesto:</td>
+                            <td t-out="emp.job_title or emp.job_id.name or ''"/></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Inicio Relación Laboral:</td>
+                            <td t-out="liq.fecha_inicio.strftime('%d/%m/%Y') if liq.fecha_inicio else ''"/></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Fin Relación Laboral:</td>
+                            <td t-out="liq.fecha_fin.strftime('%d/%m/%Y') if liq.fecha_fin else ''"/></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Tiempo en la empresa:</td>
+                            <td><t t-out="liq.dias_relacion"/> días</td></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Salario promedio (6 meses):</td>
+                            <td><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(liq.salario_promedio)"/> mensuales</td></tr>
+                        <tr><td style="font-weight: bold; padding-right: 20px;">Motivo de finalización:</td>
+                            <td style="font-weight: bold; text-transform: uppercase;"
+                                t-out="liq._tipo_finalizacion_texto()"/></tr>
+                    </table>
+
+                    <!-- ══ Tabla de prestaciones ══ -->
+                    <table style="width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 12px;">
+                        <tr style="background-color: #444; color: #fff; font-weight: bold;">
+                            <td style="border: 1px solid #444; padding: 3px 6px; text-align: center;">NO.</td>
+                            <td style="border: 1px solid #444; padding: 3px 6px;">PRESTACIÓN LABORAL</td>
+                            <td style="border: 1px solid #444; padding: 3px 6px;">BASE LEGAL</td>
+                            <td style="border: 1px solid #444; padding: 3px 6px; text-align: center;">DÍAS APLICABLES</td>
+                            <td style="border: 1px solid #444; padding: 3px 6px; text-align: right;">MONTO</td>
+                        </tr>
+                        <tr t-foreach="liq._filas_prestaciones()" t-as="fila">
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-align: center;" t-out="fila[0]"/>
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-transform: uppercase;" t-out="fila[1]"/>
+                            <td style="border: 1px solid #999; padding: 3px 6px;" t-out="fila[2]"/>
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-align: center;">
+                                <t t-if="fila[4]" t-out="fila[3]"/>
+                                <t t-else="">N/A</t>
+                            </td>
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-align: right;">
+                                <t t-if="fila[4]"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(fila[4])"/></t>
+                                <t t-else="">-</t>
+                            </td>
+                        </tr>
+                        <tr style="font-weight: bold; background-color: #f0f0f0;">
+                            <td style="border: 1px solid #999; padding: 3px 6px;" colspan="3"> </td>
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-align: center;">TOTAL</td>
+                            <td style="border: 1px solid #999; padding: 3px 6px; text-align: right;">
+                                <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(liq.total)"/>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ══ Aceptación ══ -->
+                    <div style="text-align: justify; margin-bottom: 14px;">
+                        Con la firma del presente documento de liquidación de Prestaciones Laborales,
+                        derivada de la finalización de la relación laboral entre el empleado
+                        anteriormente descrito y la empresa
+                        <span style="font-weight: bold;" t-out="liq.company_id.name"/> y en general con
+                        cualquier empresa del grupo empresarial a la que ésta pertenece, se dan por
+                        enteradas y aceptadas las cantidades descritas en este documento, en el método
+                        de pago y fechas acordadas por ambas partes.
+                    </div>
+
+                    <!-- ══ FINIQUITO ══ -->
+                    <div style="text-align: center; font-size: 13px; font-weight: bold; letter-spacing: 2px; margin: 14px 0 10px 0;">
+                        FINIQUITO
+                    </div>
+                    <div style="text-align: justify;">
+                        <p>
+                            En la ciudad de Guatemala, con fecha <t t-out="liq._fecha_texto()"/>.
+                        </p>
+                        <p>
+                            Yo: <span style="font-weight: bold;" t-out="emp.name"/>, quien me identifico
+                            con el DPI <span t-out="emp.identification_id or '________________'"/>, hago
+                            constar que he recibido de la empresa
+                            <span style="font-weight: bold;" t-out="liq.company_id.name"/>, la
+                            liquidación correspondiente por la terminación de la relación laboral que
+                            mantuve con dicha entidad.
+                        </p>
+                        <p>
+                            Manifiesto que el monto total de mi liquidación asciende a la suma de
+                            <span style="font-weight: bold;"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(liq.total)"/></span>
+                            (<span t-out="liq._total_letras()"/>
+                            <t t-if="liq.currency_id.name == 'GTQ'"> quetzales</t>)<t t-if="liq.pago_ids">,
+                            la cual será cancelada de la siguiente manera:</t><t t-else="">.</t>
+                        </p>
+                        <ul t-if="liq.pago_ids">
+                            <li t-foreach="liq.pago_ids" t-as="p">
+                                <span style="font-weight: bold;" t-out="p.descripcion or 'Pago'"/>:
+                                <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(p.monto)"/>,
+                                a efectuarse el <t t-out="p.fecha.strftime('%d/%m/%Y') if p.fecha else ''"/>.
+                            </li>
+                        </ul>
+                        <p>
+                            Acepto expresamente la forma de pago descrita, declarando que ha sido
+                            acordada de mutuo consentimiento entre ambas partes, sin coacción ni
+                            engaño alguno.
+                        </p>
+                        <p>
+                            Asimismo, manifiesto que, una vez cancelado en su totalidad el monto
+                            indicado, no tendré nada más que reclamar, judicial ni extrajudicialmente,
+                            en concepto de salarios, prestaciones laborales, indemnización, horas
+                            extraordinarias, vacaciones, aguinaldo, Bono 14, bonificación incentivo,
+                            ventajas económicas, ni ningún otro derecho derivado directa o
+                            indirectamente de la relación laboral que hoy concluye.
+                        </p>
+                        <p>
+                            Por lo anterior, otorgo el más amplio y total finiquito que en derecho
+                            corresponda a favor de la empresa
+                            <span style="font-weight: bold;" t-out="liq.company_id.name"/>, liberándola
+                            de toda responsabilidad presente o futura relacionada con la relación
+                            laboral antes descrita. La firma del presente documento —autógrafa o
+                            electrónica, esta última con plena validez conforme al Decreto 47-2008 del
+                            Congreso de la República, Ley para el Reconocimiento de las Comunicaciones
+                            y Firmas Electrónicas— constituye plena aceptación de su contenido.
+                        </p>
+                        <p>
+                            En fe de lo cual firmo la presente, quedando una copia en poder de cada
+                            una de las partes.
+                        </p>
+                    </div>
+
+                    <!-- ══ Firmas ══ -->
+                    <table style="width: 100%; margin-top: 34px; font-size: 9.5px; border-collapse: collapse;">
+                        <tr>
+                            <td style="width: 48%; text-align: center; vertical-align: bottom;">
+                                <div style="border: 1px solid #444; height: 75px;"> </div>
+                                <div style="border-top: 2px solid #444; padding-top: 3px; font-weight: bold;">
+                                    EL TRABAJADOR (FIRMA DE RECIBIDO)
+                                </div>
+                                <div t-out="emp.name"/>
+                                <div>DPI: <t t-out="emp.identification_id or '____________'"/></div>
+                                <div style="margin-top: 4px;">FECHA: __________ HORA: __________</div>
+                            </td>
+                            <td style="width: 4%;"> </td>
+                            <td style="width: 48%; text-align: center; vertical-align: bottom;">
+                                <div style="border: 1px solid #444; height: 75px;"> </div>
+                                <div style="border-top: 2px solid #444; padding-top: 3px; font-weight: bold;">
+                                    POR EL EMPLEADOR
+                                </div>
+                                <div t-out="liq.company_id.name"/>
+                                <div>Generado por: <t t-out="liq.create_uid.name or ''"/></div>
+                                <div style="margin-top: 4px;">FECHA: <t t-out="liq._fecha_texto()"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ══ Pólizas del pago (anexo) ══ -->
+                    <t t-set="moves" t-value="(liq.linea_id.move_id | liq.payment_ids.move_id).filtered(lambda m: m.state == 'posted')"/>
+                    <div t-if="moves" style="page-break-before: always;">
+                        <div style="font-weight: bold; font-size: 11px; border-bottom: 1px solid #444; margin-bottom: 6px;">
+                            ANEXO — PÓLIZAS CONTABLES DE LA LIQUIDACIÓN
+                            <span style="font-weight: normal;">(partida y pagos conciliados)</span>
+                        </div>
+                        <t t-foreach="moves" t-as="m">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 8.5px; margin-bottom: 6px;">
+                                <tr style="background-color: #e8e8e8; font-weight: bold;">
+                                    <td style="border: 1px solid #aaa; padding: 2px 4px;" colspan="2">
+                                        <t t-out="m.name"/> — <t t-out="m.ref or ''"/> (<t t-out="m.date"/>)
+                                    </td>
+                                    <td style="border: 1px solid #aaa; padding: 2px 4px; text-align: right;">Debe</td>
+                                    <td style="border: 1px solid #aaa; padding: 2px 4px; text-align: right;">Haber</td>
+                                </tr>
+                                <tr t-foreach="m.line_ids" t-as="ml">
+                                    <td style="border: 1px solid #ccc; padding: 2px 4px; width: 15%;"
+                                        t-out="ml.account_id.code or ''"/>
+                                    <td style="border: 1px solid #ccc; padding: 2px 4px;"
+                                        t-out="ml.name or ml.account_id.name"/>
+                                    <td style="border: 1px solid #ccc; padding: 2px 4px; text-align: right; width: 13%;">
+                                        <t t-if="ml.debit"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(ml.debit)"/></t>
+                                    </td>
+                                    <td style="border: 1px solid #ccc; padding: 2px 4px; text-align: right; width: 13%;">
+                                        <t t-if="ml.credit"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(ml.credit)"/></t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 8px; font-size: 7.5px; color: #888;">
+                        <t t-out="liq.name"/> · Generado por Planilla GT — KONTAXES
+                    </div>
+                </div>
+                <p style="page-break-after: always;" t-if="not liq_last"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

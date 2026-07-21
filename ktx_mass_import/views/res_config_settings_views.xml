@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_ktx" model="ir.ui.view">
+        <field name="name">res.config.settings.ktx.mass.import</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="KTX Import FEL" name="ktx_mass_import"
+                     logo="/ktx_mass_import/static/description/icon.png">
+
+                    <block title="Validacion de NIT" name="ktx_nit_block">
+                        <setting string="Permitir NIT receptor diferente (Compras)"
+                                 help="Permite importar facturas de compra aunque el NIT Receptor del XML no coincida con el NIT de la empresa activa.">
+                            <field name="ktx_allow_different_nit"/>
+                        </setting>
+                        <setting string="Permitir NIT emisor diferente (Ventas)"
+                                 help="Permite importar facturas de venta aunque el NIT Emisor del XML no coincida con el NIT de la empresa activa.">
+                            <field name="ktx_allow_different_emisor_nit"/>
+                        </setting>
+                    </block>
+
+                    <block title="Productos por defecto para lineas de importacion" name="ktx_products_block">
+
+                        <div class="alert alert-info mb-3" role="alert">
+                            <strong>&#9432; Antes de configurar, crea los productos en Odoo:</strong><br/>
+                            <ul class="mb-0 mt-1">
+                                <li>
+                                    <strong>Para Bienes (B):</strong> Crea un producto con tipo
+                                    <em>Producto almacenable</em> o <em>Consumible</em>.
+                                    Puede llamarse como quieras (ej. "Producto Generico Bien SAT").
+                                    Lo importante es que su <strong>cuenta de ingresos/gastos</strong>
+                                    corresponda al rubro contable deseado.
+                                </li>
+                                <li class="mt-1">
+                                    <strong>Para Servicios (S):</strong> Crea un producto con tipo
+                                    <em>Servicio</em>.
+                                    Puede llamarse como quieras (ej. "Servicio Generico SAT").
+                                    Su <strong>cuenta contable</strong> se usara como base para las
+                                    lineas de tipo servicio en las facturas importadas.
+                                </li>
+                            </ul>
+                            <div class="mt-2 text-muted small">
+                                El nombre del producto no aparece en la factura impresa —
+                                la descripcion de cada linea viene directamente del XML FEL.
+                                Estos productos sirven unicamente para heredar la cuenta contable
+                                y los impuestos mientras el agente Claude MCP aprende el patron
+                                de tu empresa.
+                            </div>
+                        </div>
+
+                        <setting string="Producto para Bienes (BienOServicio = B)"
+                                 help="Producto Odoo de tipo almacenable o consumible. Se usa para asignar la cuenta contable a lineas de bien en facturas importadas cuando no hay mapeo especifico de impuesto configurado.">
+                            <field name="ktx_default_product_bien_id" options="{'no_create': True}"/>
+                        </setting>
+                        <setting string="Producto para Servicios (BienOServicio = S)"
+                                 help="Producto Odoo de tipo servicio. Se usa para asignar la cuenta contable a lineas de servicio en facturas importadas cuando no hay mapeo especifico de impuesto configurado.">
+                            <field name="ktx_default_product_servicio_id" options="{'no_create': True}"/>
+                        </setting>
+
+                    </block>
+
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

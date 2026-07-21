@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Self-contained mock login page used only by the backend "live preview"
+         widget (Login Studio > Temas). Deliberately calls "web.layout" (the
+         true root template, with no inherit_id) instead of
+         web.frontend_layout / web.login_layout: web.frontend_layout is a
+         primary view based on web.layout, and portal.frontend_layout is a
+         REGULAR (non-primary) extension of web.frontend_layout, so any
+         render of web.frontend_layout (however it's reached) always
+         merges in portal's and website's patches too, which expect a lot of
+         frontend request context (lang, editable, translatable, "website"
+         key in values...) that only the website module's own dispatch
+         preprocessing sets up. web.layout itself has no such extensions
+         (only primary views are based on it), so it's the one safe anchor.
+         We pull in the web.assets_frontend CSS bundle by hand for Bootstrap
+         styling. This preview is cosmetic and admin-only; the real public
+         login page always renders through web.login_layout (see
+         login_templates.xml), wrapped in a ".ktx-login-wrap" div the same
+         way, so the CSS classes here match exactly what a real visitor
+         sees; this has no other bearing on production behavior. -->
+    <template id="preview_page" name="Login Studio - Preview">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Login Studio - Preview</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <t t-call-assets="web.assets_frontend" t-js="false"/>
+                <style t-out="ktx.get('inline_style') or ''"/>
+                <t t-foreach="ktx_head_assets" t-as="ktx_asset">
+                    <link t-if="ktx_asset.asset_type == 'css'" rel="stylesheet" t-att-href="ktx_asset.get_public_url()"/>
+                    <link t-elif="ktx_asset.asset_type == 'font'" rel="preload" as="font" crossorigin="anonymous" t-att-href="ktx_asset.get_public_url()"/>
+                </t>
+            </t>
+
+            <!-- Same rule as the real page: in "custom" mode none of the
+                 built-in theme-engine classes are added, so the preview
+                 doesn't fight the admin's own custom_css either. -->
+            <t t-set="ktx_wrap_class"
+               t-value="('ktx-login-wrap ktx-template-' + (ktx.get('template') or 'centered') + (' ktx-glass' if ktx.get('glassmorphism') else '') + (' ktx-split-right' if ktx.get('split_alignment') == 'right' else '') + (' ktx-bg-animated' if ktx.get('background_type') == 'animated_gradient' else '') + (' ktx-anim-' + ktx.get('card_entrance_animation') if ktx.get('card_entrance_animation') and ktx.get('card_entrance_animation') != 'none' else '') + (' ktx-ambient-glow ktx-glow-' + (ktx.get('ambient_glow_intensity') or 'medium') if ktx.get('ambient_glow') else '') + (' ktx-input-' + (ktx.get('input_style') or 'outlined')) + (' ktx-input-glow' if ktx.get('input_focus_glow') else '') + (' ktx-input-icons' if ktx.get('input_icons') else '') + (' ktx-btn-hover-' + ktx.get('button_hover_effect') if ktx.get('button_hover_effect') and ktx.get('button_hover_effect') != 'none' else '') if ktx.get('render_mode') == 'styled' else 'ktx-login-wrap') + (' ' + ktx.get('custom_body_class') if ktx.get('custom_body_class') else '') + (' ktx-hide-header' if ktx.get('hide_website_header') else '')"/>
+
+            <div t-attf-class="#{ktx_wrap_class}">
+                <div class="ktx-background-overlay"
+                     t-attf-style="background-color: #{ktx.get('background_overlay_color') or '#000000'}; opacity: #{ktx.get('background_overlay_opacity') or 0.3}; #{'display: block;' if ktx.get('background_type') in ('image', 'video') else ''}"/>
+
+                <video t-if="ktx.get('render_mode') == 'styled' and ktx.get('background_type') == 'video' and ktx.get('has_background_video')"
+                       class="ktx-bg-video" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline">
+                    <source t-attf-src="/ktx_login_studio/background_video?theme_id=#{ktx.get('theme_id')}"/>
+                </video>
+
+                <div class="ktx-ambient-glow-blob" t-if="ktx.get('ambient_glow')"
+                     t-att-style="'background: radial-gradient(circle, ' + (ktx.get('ambient_glow_color') or '#7c3aed') + ' 0%, transparent 70%);'"/>
+
+                <div class="ktx-split-aside" t-if="ktx.get('render_mode') == 'styled' and ktx.get('template') == 'split'">
+                    <div class="ktx-branding-content">
+                        <img t-if="ktx.get('company_logo')" t-attf-src="/ktx_login_studio/image/company_logo?theme_id=#{ktx.get('theme_id')}" alt="Logo" class="ktx-logo"/>
+                        <img t-else="" src="/web/binary/company_logo" alt="Logo" class="ktx-logo"/>
+                        <p t-if="ktx.get('show_portal_name')" class="ktx-portal-name mt-3 mb-0 small">
+                            Accede al portal de: <strong><t t-out="ktx.get('name')"/></strong>
+                        </p>
+                        <h2 t-if="ktx.get('tagline')" class="ktx-tagline mt-4 h4"><t t-out="ktx.get('tagline')"/></h2>
+                    </div>
+                </div>
+
+                <!-- Same rule as the real page (see login_templates.xml):
+                     "HTML 100% personalizado" content opens/closes its own
+                     container tags across the mock form, so it must render
+                     as flat, unwrapped siblings here too, or the preview
+                     would mislead admins into thinking a design works when
+                     it would actually break in production. -->
+                <t t-if="ktx.get('render_mode') == 'custom'">
+                    <t t-out="ktx.get('custom_header_html') or ''"/>
+                    <form onsubmit="return false;">
+                        <div class="mb-3" t-if="ktx.get('page') == 'signup'">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-control" value="Jane Doe" readonly="readonly"/>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input id="login" type="text" class="form-control" value="admin@example.com" readonly="readonly"/>
+                        </div>
+                        <div class="mb-3" t-if="ktx.get('page') != 'reset'">
+                            <label class="form-label">Password</label>
+                            <input id="password" type="password" class="form-control" value="xxxxxxxx" readonly="readonly"/>
+                        </div>
+                        <div class="mb-3" t-if="ktx.get('page') == 'signup'">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" value="xxxxxxxx" readonly="readonly"/>
+                        </div>
+                        <div class="d-grid mb-1 pt-3">
+                            <button type="button" class="btn btn-primary" disabled="disabled">
+                                <t t-if="ktx.get('page') == 'signup'">Sign up</t>
+                                <t t-elif="ktx.get('page') == 'reset'">Reset Password</t>
+                                <t t-else="">Log in</t>
+                            </button>
+                        </div>
+                    </form>
+                    <t t-out="ktx.get('custom_footer_html') or ''"/>
+                </t>
+
+                <div t-else="" class="ktx-login-card card border-0 mx-auto bg-100">
+                    <div class="card-body">
+                        <div t-if="ktx.get('template') != 'split'" class="text-center pb-3 border-bottom mb-4 ktx-card-header">
+                            <img t-if="ktx.get('company_logo')" t-attf-src="/ktx_login_studio/image/company_logo?theme_id=#{ktx.get('theme_id')}" alt="Logo" class="ktx-logo"/>
+                            <img t-else="" src="/web/binary/company_logo" alt="Logo" class="ktx-logo"/>
+                            <p t-if="ktx.get('show_portal_name')" class="ktx-portal-name mt-2 mb-0 small">
+                                Accede al portal de: <strong><t t-out="ktx.get('name')"/></strong>
+                            </p>
+                            <p t-if="ktx.get('tagline')" class="ktx-tagline mt-2 text-muted mb-0"><t t-out="ktx.get('tagline')"/></p>
+                        </div>
+
+                        <div t-if="ktx.get('login_welcome_title') or ktx.get('login_welcome_subtitle')" class="ktx-welcome-block text-center mb-3">
+                            <h4 t-if="ktx.get('login_welcome_title')" class="mb-1 fw-semibold"><t t-out="ktx.get('login_welcome_title')"/></h4>
+                            <p t-if="ktx.get('login_welcome_subtitle')" class="small text-muted mb-0"><t t-out="ktx.get('login_welcome_subtitle')"/></p>
+                        </div>
+
+                        <!-- Cosmetic mock form: read-only, never submits anywhere.
+                             Only its look (inputs/button/colors/radius) matters here. -->
+                        <form onsubmit="return false;">
+                            <div class="mb-3" t-if="ktx.get('page') == 'signup'">
+                                <label class="form-label">Name</label>
+                                <input type="text" class="form-control" value="Jane Doe" readonly="readonly"/>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input id="login" type="text" class="form-control" value="admin@example.com" readonly="readonly"/>
+                            </div>
+                            <div class="mb-3" t-if="ktx.get('page') != 'reset'">
+                                <label class="form-label">Password</label>
+                                <input id="password" type="password" class="form-control" value="xxxxxxxx" readonly="readonly"/>
+                            </div>
+                            <div class="mb-3" t-if="ktx.get('page') == 'signup'">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" value="xxxxxxxx" readonly="readonly"/>
+                            </div>
+                            <div class="d-grid mb-1 pt-3">
+                                <button type="button" class="btn btn-primary" disabled="disabled">
+                                    <t t-if="ktx.get('page') == 'signup'">Sign up</t>
+                                    <t t-elif="ktx.get('page') == 'reset'">Reset Password</t>
+                                    <t t-else="">Log in</t>
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="text-center small mt-4 pt-3 border-top ktx-footer-block">
+                            <div class="mb-1">
+                                <span t-if="ktx.get('show_database_domain')" class="text-muted"
+                                      t-attf-class="#{'border-end pe-2 me-1' if ktx.get('show_powered_by_odoo') else ''}"
+                                      t-out="ktx.get('host') or ktx.get('db') or ''"/>
+                                <a t-if="ktx.get('show_powered_by_odoo')" href="#" onclick="return false;">Powered by <span>Odoo</span></a>
+                            </div>
+                            <div t-if="ktx.get('terms_url') or ktx.get('privacy_url')" class="mt-1">
+                                <a t-if="ktx.get('terms_url')" href="#" onclick="return false;" class="text-muted me-2">
+                                    <t t-out="ktx.get('terms_label') or 'Terms of Service'"/>
+                                </a>
+                                <a t-if="ktx.get('privacy_url')" href="#" onclick="return false;" class="text-muted">
+                                    <t t-out="ktx.get('privacy_label') or 'Privacy Policy'"/>
+                                </a>
+                            </div>
+                            <p t-if="ktx.get('custom_footer_text')" class="text-muted mt-1 mb-0">
+                                <t t-out="ktx.get('custom_footer_text')"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <t t-foreach="ktx_body_assets" t-as="ktx_asset">
+                <script t-if="ktx_asset.asset_type == 'js'" t-att-src="ktx_asset.get_public_url()" defer="defer"></script>
+            </t>
+        </t>
+    </template>
+</odoo>

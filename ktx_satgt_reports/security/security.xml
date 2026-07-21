@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_satgt_user" model="res.groups">
+        <field name="name">Reportería Fiscal SAT GT / Usuario</field>
+    </record>
+
+    <record id="group_satgt_manager" model="res.groups">
+        <field name="name">Reportería Fiscal SAT GT / Administrador</field>
+        <field name="implied_ids" eval="[(4, ref('group_satgt_user'))]"/>
+    </record>
+
+    <!-- Auto-grant user access to internal users with accounting access -->
+    <record id="account.group_account_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_satgt_user'))]"/>
+    </record>
+
+    <!-- Auto-grant manager access to account managers -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_satgt_manager'))]"/>
+    </record>
+</odoo>

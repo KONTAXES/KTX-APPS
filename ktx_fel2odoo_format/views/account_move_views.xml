@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_format_account_move_view_form" model="ir.ui.view">
+        <field name="name">account.move.form.ktx.fel2odoo.format</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[last()]" position="after">
+                <field name="ktx_fel_format_available" invisible="1"/>
+                <button name="action_print_fel_format" type="object"
+                        string="Imprimir FEL"
+                        class="btn-secondary"
+                        icon="fa-file-pdf-o"
+                        invisible="not ktx_fel_format_available"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

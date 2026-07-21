@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ktx_login_studio.PreviewWidget" owl="1">
+        <div class="ktx-preview-widget d-flex flex-column h-100 ps-xl-4 border-start">
+            <div class="d-flex mb-3 gap-2 flex-wrap">
+                <button class="btn btn-sm" t-att-class="state.page === 'login' ? 'btn-primary' : 'btn-outline-secondary'" t-on-click="() => this.setPage('login')">Login</button>
+                <button class="btn btn-sm" t-att-class="state.page === 'signup' ? 'btn-primary' : 'btn-outline-secondary'" t-on-click="() => this.setPage('signup')">Registro</button>
+                <button class="btn btn-sm" t-att-class="state.page === 'reset' ? 'btn-primary' : 'btn-outline-secondary'" t-on-click="() => this.setPage('reset')">Recuperar Contrasena</button>
+                <span class="ms-auto text-muted small align-self-center">
+                    <i class="fa fa-spin fa-spinner me-1" t-if="!state.iframeSrc"/>
+                    <t t-if="state.iframeSrc">Vista Previa en Vivo</t>
+                    <t t-else="">Guarda el tema para ver la vista previa</t>
+                </span>
+            </div>
+            <div class="ktx-preview-container rounded border shadow-sm align-self-start" style="background: #e9ecef;">
+                <iframe t-if="state.iframeSrc" t-att-src="state.iframeSrc" class="ktx-preview-iframe" frameborder="0"/>
+            </div>
+        </div>
+    </t>
+
+</templates>

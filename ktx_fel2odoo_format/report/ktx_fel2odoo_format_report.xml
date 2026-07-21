@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         PAPERFORMATS: Estilo "KTX1"
+
+         Margenes en 0: la imagen de fondo/marca de agua debe llegar hasta
+         el borde fisico de la hoja (0mm), asi que el margen de lectura ya
+         no lo da el paperformat: lo da un padding CSS dentro de la
+         plantilla (ver report_ktx1_page), que se puede poner DETRAS de la
+         marca de agua sin dejar franjas blancas en los bordes.
+         ══════════════════════════════════════════════════════════════ -->
+    <record id="paperformat_ktx1_carta" model="report.paperformat">
+        <field name="name">KTX1 - Carta</field>
+        <field name="format">custom</field>
+        <field name="page_height">279</field>
+        <field name="page_width">216</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
+    <record id="paperformat_ktx1_media_carta" model="report.paperformat">
+        <field name="name">KTX1 - Media Carta</field>
+        <field name="format">custom</field>
+        <field name="page_height">216</field>
+        <field name="page_width">140</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
+    <!-- Papel continuo de impresora termica (igual ancho que el ticket ya
+         probado en l10n_gt_corp): alto grande porque el ticket crece con
+         la cantidad de lineas, no tiene un largo fijo real. Sin imagen de
+         fondo en este formato (impresoras termicas son monocromas), asi
+         que si conserva un margen fisico minimo. -->
+    <record id="paperformat_ktx1_ticket" model="report.paperformat">
+        <field name="name">KTX1 - Ticket</field>
+        <field name="format">custom</field>
+        <field name="page_height">400</field>
+        <field name="page_width">72</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">3</field>
+        <field name="margin_bottom">3</field>
+        <field name="margin_left">3</field>
+        <field name="margin_right">3</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+        <field name="dpi">90</field>
+    </record>
+
+    <record id="action_report_ktx1_carta" model="ir.actions.report">
+        <field name="name">Formato FEL GT (KTX1) - Carta</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_fel2odoo_format.report_ktx1_page</field>
+        <field name="report_file">ktx_fel2odoo_format.report_ktx1_page</field>
+        <field name="print_report_name">'FEL_Formato_%s' % (object.name or object.id)</field>
+        <field name="paperformat_id" ref="paperformat_ktx1_carta"/>
+    </record>
+
+    <record id="action_report_ktx1_media_carta" model="ir.actions.report">
+        <field name="name">Formato FEL GT (KTX1) - Media Carta</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_fel2odoo_format.report_ktx1_page</field>
+        <field name="report_file">ktx_fel2odoo_format.report_ktx1_page</field>
+        <field name="print_report_name">'FEL_Formato_%s' % (object.name or object.id)</field>
+        <field name="paperformat_id" ref="paperformat_ktx1_media_carta"/>
+    </record>
+
+    <record id="action_report_ktx1_ticket" model="ir.actions.report">
+        <field name="name">Formato FEL GT (KTX1) - Ticket</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_fel2odoo_format.report_ktx1_ticket</field>
+        <field name="report_file">ktx_fel2odoo_format.report_ktx1_ticket</field>
+        <field name="print_report_name">'FEL_Formato_%s' % (object.name or object.id)</field>
+        <field name="paperformat_id" ref="paperformat_ktx1_ticket"/>
+    </record>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ESTILO KTX1 (Carta / Media Carta)
+         ══════════════════════════════════════════════════════════════ -->
+
+    <!-- Bloque logo+emisor. Se llama dos veces (izquierda o derecha, segun
+         la configuracion) via t-call, que comparte el contexto de la
+         llamada (dte/cfg/emisor/receptor/cert/accent quedan disponibles
+         sin tener que pasarlos explicitamente). -->
+    <template id="ktx1_emisor_block">
+        <t t-set="logo_mm" t-value="26 if cfg['paper_size'] == 'media_carta' else 40"/>
+        <table style="border-collapse: collapse; margin: 0 auto;">
+            <tr>
+                <td t-if="cfg['logo']" style="vertical-align: middle; padding-right: 3mm; text-align: center;">
+                    <img t-att-src="image_data_uri(cfg['logo'])"
+                         t-attf-style="max-width: #{logo_mm}mm; max-height: #{logo_mm}mm; display: inline-block;"/>
+                </td>
+                <td style="vertical-align: middle; text-align: center;">
+                    <div style="font-size: 8.5pt; font-weight: bold; color: #1c2d5a;">
+                        <t t-esc="emisor['nombre_comercial'] or emisor['nombre']"/>
+                    </div>
+                    <t t-if="emisor['nombre_comercial'] and emisor['nombre_comercial'] != emisor['nombre']">
+                        <div style="font-size: 8.5pt; color: #666;"><t t-esc="emisor['nombre']"/></div>
+                    </t>
+                    <div style="font-size: 8.5pt;">NIT: <t t-esc="emisor['nit']"/></div>
+                    <div style="font-size: 8.5pt;">
+                        <t t-esc="emisor['direccion']"/><t t-if="emisor['municipio']">, <t t-esc="emisor['municipio']"/></t>
+                        <t t-if="emisor['departamento']">, <t t-esc="emisor['departamento']"/></t>
+                    </div>
+                    <t t-if="emisor['correo']"><div style="font-size: 8.5pt;"><t t-esc="emisor['correo']"/></div></t>
+                </td>
+            </tr>
+        </table>
+    </template>
+
+    <!-- border-radius no se ve en tablas con border-collapse:collapse (el
+         propio "collapse" desactiva el redondeo de las esquinas). Por eso
+         cada "recuadro" va dentro de un <div> con el borde+radio+overflow
+         hidden, y la tabla de adentro no lleva borde propio. -->
+    <template id="ktx1_dte_block">
+        <!-- Ancho fijo de 50mm (5cm). El desplazamiento vertical (1.5cm)
+             se aplica como padding-top en la celda del encabezado que la
+             contiene (mas fiable que un margin dentro de una celda). -->
+        <div t-attf-style="border: 1.5px solid #{accent}; border-radius: 6px; overflow: hidden; width: 50mm;">
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr t-attf-style="background: #{accent}; color: #{accent_text};">
+                    <td colspan="2" t-attf-style="padding: 1.5mm 3mm; font-weight: bold; text-align: center; color: #{accent_text};">
+                        DTE &#8212; <t t-esc="dte['tipo_documento_label']"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding: 1.5mm 3mm; font-weight: bold; white-space: nowrap;">Fecha:</td>
+                    <td style="padding: 1.5mm 3mm; white-space: nowrap;"><t t-esc="(dte['fecha_emision'] or '').split('T')[0]"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 1.5mm 3mm; font-weight: bold; white-space: nowrap;">Serie:</td>
+                    <td style="padding: 1.5mm 3mm; white-space: nowrap;"><t t-esc="cert['serie']"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 1.5mm 3mm; font-weight: bold; white-space: nowrap;">No.:</td>
+                    <td style="padding: 1.5mm 3mm; white-space: nowrap;"><t t-esc="cert['numero']"/></td>
+                </tr>
+            </table>
+        </div>
+    </template>
+
+    <!-- Todo el contenido de la factura (encabezado, cliente, items,
+         totales, certificador+QR, membrete). Se llama una sola vez, ya sea
+         directo o dentro de la columna derecha de la tabla logo-lateral,
+         para no duplicar el contenido en dos ramas t-if/t-else. -->
+    <template id="ktx1_body">
+        <t t-set="qr_mm" t-value="26 if cfg['paper_size'] == 'media_carta' else 32"/>
+        <t t-set="is_carta" t-value="cfg['paper_size'] == 'carta'"/>
+
+        <!-- ══════════ ENCABEZADO: LOGO+EMISOR  //  CAJA DTE ══════════
+             La caja DTE ocupa una columna fija de 50mm; la columna del
+             logo+emisor toma el resto y centra su contenido. Ambas columnas
+             van alineadas arriba (vertical-align: top), o sea que el logo,
+             los datos de la empresa y la caja DTE arrancan en la misma
+             linea superior. -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 3mm;">
+            <tr>
+                <t t-if="cfg['logo_position'] != 'right'">
+                    <td style="vertical-align: top; text-align: center; padding-top: 15mm;">
+                        <t t-call="ktx_fel2odoo_format.ktx1_emisor_block"/>
+                    </td>
+                    <td style="vertical-align: top; width: 50mm; padding-top: 15mm;">
+                        <t t-call="ktx_fel2odoo_format.ktx1_dte_block"/>
+                    </td>
+                </t>
+                <t t-else="">
+                    <td style="vertical-align: top; width: 50mm; padding-top: 15mm;">
+                        <t t-call="ktx_fel2odoo_format.ktx1_dte_block"/>
+                    </td>
+                    <td style="vertical-align: top; text-align: center; padding-top: 15mm;">
+                        <t t-call="ktx_fel2odoo_format.ktx1_emisor_block"/>
+                    </td>
+                </t>
+            </tr>
+        </table>
+
+        <!-- ══════════ CLIENTE ══════════
+             width:1% + white-space:nowrap en la columna de etiquetas: es el
+             truco estandar para que esa columna se encoja al ancho de su
+             texto y el valor quede pegado justo despues (una sola tabulacion
+             de separacion), en vez de repartir el ancho sobrante y dejar un
+             hueco grande entre etiqueta y valor. -->
+        <div t-attf-style="border: 1.5px solid #{accent}; border-radius: 6px; overflow: hidden; margin-bottom: 3mm; width: 100%;">
+            <table style="border-collapse: collapse; width: 100%;">
+                <tr>
+                    <td style="padding: 1mm 1mm 1mm 3mm; font-weight: bold; white-space: nowrap; width: 1%; vertical-align: top;">Cliente:</td>
+                    <td style="padding: 1mm 3mm;"><t t-esc="receptor['nombre']"/></td>
+                </tr>
+                <tr>
+                    <td style="padding: 1mm 1mm 1mm 3mm; font-weight: bold; white-space: nowrap; width: 1%; vertical-align: top;">NIT:</td>
+                    <td style="padding: 1mm 3mm;"><t t-esc="receptor['id']"/></td>
+                </tr>
+                <tr t-if="receptor['direccion']">
+                    <td style="padding: 1mm 1mm 1mm 3mm; font-weight: bold; white-space: nowrap; width: 1%; vertical-align: top;">Direccion:</td>
+                    <td style="padding: 1mm 3mm;">
+                        <t t-esc="receptor['direccion']"/><t t-if="receptor['municipio']">, <t t-esc="receptor['municipio']"/></t>
+                        <t t-if="receptor['departamento']">, <t t-esc="receptor['departamento']"/></t>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ══════════ ITEMS ══════════
+             En Carta se reserva un alto minimo (~15cm) para el recuadro de
+             lineas, igual que una factura preimpresa de formulario continuo:
+             si hay pocas lineas, el recuadro igual ocupa ese espacio y el
+             resto (frase/totales/certificador) queda debajo. En Media
+             Carta/Ticket no se reserva ese espacio: todo va junto. -->
+        <div t-attf-style="border: 1.5px solid #{accent}; border-radius: 6px; overflow: hidden; margin-bottom: 3mm; #{'min-height: 150mm;' if is_carta else ''}">
+            <table style="width: 100%; border-collapse: collapse; font-size: 8.5pt;">
+                <thead>
+                    <tr t-attf-style="background: #{accent}; color: #{accent_text};">
+                        <th style="padding: 2mm; text-align: left;">B/S</th>
+                        <th style="padding: 2mm; text-align: left;">Cant.</th>
+                        <th style="padding: 2mm; text-align: left;">Descripcion</th>
+                        <th style="padding: 2mm; text-align: right;">Descuento</th>
+                        <th style="padding: 2mm; text-align: right;">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr t-foreach="dte['items']" t-as="item"
+                        t-att-style="'background:#f7f7f7;' if item_index % 2 else ''">
+                        <td style="padding: 1.5mm 2mm; border-bottom: 1px solid #eee;"><t t-esc="item['bien_servicio']"/></td>
+                        <td style="padding: 1.5mm 2mm; border-bottom: 1px solid #eee;">
+                            <t t-esc="'%.2f' % item['cantidad']"/> <t t-esc="item['unidad_medida']"/>
+                        </td>
+                        <td style="padding: 1.5mm 2mm; border-bottom: 1px solid #eee;"><t t-esc="item['descripcion']"/></td>
+                        <td style="padding: 1.5mm 2mm; border-bottom: 1px solid #eee; text-align: right;">
+                            <t t-esc="'%.2f' % item['descuento']"/>
+                        </td>
+                        <td style="padding: 1.5mm 2mm; border-bottom: 1px solid #eee; text-align: right; font-weight: bold;">
+                            <t t-esc="'%.2f' % item['total']"/>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ══════════ FRASE SAT + IVA + TOTAL EN LETRAS + TOTAL ══════════
+             Una sola barra de 2 columnas: izquierda = Frase SAT / Total en
+             letras; derecha = IVA / TOTAL. -->
+        <!-- IMPORTANTE: el color del texto va puesto directamente en cada
+             celda (no solo en el div exterior). El motor de PDF
+             (wkhtmltopdf) NO hereda de forma confiable el 'color' de un div
+             hacia las celdas de una tabla que tiene dentro: por eso este
+             bloque salia con texto negro aunque el div pedia blanco,
+             mientras que la caja DTE y el encabezado de items (que ponen el
+             color en el tr) si salian bien. -->
+        <div t-attf-style="background: #{accent}; border-radius: 6px; overflow: hidden; margin-bottom: 3mm;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                    <td t-attf-style="width: 65%; vertical-align: top; padding: 2mm 3mm; color: #{accent_text};">
+                        <div t-if="dte['frases']">
+                            <b>Frase SAT:</b>
+                            <t t-foreach="dte['frases']" t-as="frase">
+                                <t t-if="frase['texto']"><t t-esc="frase['texto']"/></t>
+                                <t t-else="">Tipo <t t-esc="frase['tipo']"/> / Escenario <t t-esc="frase['escenario']"/></t>
+                                <t t-if="not frase_last">; </t>
+                            </t>
+                        </div>
+                        <div style="margin-top: 1mm;"><b>Total en letras:</b> <t t-esc="dte['total_en_letras']"/></div>
+                    </td>
+                    <td t-attf-style="width: 35%; vertical-align: top; text-align: right; padding: 2mm 3mm; color: #{accent_text};">
+                        <div t-if="dte['iva_monto']">IVA <t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['iva_monto']"/></div>
+                        <div style="font-weight: bold; margin-top: 1mm;">
+                            TOTAL <t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['gran_total']"/>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- ══════════ CERTIFICADOR + QR ══════════ -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 2mm;">
+            <tr>
+                <td style="width: 68%; vertical-align: top; font-size: 8.5pt; color: #333;">
+                    <div>Fecha de Certificacion: <t t-esc="cert['fecha']"/></div>
+                    <div>UUID: <t t-esc="cert['uuid']"/></div>
+                    <div>Moneda: <t t-esc="dte['moneda']"/></div>
+                    <div style="font-weight: bold; margin-top: 1.5mm;">DATOS DEL CERTIFICADOR</div>
+                    <div><t t-esc="cert['nombre_certificador']"/></div>
+                    <div>NIT: <t t-esc="cert['nit_certificador']"/></div>
+                </td>
+                <td style="width: 32%; vertical-align: top; text-align: center;">
+                    <img t-if="qr_src" t-att-src="qr_src" t-attf-style="width: #{qr_mm}mm; height: #{qr_mm}mm;"/>
+                    <div t-if="not qr_src" t-attf-style="width: #{qr_mm}mm; height: #{qr_mm}mm; display: inline-block; border: 1px dashed #ccc; color: #999; font-size: 8.5pt; text-align: center; vertical-align: middle; padding-top: 12mm;">
+                        QR no disponible
+                    </div>
+                </td>
+            </tr>
+        </table>
+
+        <!-- ══════════ MEMBRETE / PIE DE PAGINA (opcional) ══════════ -->
+        <div t-if="cfg['show_footer']"
+             t-attf-style="border-top: 2px solid #{accent}; padding-top: 2mm; margin-top: 2mm; font-size: 8.5pt; color: #444;">
+            <t t-if="cfg['footer_description']">
+                <div style="white-space: pre-line; margin-bottom: 2mm;"><t t-esc="cfg['footer_description']"/></div>
+            </t>
+            <div>
+                <t t-if="cfg['social_website']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; margin-right: 2mm; display: inline-block;">Web: <t t-esc="cfg['social_website']"/></span>
+                </t>
+                <t t-if="cfg['social_phone']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; margin-right: 2mm; display: inline-block;">Tel: <t t-esc="cfg['social_phone']"/></span>
+                </t>
+                <t t-if="cfg['social_email']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; display: inline-block;">Correo: <t t-esc="cfg['social_email']"/></span>
+                </t>
+            </div>
+            <div style="margin-top: 1.5mm;">
+                <t t-if="cfg['social_facebook']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; margin-right: 2mm; display: inline-block;">Facebook: <t t-esc="cfg['social_facebook']"/></span>
+                </t>
+                <t t-if="cfg['social_instagram']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; margin-right: 2mm; display: inline-block;">Instagram: <t t-esc="cfg['social_instagram']"/></span>
+                </t>
+                <t t-if="cfg['social_x']">
+                    <span style="background: #f1f5f4; padding: 1mm 2.5mm; border-radius: 8px; display: inline-block;">X/Twitter: <t t-esc="cfg['social_x']"/></span>
+                </t>
+            </div>
+        </div>
+    </template>
+
+    <template id="report_ktx1_page">
+        <t t-call="web.html_container">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-set="dte" t-value="o._ktx_fel_get_format_data()"/>
+                <t t-set="cfg" t-value="o._ktx_fel_format_company_data()"/>
+                <t t-set="emisor" t-value="dte['emisor']"/>
+                <t t-set="receptor" t-value="dte['receptor']"/>
+                <t t-set="cert" t-value="dte['certificacion']"/>
+                <t t-set="qr_src" t-value="o._ktx_fel_format_qr_img_src(dte['qr_url'])"/>
+                <t t-set="has_side" t-value="bool(cfg['side_image'])"/>
+                <t t-set="accent" t-value="cfg['accent_color'] or '#e97132'"/>
+                <t t-set="accent_text" t-value="cfg['accent_text'] or '#ffffff'"/>
+
+                <!-- "Margen de lectura" (antes vivia en el paperformat; ahora
+                     es padding CSS para poder poner la marca de agua detras,
+                     a 0mm de los 4 bordes fisicos). -->
+                <t t-set="pad_mm" t-value="6 if cfg['paper_size'] == 'media_carta' else 8"/>
+
+                <!-- Alto minimo de la pagina, para que la marca de agua (que
+                     se estira al alto del contenedor) llegue hasta abajo aun
+                     cuando la factura es corta. Solo se fija el ALTO en mm;
+                     el ancho se deja libre (fijar el ancho en mm fue lo que
+                     antes dejaba franja blanca a la derecha). 2mm menos que
+                     la hoja para no forzar una segunda pagina en blanco por
+                     redondeo. -->
+                <t t-set="page_min_mm" t-value="214 if cfg['paper_size'] == 'media_carta' else 277"/>
+
+                <!-- Tipografia unica para TODO el documento: mismo tipo de
+                     letra y mismo tamano en cada elemento, sin excepciones
+                     (el !important gana sobre cualquier font-size inline que
+                     haya quedado suelto). Tambien se fuerza html/body a 0 de
+                     margen para que la marca de agua llegue al borde fisico. -->
+                <style>
+                    html, body { margin: 0 !important; padding: 0 !important; }
+                    .ktx1doc, .ktx1doc * {
+                        font-family: Arial, Helvetica, sans-serif !important;
+                        font-size: 9.5pt !important;
+                        line-height: 1.35 !important;
+                    }
+                </style>
+
+                <div class="ktx1doc" t-attf-style="position: relative; min-height: #{page_min_mm}mm; color: #2b2b2b;">
+
+                    <!-- ══════════ MARCA DE AGUA: a 0mm de los 4 bordes ══════════
+                         OJO: darle un ancho/alto fijo en mm a este div (o al
+                         contenedor padre) hizo que el motor de PDF lo
+                         renderizara mas chico que la hoja real (quedaba
+                         espacio en blanco a la derecha y abajo): el mm de
+                         CSS no coincidia exactamente con el tamano fisico de
+                         pagina que arma el motor a partir del paperformat.
+                         En vez de eso: position:absolute con
+                         top/right/bottom/left en 0 (sin ancho/alto propio),
+                         que se estira exactamente al tamano real del
+                         contenedor padre sea cual sea ese tamano, sin
+                         asumir ninguna medida en mm. (No position:fixed: ese
+                         no se respeta de forma confiable en este motor y
+                         termina ocupando espacio real en el documento en vez
+                         de quedar de fondo). Aclarado con opacity, aplicado
+                         solo a esta capa (no afecta el texto, que va en un
+                         div hermano aparte). -->
+                    <div t-if="cfg['background_image']"
+                         t-attf-style="position: absolute; top: 0; right: 0; bottom: 0; left: 0;
+                                       background-image: url(#{image_data_uri(cfg['background_image'])});
+                                       background-size: cover; background-position: center;
+                                       background-repeat: no-repeat; opacity: 0.08; z-index: 0;"/>
+
+                    <!-- Contenido, con el padding que antes daba el margen
+                         del paperformat, por encima de la marca de agua. -->
+                    <div t-attf-style="position: relative; z-index: 1; padding: #{pad_mm}mm;">
+                        <t t-if="has_side">
+                            <!-- Panel lateral: tabla (no position:fixed) para
+                                 que el alto de la imagen siga al alto real
+                                 del contenido en vez de ocupar un bloque
+                                 aparte. -->
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <tr>
+                                    <td style="width: 38mm; padding: 0;">
+                                        <img t-att-src="image_data_uri(cfg['side_image'])"
+                                             style="width: 100%; height: 100%; display: block;"/>
+                                    </td>
+                                    <td style="vertical-align: top; padding-left: 4mm;">
+                                        <t t-call="ktx_fel2odoo_format.ktx1_body"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                        <t t-else="">
+                            <t t-call="ktx_fel2odoo_format.ktx1_body"/>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+
+    <!-- ══════════════════════════════════════════════════════════════
+         ESTILO KTX1 (Ticket): impresora termica angosta, 72mm. Una sola
+         columna, sin tablas anchas, al estilo de un comprobante POS.
+         ══════════════════════════════════════════════════════════════ -->
+    <template id="report_ktx1_ticket">
+        <t t-call="web.html_container">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-set="dte" t-value="o._ktx_fel_get_format_data()"/>
+                <t t-set="cfg" t-value="o._ktx_fel_format_company_data()"/>
+                <t t-set="emisor" t-value="dte['emisor']"/>
+                <t t-set="receptor" t-value="dte['receptor']"/>
+                <t t-set="cert" t-value="dte['certificacion']"/>
+                <t t-set="qr_src" t-value="o._ktx_fel_format_qr_img_src(dte['qr_url'])"/>
+
+                <div style="font-family: 'Courier New', monospace; font-size: 7.5pt; color: #000; text-align: center;">
+
+                    <img t-if="cfg['logo']" t-att-src="image_data_uri(cfg['logo'])"
+                         style="max-width: 20mm; max-height: 16mm; display: inline-block; margin-bottom: 1mm;"/>
+
+                    <div style="font-weight: bold; font-size: 9pt;">
+                        <t t-esc="emisor['nombre_comercial'] or emisor['nombre']"/>
+                    </div>
+                    <div><t t-esc="emisor['direccion']"/></div>
+                    <div>
+                        <t t-if="emisor['municipio']"><t t-esc="emisor['municipio']"/></t>
+                        <t t-if="emisor['departamento']">, <t t-esc="emisor['departamento']"/></t>
+                    </div>
+                    <div>NIT: <t t-esc="emisor['nit']"/></div>
+
+                    <div style="border-top: 1px dashed #000; margin: 1.5mm 0;"/>
+
+                    <div style="font-weight: bold;">DTE &#8212; <t t-esc="dte['tipo_documento_label']"/></div>
+                    <div>No.: <t t-esc="cert['numero']"/> Serie: <t t-esc="cert['serie']"/></div>
+                    <div>Fecha: <t t-esc="dte['fecha_emision']"/></div>
+
+                    <div style="border-top: 1px dashed #000; margin: 1.5mm 0;"/>
+
+                    <div style="text-align: left;">
+                        <div>NIT: <t t-esc="receptor['id']"/></div>
+                        <div>Nombre: <t t-esc="receptor['nombre']"/></div>
+                        <div t-if="receptor['direccion']"><t t-esc="receptor['direccion']"/></div>
+                    </div>
+
+                    <div style="border-top: 1px dashed #000; margin: 1.5mm 0;"/>
+
+                    <div style="text-align: left;">
+                        <t t-foreach="dte['items']" t-as="item">
+                            <div style="margin-top: 1mm;">
+                                <b><t t-esc="'%.2f' % item['cantidad']"/> <t t-esc="item['unidad_medida']"/></b>
+                                <t t-esc="item['descripcion']"/>
+                            </div>
+                            <div style="text-align: right;">
+                                <t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % item['total']"/>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div style="border-top: 1px dashed #000; margin: 1.5mm 0;"/>
+
+                    <div t-if="dte['iva_monto']" style="text-align: right;">
+                        IVA: <t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['iva_monto']"/>
+                    </div>
+                    <div style="text-align: right; font-weight: bold; font-size: 9pt;">
+                        TOTAL: <t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['gran_total']"/>
+                    </div>
+                    <div style="text-align: left; margin-top: 1mm;">
+                        Total en letras: <t t-esc="dte['total_en_letras']"/>
+                    </div>
+
+                    <div t-if="dte['frases']" style="text-align: left; margin-top: 1.5mm;">
+                        <t t-foreach="dte['frases']" t-as="frase">
+                            <div>
+                                <t t-if="frase['texto']"><t t-esc="frase['texto']"/></t>
+                                <t t-else="">Tipo <t t-esc="frase['tipo']"/> / Escenario <t t-esc="frase['escenario']"/></t>
+                            </div>
+                        </t>
+                    </div>
+
+                    <div style="border-top: 1px dashed #000; margin: 1.5mm 0;"/>
+
+                    <div style="text-align: left; font-size: 7pt;">
+                        <div>UUID: <t t-esc="cert['uuid']"/></div>
+                        <div>Fecha Certificacion: <t t-esc="cert['fecha']"/></div>
+                        <div>Certificador: <t t-esc="cert['nombre_certificador']"/></div>
+                        <div>NIT Certificador: <t t-esc="cert['nit_certificador']"/></div>
+                    </div>
+
+                    <img t-if="qr_src" t-att-src="qr_src" style="width: 28mm; height: 28mm; margin-top: 2mm;"/>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

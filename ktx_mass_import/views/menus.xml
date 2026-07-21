@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menu raiz del modulo (aparece en Home de Odoo) -->
+    <menuitem
+        id="ktx_mass_import_root"
+        name="Importacion Masiva XML-SAT"
+        web_icon="ktx_mass_import,static/description/icon.png"
+        sequence="100"/>
+
+    <!-- Home: sesiones de importacion -->
+    <menuitem
+        id="ktx_mass_import_sessions"
+        name="Importaciones"
+        parent="ktx_mass_import_root"
+        action="ktx_import_session_action"
+        sequence="10"/>
+
+    <!-- Documentos individuales -->
+    <menuitem
+        id="ktx_mass_import_documents"
+        name="Documentos XML"
+        parent="ktx_mass_import_root"
+        action="ktx_import_document_action"
+        sequence="20"/>
+
+    <!-- Configuracion -->
+    <menuitem
+        id="ktx_mass_import_config"
+        name="Configuracion"
+        parent="ktx_mass_import_root"
+        sequence="90"/>
+
+    <menuitem
+        id="ktx_mass_import_tax_mapping"
+        name="Mapeo de Impuestos SAT"
+        parent="ktx_mass_import_config"
+        action="ktx_tax_mapping_action"
+        sequence="10"/>
+
+    <menuitem
+        id="ktx_mass_import_phrases"
+        name="Frases SAT FEL"
+        parent="ktx_mass_import_config"
+        action="ktx_phrase_config_action"
+        sequence="20"/>
+
+</odoo>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Server action que abre/crea el singleton de Resumen Fiscal -->
+    <record id="action_satgt_resumen_server" model="ir.actions.server">
+        <field name="name">Resumen Fiscal</field>
+        <field name="model_id" ref="model_ktx_satgt_resumen"/>
+        <field name="state">code</field>
+        <field name="code">action = env['ktx.satgt.resumen'].action_open_resumen()</field>
+    </record>
+
+    <record id="view_satgt_resumen_form" model="ir.ui.view">
+        <field name="name">ktx.satgt.resumen.form</field>
+        <field name="model">ktx.satgt.resumen</field>
+        <field name="arch" type="xml">
+            <form string="Resumen Fiscal" create="false" delete="false">
+                <sheet>
+
+                    <!-- ── Encabezado ─────────────────────────────────────── -->
+                    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                        <h4 style="margin:0;font-weight:700;color:#1e293b;">Resumen Fiscal</h4>
+                        <div class="d-flex align-items-center gap-2">
+                            <span style="font-size:12px;color:#64748b;font-weight:600;">Empresa(s):</span>
+                            <field name="company_ids" nolabel="1"
+                                   widget="many2many_tags"
+                                   options="{'no_create': True}"
+                                   style="min-width:200px;"/>
+                        </div>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- IVA                                            -->
+                    <!-- ═══════════════════════════════════════════════ -->
+
+                    <!-- Filtro IVA (OWL widget) -->
+                    <widget name="satgt_iva_period_filter"/>
+
+                    <!-- Campos ocultos que el widget lee -->
+                    <field name="iva_period_display"  invisible="1"/>
+                    <field name="iva_comparison"      invisible="1"/>
+
+                    <!-- Tabla IVA -->
+                    <div class="mb-4">
+                        <field name="html_iva" nolabel="1"/>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- ISR                                            -->
+                    <!-- ═══════════════════════════════════════════════ -->
+
+                    <!-- Filtro ISR (OWL widget) -->
+                    <widget name="satgt_isr_period_filter"/>
+
+                    <!-- Campos ocultos que el widget lee -->
+                    <field name="isr_period_display"  invisible="1"/>
+                    <field name="isr_comparison"      invisible="1"/>
+                    <field name="isr_period_type"     invisible="1"/>
+
+                    <!-- Tabla ISR -->
+                    <div class="mb-4">
+                        <field name="html_isr" nolabel="1"/>
+                    </div>
+
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <!-- ISO + Extras                                   -->
+                    <!-- ═══════════════════════════════════════════════ -->
+                    <field name="html_iso"    nolabel="1"/>
+                    <div class="mt-3">
+                        <field name="html_extras" nolabel="1"/>
+                    </div>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_satgt_resumen_list" model="ir.ui.view">
+        <field name="name">ktx.satgt.resumen.list</field>
+        <field name="model">ktx.satgt.resumen</field>
+        <field name="arch" type="xml">
+            <list string="Resumen Fiscal">
+                <field name="iva_date_from" string="IVA Desde"/>
+                <field name="iva_date_to"   string="IVA Hasta"/>
+                <field name="isr_date_from" string="ISR Desde"/>
+                <field name="isr_date_to"   string="ISR Hasta"/>
+                <field name="company_ids"   widget="many2many_tags"/>
+            </list>
+        </field>
+    </record>
+
+</odoo>

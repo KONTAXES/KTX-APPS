@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_tax_mapping_view_list" model="ir.ui.view">
+        <field name="name">ktx.tax.mapping.list</field>
+        <field name="model">ktx.tax.mapping</field>
+        <field name="arch" type="xml">
+            <list string="Mapeo de Impuestos SAT FEL" editable="bottom" create="false">
+                <field name="nombre_corto" string="Tipo SAT"/>
+                <field name="codigo_unidad_gravable" string="Cod. UG"/>
+                <field name="descripcion" string="Descripcion SAT"/>
+                <field name="tasa_referencia" string="Tasa SAT"/>
+                <field name="tax_id" string="Compras (esta empresa)"
+                       domain="[('type_tax_use', 'in', ['purchase', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                       options="{'no_create': True}"/>
+                <field name="tax_id_sale" string="Ventas (esta empresa)"
+                       domain="[('type_tax_use', 'in', ['sale', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                       options="{'no_create': True}"/>
+                <field name="product_id" string="Producto Defecto" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_tax_mapping_view_form" model="ir.ui.view">
+        <field name="name">ktx.tax.mapping.form</field>
+        <field name="model">ktx.tax.mapping</field>
+        <field name="arch" type="xml">
+            <form string="Mapeo Impuesto SAT FEL">
+                <sheet>
+                    <group string="Identificacion SAT">
+                        <field name="nombre_corto" string="NombreCorto (XML FEL)"/>
+                        <field name="codigo_unidad_gravable" string="CodigoUnidadGravable"/>
+                        <field name="descripcion" string="Descripcion"/>
+                        <field name="tasa_referencia" string="Tasa / Monto referencia"/>
+                    </group>
+                    <group string="Configuracion por empresa">
+                        <group string="Facturas de Compras (Proveedores)">
+                            <field name="tax_id"
+                                   string="Impuesto Compras"
+                                   domain="[('type_tax_use', 'in', ['purchase', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                                   options="{'no_create': True}"
+                                   help="Impuesto de compras de la empresa activa. Se asigna al importar facturas de proveedores."/>
+                        </group>
+                        <group string="Facturas de Ventas (Clientes)">
+                            <field name="tax_id_sale"
+                                   string="Impuesto Ventas"
+                                   domain="[('type_tax_use', 'in', ['sale', 'all']), ('company_id', 'in', allowed_company_ids)]"
+                                   options="{'no_create': True}"
+                                   help="Impuesto de ventas de la empresa activa. Se asigna al importar facturas de clientes."/>
+                        </group>
+                        <field name="product_id"
+                               string="Producto por defecto"
+                               help="Si se configura, las lineas con este tipo de impuesto usaran este producto."/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_tax_mapping_action" model="ir.actions.act_window">
+        <field name="name">Mapeo de Impuestos SAT FEL</field>
+        <field name="res_model">ktx.tax.mapping</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure el mapeo de impuestos
+            </p>
+            <p>Asigne a cada tipo SAT el impuesto de compras y/o ventas de su empresa.
+               La columna <b>Compras</b> se usa al importar facturas de proveedores y
+               <b>Ventas</b> al importar facturas de clientes.</p>
+            <p><b>Multi-empresa:</b> cada empresa configura los suyos de forma independiente.</p>
+        </field>
+    </record>
+
+</odoo>

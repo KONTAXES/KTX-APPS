@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem
+        id="ktx_fel2odoo_root"
+        name="FEL2Odoo"
+        web_icon="ktx_fel2odoo,static/description/icon.png"
+        sequence="101"/>
+
+    <menuitem
+        id="ktx_fel2odoo_menu_config"
+        name="Conexiones FEL"
+        parent="ktx_fel2odoo_root"
+        action="ktx_fel2odoo_config_action"
+        sequence="10"/>
+
+    <menuitem
+        id="ktx_fel2odoo_menu_import"
+        name="Importar XML"
+        parent="ktx_fel2odoo_root"
+        action="ktx_fel2odoo_test_wizard_action"
+        sequence="20"/>
+
+    <menuitem
+        id="ktx_fel2odoo_menu_nit"
+        name="Consultar NIT"
+        parent="ktx_fel2odoo_root"
+        action="ktx_fel2odoo_nit_wizard_action"
+        sequence="22"/>
+
+    <menuitem
+        id="ktx_fel2odoo_menu_rules"
+        name="Reglas de cuentas"
+        parent="ktx_fel2odoo_root"
+        action="ktx_fel2odoo_account_rule_action"
+        sequence="25"/>
+
+    <menuitem
+        id="ktx_fel2odoo_menu_logs"
+        name="Bitacora"
+        parent="ktx_fel2odoo_root"
+        action="ktx_fel2odoo_log_action"
+        sequence="30"/>
+
+</odoo>

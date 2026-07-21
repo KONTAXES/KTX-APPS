@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_planilla" model="ir.actions.report">
+        <field name="name">Planilla de Sueldos</field>
+        <field name="model">ktx.planilla</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_planilla_empleados_gt.report_planilla</field>
+        <field name="report_file">ktx_planilla_empleados_gt.report_planilla</field>
+        <field name="paperformat_id" ref="paperformat_planilla_legal"/>
+        <field name="binding_model_id" ref="model_ktx_planilla"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">(object._titulo_reporte() + ' ' + object.name).replace('/', '-')</field>
+    </record>
+
+    <template id="report_planilla">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <div class="page" style="font-family: 'Helvetica', sans-serif; font-size: 9px;">
+
+                    <!-- Encabezado -->
+                    <div style="margin-bottom: 6px;">
+                        <span style="font-weight: bold;">Nombre de la Empresa: </span>
+                        <span style="text-decoration: underline;" t-out="o.company_id.name"/>
+                        <span t-if="o.company_id.vat" class="ms-3">
+                            NIT: <span t-out="o.company_id.vat"/>
+                        </span>
+                    </div>
+                    <div style="text-align: center; font-weight: bold; margin-bottom: 8px;">
+                        <span t-out="o._titulo_reporte()"/>
+                        No. <span style="text-decoration: underline;" t-out="o.numero or '____'"/>,
+                        correspondiente a <span t-out="o.mes_nombre"/>.
+                        (cifras en <span t-out="o.currency_id.name == 'GTQ' and 'Quetzales' or o.currency_id.name"/>)
+                    </div>
+
+                    <!-- Tabla principal -->
+                    <table class="table table-sm"
+                           style="width: 100%; border-collapse: collapse; font-size: 8px;">
+                        <thead>
+                            <tr style="background-color: #f0f0f0;">
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">No.</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Nombres</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Puesto</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Sueldo<br/>Ordinario</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Sueldo<br/>Extraordinario</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Comisiones</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Bonifica-<br/>ciones</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Otros</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Total<br/>Devengado</th>
+                                <th colspan="5" style="border: 1px solid #000; text-align: center;">Descuentos</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Total de<br/>Descuentos</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Total<br/>Líquido</th>
+                                <th rowspan="2" style="border: 1px solid #000; text-align: center; vertical-align: middle;">Firma</th>
+                            </tr>
+                            <tr style="background-color: #f0f0f0;">
+                                <th style="border: 1px solid #000; text-align: center;">IGSS</th>
+                                <th style="border: 1px solid #000; text-align: center;">ISR</th>
+                                <th style="border: 1px solid #000; text-align: center;">Anticipo</th>
+                                <th style="border: 1px solid #000; text-align: center;">Judic.</th>
+                                <th style="border: 1px solid #000; text-align: center;">Otros</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-set="simbolo" t-value="o.currency_id.symbol or 'Q'"/>
+                            <tr t-foreach="o.line_ids.sorted('secuencia')" t-as="l">
+                                <td style="border: 1px solid #000; text-align: center;" t-out="l.secuencia"/>
+                                <td style="border: 1px solid #000;" t-out="l.employee_id.name"/>
+                                <td style="border: 1px solid #000;" t-out="l.puesto or ''"/>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.sueldo_ordinario)"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.sueldo_extraordinario"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.sueldo_extraordinario)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.comisiones"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.comisiones)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.bonificacion_incentivo"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.bonificacion_incentivo)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.otros_ingresos"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.otros_ingresos)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right; font-weight: bold;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_devengado)"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.igss_laboral"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.igss_laboral)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.isr"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.isr)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.anticipos"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.anticipos)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.judiciales"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.judiciales)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-if="l.otros_descuentos"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.otros_descuentos)"/></t>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_descuentos)"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right; font-weight: bold;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_liquido)"/>
+                                </td>
+                                <td style="border: 1px solid #000; min-width: 70px;"> </td>
+                            </tr>
+                            <!-- Filas vacías para llegar a un mínimo visual -->
+                            <t t-set="faltantes" t-value="max(0, 3 - len(o.line_ids))"/>
+                            <t t-foreach="range(faltantes)" t-as="i">
+                                <tr>
+                                    <t t-foreach="range(17)" t-as="j">
+                                        <td style="border: 1px solid #000;"> </td>
+                                    </t>
+                                </tr>
+                            </t>
+                            <!-- Totales -->
+                            <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                <td style="border: 1px solid #000;"> </td>
+                                <td style="border: 1px solid #000;">Totales</td>
+                                <td style="border: 1px solid #000;"> </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('sueldo_ordinario')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('sueldo_extraordinario')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('comisiones')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('bonificacion_incentivo')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('otros_ingresos')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(o.total_devengado)"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('igss_laboral')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('isr')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('anticipos')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('judiciales')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(sum(o.line_ids.mapped('otros_descuentos')))"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(o.total_descuentos)"/>
+                                </td>
+                                <td style="border: 1px solid #000; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(o.total_liquido)"/>
+                                </td>
+                                <td style="border: 1px solid #000;"> </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Leyendas -->
+                    <div style="margin-top: 8px; font-size: 8.5px;">
+                        <div style="border-bottom: 1px solid #000; padding-bottom: 2px;">
+                            <span style="font-weight: bold;">De conformidad con los datos anteriores, el total devengado de la planilla asciende a la cantidad de: </span>
+                            <span t-out="o._total_devengado_letras()"/>
+                        </div>
+                        <div style="border-bottom: 1px solid #000; padding-top: 2px; padding-bottom: 2px;">
+                            <span style="font-weight: bold;">Un total líquido de: </span>
+                            <span t-out="o._total_liquido_letras()"/>
+                        </div>
+                    </div>
+
+                    <!-- Fecha y firma -->
+                    <div style="text-align: center; margin-top: 18px; font-size: 9px;">
+                        Guatemala, <span t-out="(o.fecha_contable or o.date_to).day"/> de
+                        <t t-set="meses" t-value="{1:'enero',2:'febrero',3:'marzo',4:'abril',5:'mayo',6:'junio',7:'julio',8:'agosto',9:'septiembre',10:'octubre',11:'noviembre',12:'diciembre'}"/>
+                        <span t-out="meses[(o.fecha_contable or o.date_to).month]"/> de
+                        <span t-out="(o.fecha_contable or o.date_to).year"/>
+                    </div>
+                    <div style="text-align: center; margin-top: 36px;">
+                        <div style="display: inline-block; border-top: 1px solid #000; padding: 4px 40px 0 40px; font-size: 9px;">
+                            <div style="font-weight: bold;"
+                                 t-out="o.company_id.ktx_pl_contador_nombre or ' '"/>
+                            <div>Perito Contador No.
+                                <span t-out="o.company_id.ktx_pl_contador_registro or '________'"/>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <p style="page-break-after: always;" t-if="not o_last"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

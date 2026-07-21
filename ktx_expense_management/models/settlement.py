@@ -28,6 +28,18 @@ class Settlement(models.Model):
         tracking=True,
         help="Nombre descriptivo para identificar fácilmente esta liquidación.",
     )
+    kind = fields.Selection(
+        selection=[("expense", "Gasto"), ("sale", "Venta")],
+        string="Clase",
+        required=True,
+        default="expense",
+        tracking=True,
+        index=True,
+        copy=True,
+        help="Gasto: liquida facturas de compra contra una cuenta por pagar. "
+             "Venta: liquida facturas de venta contra una cuenta por cobrar.",
+    )
+    kind_color = fields.Integer(compute="_compute_kind_color")
     date = fields.Date(
         string="Fecha Liquidación",
         required=True,
@@ -39,14 +51,16 @@ class Settlement(models.Model):
         string="Diario",
         tracking=True,
         ondelete="restrict",
-        domain="[('type', 'in', ['general', 'purchase']), ('company_id', '=', company_id)]",
+        domain="[('type', 'in', ['general', 'purchase', 'sale']), ('company_id', '=', company_id)]",
     )
     account_id = fields.Many2one(
         comodel_name="account.account",
-        string="Cuenta por Pagar",
+        string="Cuenta de Liquidación",
         tracking=True,
         ondelete="restrict",
-        domain="[('account_type', 'in', ['liability_payable', 'liability_current']), ('company_ids', 'in', [company_id])]",
+        domain="[('account_type', 'in', ['liability_payable', 'liability_current', 'asset_receivable', 'asset_current']), ('company_ids', 'in', [company_id])]",
+        help="Gasto: cuenta por pagar de contrapartida. "
+             "Venta: cuenta por cobrar (activo) donde queda el saldo tras liquidar.",
     )
     employee_id = fields.Many2one(
         comodel_name="res.partner",
@@ -202,10 +216,10 @@ class Settlement(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, **kwargs):
         """Filter settlements by company unless multi-company mode is enabled."""
         if not self.env.su:
-            multi = self.env["ir.config_parameter"].sudo().get_param(
-                "ktx_expense_management.multi_company_staging", "False"
+            multi = self.env['ir.config_parameter'].sudo().get_param(
+                'ktx_expense_management.multi_company_staging', 'False'
             )
-            if multi not in ("True", "1", "true"):
+            if multi not in ('True', '1', 'true'):
                 domain = [("company_id", "in", self.env.companies.ids)] + list(domain)
         return super()._search(domain, offset=offset, limit=limit, order=order, **kwargs)
 
@@ -226,6 +240,11 @@ class Settlement(models.Model):
         }
         for rec in self:
             rec.state_color = _map.get(rec.state, 0)
+
+    @api.depends("kind")
+    def _compute_kind_color(self):
+        for rec in self:
+            rec.kind_color = 10 if rec.kind == "sale" else 2
 
     @api.depends(
         "payment_ids", "payment_ids.amount", "payment_ids.currency_id",
@@ -356,6 +375,14 @@ class Settlement(models.Model):
         if self.account_id:
             if company not in self.account_id.company_ids and self.account_id.company_ids:
                 self.account_id = False
+
+    @api.onchange("kind")
+    def _onchange_kind_clear_account_journal(self):
+        """La cuenta y el diario dependen de la clase (por pagar vs por cobrar):
+        al cambiar de gasto a venta (o viceversa) se limpian para no dejar una
+        cuenta/diario del tipo equivocado."""
+        self.account_id = False
+        self.journal_id = False
 
     @api.onchange("date")
     def _onchange_date_update_rate_date(self):
@@ -603,6 +630,24 @@ class Settlement(models.Model):
         # Último fallback: cuenta configurada en la liquidación
         return self.account_id
 
+    def _get_receivable_account_from_move(self, move):
+        """Obtiene la cuenta por cobrar original de la factura de venta."""
+        receivable_line = move.line_ids.filtered(
+            lambda l: l.account_id.account_type in (
+                "asset_receivable", "asset_current"
+            ) and not l.reconciled
+        )
+        if receivable_line:
+            return receivable_line[0].account_id
+        # Fallback: primera cuenta de ingreso
+        income_line = move.line_ids.filtered(
+            lambda l: l.account_id.account_type in ("income", "income_other")
+        )
+        if income_line:
+            return income_line[0].account_id
+        # Último fallback: cuenta configurada en la liquidación
+        return self.account_id
+
     # ------------------------------------------------------------------
     # Actions / State transitions
     # ------------------------------------------------------------------
@@ -616,12 +661,25 @@ class Settlement(models.Model):
             empty_lines = rec.line_ids.filtered(lambda l: not l.staging_id)
             if empty_lines:
                 raise UserError(
-                    _("Todas las líneas deben tener un gasto por liquidar asignado antes de confirmar.")
+                    _("Todas las líneas deben tener un documento por liquidar asignado antes de confirmar.")
+                )
+            # La clase de cada documento debe coincidir con la de la liquidación
+            mismatched = rec.line_ids.filtered(
+                lambda l: l.staging_id and l.staging_id.kind != rec.kind
+            )
+            if mismatched:
+                raise UserError(
+                    _("Hay líneas cuya clase (gasto/venta) no coincide con la de la liquidación. "
+                      "Una liquidación no puede mezclar gastos y ventas.")
                 )
             if not rec.journal_id:
                 raise UserError(_("Debe seleccionar un diario antes de confirmar la liquidación."))
             if not rec.account_id:
-                raise UserError(_("Debe seleccionar una cuenta por pagar antes de confirmar la liquidación."))
+                raise UserError(_(
+                    "Debe seleccionar una cuenta por cobrar antes de confirmar la liquidación."
+                ) if rec.kind == "sale" else _(
+                    "Debe seleccionar una cuenta por pagar antes de confirmar la liquidación."
+                ))
             if not rec.approver_id:
                 raise UserError(
                     _("Debe seleccionar un aprobador antes de confirmar la liquidación.")
@@ -659,6 +717,18 @@ class Settlement(models.Model):
             cross_companies = rec.line_ids.filtered(
                 lambda l: l.move_id and l.move_id.company_id and l.move_id.company_id != company
             ).mapped("move_id.company_id")
+            # El flujo intercompañía (asiento espejo por pagar) solo aplica a
+            # liquidaciones de gastos. En ventas no se soporta multiempresa:
+            # cada factura se liquida contra la cuenta por cobrar designada de
+            # la misma empresa.
+            if rec.kind == "sale":
+                if cross_companies:
+                    raise UserError(
+                        _("Las liquidaciones de ventas deben incluir facturas de una sola "
+                          "empresa (%s). No se admite multiempresa en ventas.")
+                        % ", ".join(cross_companies.mapped("name"))
+                    )
+                cross_companies = self.env["res.company"]
             if cross_companies:
                 if not rec.intercompany_receivable_id:
                     raise UserError(
@@ -849,7 +919,7 @@ class Settlement(models.Model):
 
         # Encabezado empresa + referencia
         ws.write(0, 0, company.name, fmt_title)
-        ws.write(1, 0, "LIQUIDACIÓN DE GASTOS", fmt_state)
+        ws.write(1, 0, "LIQUIDACIÓN DE VENTAS" if self.kind == "sale" else "LIQUIDACIÓN DE GASTOS", fmt_state)
         ws.write(2, 0, self.name or "", fmt_ref)
         if self.description:
             ws.write(3, 0, self.description, fmt_desc)
@@ -949,54 +1019,67 @@ class Settlement(models.Model):
     # ------------------------------------------------------------------
 
     def _reconcile_original_invoices(self, settlement_move):
-        """Reconcilia cada línea pagable de factura original con su débito específico
-        en el asiento de liquidación, uno a uno, para evitar que líneas de distintas
-        facturas del mismo proveedor se mezclen entre sí.
+        """Reconcilia cada factura original con su línea específica en el asiento
+        de liquidación, una a una, para no mezclar facturas del mismo tercero.
+
+        - Gastos: la línea PAGABLE (crédito) de la factura de compra contra el
+          DÉBITO del asiento de liquidación en esa cuenta por pagar.
+        - Ventas: la línea POR COBRAR (débito) de la factura de venta contra el
+          CRÉDITO del asiento de liquidación en esa cuenta por cobrar.
         """
         ref_date = self.rate_date or self.date or fields.Date.context_today(self)
         company = self.company_id or self.env.company
+        is_sale = self.kind == "sale"
+        valid_types = ("out_invoice", "out_refund") if is_sale else ("in_invoice",)
         for line in self.line_ids:
             original_move = line.move_id
-            if not original_move or original_move.move_type not in ("in_invoice",):
+            if not original_move or original_move.move_type not in valid_types:
                 continue
             # Skip cross-company lines — reconciliation across companies is not allowed
             if original_move.company_id and original_move.company_id != company:
                 continue
 
-            payable_account = self._get_payable_account_from_move(original_move)
-            if not payable_account:
+            if is_sale:
+                target_account = self._get_receivable_account_from_move(original_move)
+            else:
+                target_account = self._get_payable_account_from_move(original_move)
+            if not target_account:
                 continue
 
-            # Payable line(s) of this specific invoice
-            invoice_payable = original_move.line_ids.filtered(
-                lambda l: l.account_id == payable_account and not l.reconciled
+            # Open line(s) of this specific invoice on the target control account
+            invoice_open = original_move.line_ids.filtered(
+                lambda l: l.account_id == target_account and not l.reconciled
             )
-            if not invoice_payable:
+            if not invoice_open:
                 continue
 
-            # Find the ONE debit line in the settlement move that belongs to this invoice.
+            # Find the ONE settlement line that belongs to this invoice.
             # Primary key: same account + same name (invoice number) + same partner.
             invoice_name = line.move_name or ""
             partner = line.partner_id
 
-            def _match(l, acct=payable_account, name=invoice_name, pid=partner.id if partner else False):
+            def _match(l, acct=target_account, name=invoice_name,
+                       pid=partner.id if partner else False, sale=is_sale):
+                amt_ok = (l.credit > 0) if sale else (l.debit > 0)
                 return (
                     l.account_id == acct
-                    and l.debit > 0
+                    and amt_ok
                     and not l.reconciled
                     and l.name == name
                     and (not pid or l.partner_id.id == pid)
                 )
 
-            settlement_debit = settlement_move.line_ids.filtered(_match)
+            settlement_side = settlement_move.line_ids.filtered(_match)
 
             # Fallback: same account + partner (ignore name) — take the first unreconciled
-            if not settlement_debit:
-                def _match_loose(l, acct=payable_account, pid=partner.id if partner else False):
-                    return l.account_id == acct and l.debit > 0 and not l.reconciled and (not pid or l.partner_id.id == pid)
-                settlement_debit = settlement_move.line_ids.filtered(_match_loose)[:1]
+            if not settlement_side:
+                def _match_loose(l, acct=target_account,
+                                 pid=partner.id if partner else False, sale=is_sale):
+                    amt_ok = (l.credit > 0) if sale else (l.debit > 0)
+                    return l.account_id == acct and amt_ok and not l.reconciled and (not pid or l.partner_id.id == pid)
+                settlement_side = settlement_move.line_ids.filtered(_match_loose)[:1]
 
-            to_reconcile = invoice_payable | settlement_debit
+            to_reconcile = invoice_open | settlement_side
             if len(to_reconcile) >= 2:
                 try:
                     to_reconcile.with_context(
@@ -1010,6 +1093,8 @@ class Settlement(models.Model):
 
     def _create_journal_entry(self):
         self.ensure_one()
+        if self.kind == "sale":
+            return self._create_sales_journal_entry()
         company = self.company_id or self.env.company
         company_currency = company.currency_id
         ref_date = self.date or fields.Date.context_today(self)
@@ -1099,4 +1184,76 @@ class Settlement(models.Model):
             for line in cross_company_lines:
                 self._create_intercompany_entry(line)
 
+        return move
+
+    def _create_sales_journal_entry(self):
+        """Asiento de una liquidación de VENTAS (espejo del de gastos).
+
+        Por cada factura de venta: CRÉDITO a su cuenta por cobrar de cliente
+        (para saldarla contra la factura) y DÉBITO, por el total, a la cuenta
+        por cobrar/activo designada en la liquidación. La factura de venta
+        original (DR clientes / CR ventas) queda así conciliada y marcada como
+        pagada, y el saldo por cobrar se traslada a la cuenta designada.
+        """
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        company_currency = company.currency_id
+        ref_date = self.date or fields.Date.context_today(self)
+        lines = []
+        total_credit = 0.0
+
+        for line in self.line_ids:
+            credit_account = self._get_receivable_account_from_move(line.move_id)
+
+            line_currency = line.currency_id or company_currency
+            if line_currency == company_currency:
+                amount_company = line.amount_to_pay
+            else:
+                try:
+                    amount_company = line_currency._convert(
+                        line.amount_to_pay, company_currency, company, ref_date
+                    )
+                except Exception:
+                    rate = self.exchange_rate or 1.0
+                    amount_company = line.amount_to_pay / rate if rate else line.amount_to_pay
+
+            total_credit += amount_company
+
+            line_partner = line.partner_id.id if line.partner_id else False
+            line_vals = {
+                "name": line.move_name or line.ref or self.name,
+                "partner_id": line_partner,
+                "account_id": credit_account.id,
+                "debit": 0.0,
+                "credit": amount_company,
+            }
+            if line_currency != company_currency:
+                line_vals["currency_id"] = line_currency.id
+                line_vals["amount_currency"] = -line.amount_to_pay
+            lines.append((0, 0, line_vals))
+
+        # Debit line — the designated receivable/asset account, for the total
+        debit_vals = {
+            "name": self.name,
+            "partner_id": self.employee_id.id if self.employee_id else False,
+            "account_id": self.account_id.id,
+            "debit": total_credit,
+            "credit": 0.0,
+        }
+        settlement_currency = self.currency_id or company_currency
+        if settlement_currency != company_currency:
+            debit_vals["currency_id"] = settlement_currency.id
+            debit_vals["amount_currency"] = self.amount_total
+        lines.append((0, 0, debit_vals))
+
+        move_vals = {
+            "journal_id": self.journal_id.id,
+            "date": ref_date,
+            "ref": self.name,
+            "company_id": company.id,
+            "line_ids": lines,
+        }
+        move = self.env["account.move"].create(move_vals)
+        move.action_post()
+        self._reconcile_original_invoices(move)
         return move

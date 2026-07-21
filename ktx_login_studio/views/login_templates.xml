@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Login Studio hooks in AFTER the "website" module's own override of
+         web.login_layout, not before it.
+
+         web.login_layout has no inherit_id of its own: its whole body is a
+         single top-level "<t t-call="web.frontend_layout">...</t>" node. The
+         website module's own view (id "website.login_layout", priority=20)
+         does "xpath expr='t[@t-call]' position='replace'" on THAT exact
+         top-level node, discarding it completely and substituting
+         "<t t-call='website.layout'><div class='oe_website_login_container'
+         t-out='0'/></t>" instead, so with website installed (the normal
+         case for Enterprise/public deployments, hence the hard dependency in
+         __manifest__.py), the original card/container/body_classname
+         structure this module used to anchor on never survives to be shown,
+         no matter what a lower-priority view does to it first.
+
+         priority="30" here (higher than website's 20) means our own xpath
+         runs SECOND, patching the actual final anchor (the
+         oe_website_login_container div) instead of the one website already
+         replaced. Rather than scattering several xpath ops like before, the
+         whole personalization is built as one self-contained replacement of
+         that div, since we now own 100% of what goes inside it.
+
+         The actual t-out="0" slot, and therefore the real form, its
+         fields, and its CSRF token, is still never touched: it's
+         reproduced as-is inside our own wrapper, so a broken theme or a
+         broken uploaded file can never prevent someone from logging in.
+
+         A dedicated "safe mode" (ir.config_parameter
+         ktx_login_studio.force_safe_mode, or the URL query `?ktx_safe=1`)
+         is checked first and, when active, renders the plain
+         oe_website_login_container exactly as website would on its own. -->
+    <template id="login_layout_studio" inherit_id="web.login_layout" priority="30">
+        <xpath expr="//div[hasclass('oe_website_login_container')]" position="replace">
+            <t t-set="ktx_force_safe"
+               t-value="request.env['ir.config_parameter'].sudo().get_param('ktx_login_studio.force_safe_mode', 'False').lower() == 'true' or request.params.get('ktx_safe') == '1'"/>
+            <t t-set="ktx_preview" t-value="False if ktx_force_safe else request.env.context.get('ktx_preview_theme')"/>
+            <!-- Theme resolution, in priority order:
+                 (1) a shareable "?ktx_t=<token>" link (see
+                 ktx.login.theme.login_url) always shows one specific
+                 (personal) theme, falling back to a "ktx_t" cookie (set
+                 below, once, the first time the token is seen) so the same
+                 personal theme keeps showing after following the native
+                 "Don't have an account?"/"Reset Password" links to
+                 /web/signup or /web/reset_password, even on requests where
+                 the query string doesn't carry the token through; (2) if
+                 the visitor is already identified by email (an invitation
+                 link, a failed-login retry, or Odoo's own same-browser
+                 post-logout "login" pre-fill, read via the QWeb "login"
+                 variable rather than request.params.get('login') since only
+                 that also covers the post-logout case), their own assigned
+                 personal theme is used; (3) otherwise, the published
+                 DEFAULT theme (is_default, get_default) applies to every
+                 visitor without a personal theme. Only when nothing at all
+                 is published does the plain website-wrapped login show. -->
+            <t t-set="ktx_by_token"
+               t-value="False if ktx_force_safe or ktx_preview else request.env['ktx.login.theme'].sudo().get_by_token(request.params.get('ktx_t') or request.cookies.get('ktx_t'))"/>
+            <t t-set="ktx_login_user"
+               t-value="request.env['ktx.login.theme'].sudo().get_user_by_login(login) if login else False"/>
+            <t t-set="ktx_by_user"
+               t-value="False if ktx_force_safe or ktx_preview or ktx_by_token or not ktx_login_user else request.env['ktx.login.theme'].sudo().get_active_for_user(ktx_login_user)"/>
+            <t t-set="ktx_default"
+               t-value="False if ktx_force_safe or ktx_preview or ktx_by_token or ktx_by_user else request.env['ktx.login.theme'].sudo().get_default()"/>
+            <t t-set="ktx" t-value="False if ktx_force_safe else (ktx_preview or ktx_by_token or ktx_by_user or ktx_default)"/>
+            <t t-set="ktx_is_dict" t-value="bool(ktx_preview)"/>
+            <t t-set="ktx_active" t-value="bool(ktx) and not ktx_force_safe"/>
+
+            <div t-if="not ktx_active" class="oe_website_login_container" t-out="0"/>
+
+            <t t-if="ktx_active">
+                <t t-set="ktx_template" t-value="ktx.get('template') if ktx_is_dict else ktx.template"/>
+                <t t-set="ktx_render_mode" t-value="ktx.get('render_mode') if ktx_is_dict else ktx.render_mode"/>
+                <t t-set="ktx_glass" t-value="ktx.get('glassmorphism') if ktx_is_dict else ktx.glassmorphism"/>
+                <t t-set="ktx_split_side" t-value="ktx.get('split_alignment') if ktx_is_dict else ktx.split_alignment"/>
+                <t t-set="ktx_bg_type" t-value="ktx.get('background_type') if ktx_is_dict else ktx.background_type"/>
+                <t t-set="ktx_body_class_extra" t-value="ktx.get('custom_body_class') if ktx_is_dict else ktx.custom_body_class"/>
+                <t t-set="ktx_entrance_anim" t-value="ktx.get('card_entrance_animation') if ktx_is_dict else ktx.card_entrance_animation"/>
+                <t t-set="ktx_ambient_glow" t-value="ktx.get('ambient_glow') if ktx_is_dict else ktx.ambient_glow"/>
+                <t t-set="ktx_glow_intensity" t-value="ktx.get('ambient_glow_intensity') if ktx_is_dict else ktx.ambient_glow_intensity"/>
+                <t t-set="ktx_input_style" t-value="ktx.get('input_style') if ktx_is_dict else ktx.input_style"/>
+                <t t-set="ktx_input_glow" t-value="ktx.get('input_focus_glow') if ktx_is_dict else ktx.input_focus_glow"/>
+                <t t-set="ktx_input_icons" t-value="ktx.get('input_icons') if ktx_is_dict else ktx.input_icons"/>
+                <t t-set="ktx_btn_hover" t-value="ktx.get('button_hover_effect') if ktx_is_dict else ktx.button_hover_effect"/>
+
+                <!-- In "custom" mode the admin's own CSS owns 100% of the
+                     look: none of the built-in theme-engine classes
+                     (ktx-template-*, ktx-glass, ktx-anim-*, ktx-input-*...)
+                     are added here, only "ktx-login-wrap" itself plus the
+                     optional custom_body_class hook, so none of
+                     ktx_login_studio_frontend.css's !important rules (meant
+                     for the built-in "styled" theme engine) compete with
+                     custom_css for the same elements. -->
+                <t t-set="ktx_hide_header" t-value="ktx.get('hide_website_header') if ktx_is_dict else ktx.hide_website_header"/>
+                <t t-set="ktx_wrap_class"
+                   t-value="('ktx-login-wrap ktx-template-' + (ktx_template or 'centered') + (' ktx-glass' if ktx_glass else '') + (' ktx-split-right' if ktx_split_side == 'right' else '') + (' ktx-bg-animated' if ktx_bg_type == 'animated_gradient' else '') + (' ktx-anim-' + ktx_entrance_anim if ktx_entrance_anim and ktx_entrance_anim != 'none' else '') + (' ktx-ambient-glow ktx-glow-' + (ktx_glow_intensity or 'medium') if ktx_ambient_glow else '') + (' ktx-input-' + (ktx_input_style or 'outlined')) + (' ktx-input-glow' if ktx_input_glow else '') + (' ktx-input-icons' if ktx_input_icons else '') + (' ktx-btn-hover-' + ktx_btn_hover if ktx_btn_hover and ktx_btn_hover != 'none' else '') if ktx_render_mode == 'styled' else 'ktx-login-wrap') + (' ' + ktx_body_class_extra if ktx_body_class_extra else '') + (' ktx-hide-header' if ktx_hide_header else '')"/>
+
+                <t t-set="ktx_page"
+                   t-value="(ktx.get('page') if ktx_is_dict else False) or ('signup' if 'signup' in request.httprequest.path else ('reset' if 'reset_password' in request.httprequest.path else 'login'))"/>
+                <t t-set="ktx_theme_rec" t-value="ktx if not ktx_is_dict else request.env['ktx.login.theme'].sudo().browse(ktx.get('theme_id'))"/>
+                <t t-set="ktx_head_assets"
+                   t-value="ktx_theme_rec.exists() and ktx_theme_rec.asset_ids.filtered(lambda a: a.active and a.state == 'published' and a.target == 'head' and a.scope in ('all', ktx_page)).sorted('sequence') or []"/>
+                <t t-set="ktx_body_assets"
+                   t-value="ktx_theme_rec.exists() and ktx_theme_rec.asset_ids.filtered(lambda a: a.active and a.state == 'published' and a.target == 'body_end' and a.scope in ('all', ktx_page)).sorted('sequence') or []"/>
+
+                <t t-set="ktx_has_logo" t-value="ktx.get('company_logo') if ktx_is_dict else bool(ktx.company_logo)"/>
+                <t t-set="ktx_tagline" t-value="ktx.get('tagline') if ktx_is_dict else ktx.tagline"/>
+                <t t-set="ktx_is_preview" t-value="ktx.get('is_preview') if ktx_is_dict else False"/>
+                <t t-set="ktx_show_portal_name" t-value="ktx.get('show_portal_name') if ktx_is_dict else ktx.show_portal_name"/>
+                <t t-set="ktx_portal_name" t-value="ktx.get('name') if ktx_is_dict else ktx.name"/>
+
+                <div t-attf-class="oe_website_login_container #{ktx_wrap_class}">
+                    <!-- Remember a personal theme (token or auto-detected by
+                         email) in a cookie the first time it's resolved, so
+                         it keeps showing on /web/signup and
+                         /web/reset_password even if the query string
+                         carrying "?ktx_t=" doesn't make it through those
+                         navigations intact. Never set for the default theme,
+                         so plain /web/login visits keep behaving normally. -->
+                    <script t-if="not ktx_is_dict and (ktx_by_token or ktx_by_user)"
+                            t-out="(ktx_by_token or ktx_by_user).get_set_cookie_script()"/>
+
+                    <!-- Base theme CSS variables + backgrounds -->
+                    <style t-if="ktx_is_preview" t-out="ktx.get('inline_style', '')"/>
+                    <link t-else="" rel="stylesheet" t-attf-href="/ktx_login_studio/theme.css?theme_id={{ktx_theme_rec.id}}"/>
+
+                    <!-- Extra CSS / font extensions uploaded by the admin -->
+                    <t t-foreach="ktx_head_assets" t-as="ktx_asset">
+                        <link t-if="ktx_asset.asset_type == 'css'" rel="stylesheet" t-att-href="ktx_asset.get_public_url()"/>
+                        <link t-elif="ktx_asset.asset_type == 'font'" rel="preload" as="font" crossorigin="anonymous" t-att-href="ktx_asset.get_public_url()"/>
+                    </t>
+
+                    <t t-set="ktx_overlay_color" t-value="ktx.get('background_overlay_color') if ktx_is_dict else ktx.background_overlay_color"/>
+                    <t t-set="ktx_overlay_opacity" t-value="ktx.get('background_overlay_opacity') if ktx_is_dict else ktx.background_overlay_opacity"/>
+                    <div class="ktx-background-overlay"
+                         t-attf-style="background-color: #{ktx_overlay_color or '#000000'}; opacity: #{ktx_overlay_opacity}; #{'display: block;' if ktx_bg_type in ('image', 'video') else ''}"/>
+
+                    <div class="ktx-ambient-glow-blob" t-if="ktx_ambient_glow"
+                         t-att-style="'background: radial-gradient(circle, ' + (ktx.get('ambient_glow_color') if ktx_is_dict else ktx.ambient_glow_color or '#7c3aed') + ' 0%, transparent 70%);'"/>
+
+                    <!-- Background video: a video uploaded directly on the theme
+                         (Colores y Fondo) takes priority; otherwise an advanced
+                         video Extension, if one is set. Autoplay requires the
+                         muted attribute; loop + playsinline keep it seamless and
+                         inline on mobile. -->
+                    <t t-set="ktx_video_src"
+                       t-value="('/ktx_login_studio/background_video?theme_id=' + str(ktx.id) if (not ktx_is_dict and ktx.background_video) else (ktx.background_video_asset_id.get_public_url() if (not ktx_is_dict and ktx.background_video_asset_id) else False))"/>
+                    <video t-if="ktx_render_mode == 'styled' and ktx_bg_type == 'video' and ktx_video_src"
+                           class="ktx-bg-video" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline">
+                        <source t-att-src="ktx_video_src"/>
+                    </video>
+
+                    <div class="ktx-split-aside" t-if="ktx_render_mode == 'styled' and ktx_template == 'split'">
+                        <div class="ktx-branding-content">
+                            <t t-if="ktx_has_logo">
+                                <img t-attf-src="/ktx_login_studio/image/company_logo?theme_id={{ktx.get('theme_id') if ktx_is_dict else ktx.id}}" alt="Logo" class="ktx-logo"/>
+                            </t>
+                            <t t-else="">
+                                <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" class="ktx-logo"/>
+                            </t>
+                            <p t-if="ktx_show_portal_name" class="ktx-portal-name mt-3 mb-0 small">
+                                Accede al portal de: <strong><t t-out="ktx_portal_name"/></strong>
+                            </p>
+                            <h2 t-if="ktx_tagline" class="ktx-tagline mt-4 h4"><t t-out="ktx_tagline"/></h2>
+                        </div>
+                    </div>
+
+                    <!-- "HTML 100% personalizado": custom_header_html and
+                         custom_footer_html are trusted to open/close their
+                         own container tags across the real form (a common,
+                         valid pattern, e.g. an unclosed <div class="...">
+                         in the header, closed in the footer). Login Studio
+                         must not wrap them in any div of its own here, or a
+                         tag meant to be closed in the footer ends up closed
+                         inside a DIFFERENT element than the one it opened
+                         in, which browsers "fix" by silently re-nesting
+                         content in unpredictable ways. -->
+                    <t t-if="ktx_render_mode == 'custom'">
+                        <t t-out="ktx.get('custom_header_html') if ktx_is_dict else ktx.get_header_html()"/>
+                        <div t-out="0"/>
+                        <t t-out="ktx.get('custom_footer_html') if ktx_is_dict else ktx.get_footer_html()"/>
+                    </t>
+
+                    <div t-else="" class="ktx-login-card card border-0 mx-auto bg-100">
+                        <div class="card-body">
+                            <div t-if="ktx_template != 'split'" class="text-center pb-3 border-bottom mb-4 ktx-card-header">
+                                <t t-if="ktx_has_logo">
+                                    <img t-attf-src="/ktx_login_studio/image/company_logo?theme_id={{ktx.get('theme_id') if ktx_is_dict else ktx.id}}" alt="Logo" class="ktx-logo"/>
+                                </t>
+                                <t t-else="">
+                                    <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" class="ktx-logo"/>
+                                </t>
+                                <p t-if="ktx_show_portal_name" class="ktx-portal-name mt-2 mb-0 small">
+                                    Accede al portal de: <strong><t t-out="ktx_portal_name"/></strong>
+                                </p>
+                                <p t-if="ktx_tagline" class="ktx-tagline mt-2 text-muted mb-0"><t t-out="ktx_tagline"/></p>
+                            </div>
+
+                            <t t-set="ktx_welcome_title" t-value="ktx.get('login_welcome_title') if ktx_is_dict else ktx.login_welcome_title"/>
+                            <t t-set="ktx_welcome_subtitle" t-value="ktx.get('login_welcome_subtitle') if ktx_is_dict else ktx.login_welcome_subtitle"/>
+                            <div t-if="ktx_welcome_title or ktx_welcome_subtitle" class="ktx-welcome-block text-center mb-3">
+                                <h4 t-if="ktx_welcome_title" class="mb-1 fw-semibold"><t t-out="ktx_welcome_title"/></h4>
+                                <p t-if="ktx_welcome_subtitle" class="small text-muted mb-0"><t t-out="ktx_welcome_subtitle"/></p>
+                            </div>
+
+                            <!-- The real form: never replaced, always rendered by Odoo. -->
+                            <div t-out="0"/>
+
+                            <div class="text-center small mt-4 pt-3 border-top ktx-footer-block">
+                                <t t-set="ktx_show_dbdomain" t-value="ktx.get('show_database_domain') if ktx_is_dict else ktx.show_database_domain"/>
+                                <t t-set="ktx_show_pbo" t-value="ktx.get('show_powered_by_odoo') if ktx_is_dict else ktx.show_powered_by_odoo"/>
+                                <div class="mb-1">
+                                    <span t-if="ktx_show_dbdomain" class="text-muted"
+                                          t-attf-class="#{ktx_show_pbo and 'border-end pe-2 me-1' or ''}"
+                                          t-out="request.httprequest.host"/>
+                                    <a t-if="ktx_show_pbo" href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+                                </div>
+                                <t t-set="ktx_terms_url" t-value="ktx.get('terms_url') if ktx_is_dict else ktx.terms_url"/>
+                                <t t-set="ktx_privacy_url" t-value="ktx.get('privacy_url') if ktx_is_dict else ktx.privacy_url"/>
+                                <div t-if="ktx_terms_url or ktx_privacy_url" class="mt-1">
+                                    <a t-if="ktx_terms_url" t-att-href="ktx_terms_url" target="_blank" class="text-muted me-2">
+                                        <t t-out="(ktx.get('terms_label') if ktx_is_dict else ktx.terms_label) or 'Terms of Service'"/>
+                                    </a>
+                                    <a t-if="ktx_privacy_url" t-att-href="ktx_privacy_url" target="_blank" class="text-muted">
+                                        <t t-out="(ktx.get('privacy_label') if ktx_is_dict else ktx.privacy_label) or 'Privacy Policy'"/>
+                                    </a>
+                                </div>
+                                <p t-if="ktx.get('custom_footer_text') if ktx_is_dict else ktx.custom_footer_text" class="text-muted mt-1 mb-0">
+                                    <t t-out="ktx.get('custom_footer_text') if ktx_is_dict else ktx.custom_footer_text"/>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Uploaded JavaScript extensions: always loaded as external
+                         <script src> files, placed last so the real login form is
+                         already in the DOM. A syntax/runtime error in one of these
+                         files only breaks itself (visible in the browser console)
+                         and can never prevent the native form submit from working. -->
+                    <t t-foreach="ktx_body_assets" t-as="ktx_asset">
+                        <script t-if="ktx_asset.asset_type == 'js'" t-att-src="ktx_asset.get_public_url()" defer="defer"></script>
+                    </t>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Favicon and browser-tab title: separate from the above, since both
+         live in <head>, which belongs to website.layout's own arch (reached
+         only via the runtime "t-call='website.layout'" inside
+         web.login_layout, a template boundary our own xpath above cannot
+         cross). website.layout sets x_icon unconditionally, and "title" only
+         when not already set, as part of its own arch prolog; injecting here
+         (right after that prolog's x_icon set, at a higher priority) lets us
+         override both and win, scoped to only the 3 auth routes so the rest
+         of the website's head is never touched. -->
+    <template id="website_layout_favicon_override" inherit_id="website.layout" priority="30">
+        <xpath expr="//t[@t-set='x_icon']" position="after">
+            <t t-if="request.httprequest.path in ('/web/login', '/web/signup', '/web/reset_password')">
+                <t t-set="ktx_head_theme"
+                   t-value="request.env['ktx.login.theme'].sudo().get_current(request.params.get('ktx_t') or request.cookies.get('ktx_t'))"/>
+                <t t-if="ktx_head_theme and ktx_head_theme.favicon" t-set="x_icon" t-value="'/ktx_login_studio/active_favicon'"/>
+                <t t-if="ktx_head_theme and ktx_head_theme.name">
+                    <t t-set="ktx_page_label"
+                       t-value="'Registro' if 'signup' in request.httprequest.path else ('Recuperar contrasena' if 'reset_password' in request.httprequest.path else 'Login')"/>
+                    <t t-set="title" t-value="ktx_page_label + ' - ' + ktx_head_theme.name"/>
+                </t>
+            </t>
+        </xpath>
+    </template>
+</odoo>

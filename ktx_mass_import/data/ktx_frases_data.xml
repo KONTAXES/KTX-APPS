@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Catalogo completo de Frases SAT FEL - CatalogoFrases-0.6.0 -->
+<!-- Referencia: https://github.com/notificacioneselectfel/Catalogo-FEL -->
+<odoo>
+    <data noupdate="1">
+
+        <!-- ================================================== -->
+        <!--  TIPO 1: Retenciones ISR                           -->
+        <!-- ================================================== -->
+        <record id="frase_1_1" model="ktx.phrase.config">
+            <field name="tipo_frase">1</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Sujeto a pagos trimestrales ISR</field>
+            <field name="descripcion_es">Sujeto a pagos trimestrales del Impuesto Sobre la Renta</field>
+            <field name="tipo_regimen">ISR Trimestral</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_1_2" model="ktx.phrase.config">
+            <field name="tipo_frase">1</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Sujeto a retencion definitiva ISR</field>
+            <field name="descripcion_es">Sujeto a Retencion Definitiva del Impuesto Sobre la Renta</field>
+            <field name="tipo_regimen">ISR Retencion Definitiva</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_1_3" model="ktx.phrase.config">
+            <field name="tipo_frase">1</field><field name="codigo_escenario">3</field>
+            <field name="descripcion">Sujeto a pago directo ISR</field>
+            <field name="descripcion_es">Sujeto a Pago Directo del Impuesto Sobre la Renta</field>
+            <field name="tipo_regimen">ISR Pago Directo</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_1_4" model="ktx.phrase.config">
+            <field name="tipo_frase">1</field><field name="codigo_escenario">4</field>
+            <field name="descripcion">Exento del ISR</field>
+            <field name="descripcion_es">Exento del Impuesto Sobre la Renta</field>
+            <field name="tipo_regimen">ISR Exento</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 2: Agente de Retencion IVA                   -->
+        <!-- ================================================== -->
+        <record id="frase_2_1" model="ktx.phrase.config">
+            <field name="tipo_frase">2</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Agente de Retencion del IVA</field>
+            <field name="descripcion_es">El emisor es Agente de Retencion del Impuesto al Valor Agregado</field>
+            <field name="tipo_regimen">IVA Agente Retencion</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 3: Sin credito fiscal IVA                    -->
+        <!-- ================================================== -->
+        <record id="frase_3_1" model="ktx.phrase.config">
+            <field name="tipo_frase">3</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">No genera derecho a credito fiscal</field>
+            <field name="descripcion_es">Esta factura no genera derecho a credito fiscal del IVA</field>
+            <field name="tipo_regimen">Pequeno Contribuyente</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 4: Exento / No afecto IVA (36 escenarios)   -->
+        <!--  clear_taxes=True: SAT indica que no genera IVA   -->
+        <!-- ================================================== -->
+        <record id="frase_4_1" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Exportacion de bienes</field>
+            <field name="descripcion_es">Exportacion de bienes - Exento del IVA</field>
+            <field name="tipo_regimen">Exento IVA Exportacion</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_2" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Exportacion de servicios</field>
+            <field name="descripcion_es">Exportacion de servicios - Exento del IVA</field>
+            <field name="tipo_regimen">Exento IVA Exportacion</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_3" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">3</field>
+            <field name="descripcion">Servicios bancarios y financieros</field>
+            <field name="descripcion_es">Servicios bancarios y financieros exentos del IVA</field>
+            <field name="tipo_regimen">Exento IVA Bancario</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_4" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">4</field>
+            <field name="descripcion">Cooperativas - operaciones de ahorro y credito</field>
+            <field name="descripcion_es">Operaciones de ahorro y credito de cooperativas - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Cooperativas</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_5" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">5</field>
+            <field name="descripcion">Donaciones y aportes</field>
+            <field name="descripcion_es">Donaciones y aportes a entidades no lucrativas - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Donaciones</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_6" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">6</field>
+            <field name="descripcion">Cuotas de agremiacion y aportaciones a partidos politicos</field>
+            <field name="descripcion_es">Cuotas de agremiacion y aportaciones - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Cuotas</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_7" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">7</field>
+            <field name="descripcion">Educacion - colegios y centros educativos privados</field>
+            <field name="descripcion_es">Servicios de educacion en colegios y centros educativos privados - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Educacion</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_8" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">8</field>
+            <field name="descripcion">Universidades privadas</field>
+            <field name="descripcion_es">Servicios de educacion universitaria privada - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Universidad</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_9" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">9</field>
+            <field name="descripcion">Servicios de culto religioso</field>
+            <field name="descripcion_es">Servicios de culto de iglesias y entidades religiosas - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Religion</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_10" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">10</field>
+            <field name="descripcion">Servicios medicos y hospitalarios</field>
+            <field name="descripcion_es">Servicios medicos, hospitalarios y odontologicos - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Salud</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_11" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">11</field>
+            <field name="descripcion">Seguros de vida</field>
+            <field name="descripcion_es">Primas de seguros de vida - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Seguros</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_12" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">12</field>
+            <field name="descripcion">Intereses sobre operaciones de credito</field>
+            <field name="descripcion_es">Intereses sobre operaciones de credito bancario y financiero - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Intereses</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_13" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">13</field>
+            <field name="descripcion">Arrendamiento de inmuebles para vivienda</field>
+            <field name="descripcion_es">Arrendamiento de inmuebles destinados exclusivamente a vivienda - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Vivienda</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_14" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">14</field>
+            <field name="descripcion">Medicamentos y productos farmaceuticos</field>
+            <field name="descripcion_es">Venta de medicamentos y productos farmaceuticos - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Medicamentos</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_15" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">15</field>
+            <field name="descripcion">Zona Libre de Industria y Comercio ZOLIC</field>
+            <field name="descripcion_es">Operacion realizada por usuario de la Zona Libre de Industria y Comercio ZOLIC - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA ZOLIC</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_16" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">16</field>
+            <field name="descripcion">Primera venta de vivienda</field>
+            <field name="descripcion_es">Primera venta o transferencia de vivienda - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Primera Vivienda</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_17" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">17</field>
+            <field name="descripcion">Operaciones de maquila</field>
+            <field name="descripcion_es">Operaciones de maquila para exportacion - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Maquila</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_18" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">18</field>
+            <field name="descripcion">Zona Franca</field>
+            <field name="descripcion_es">Operacion realizada en Zona Franca - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Zona Franca</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_19" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">19</field>
+            <field name="descripcion">Transporte extraurbano de personas</field>
+            <field name="descripcion_es">Servicio de transporte extraurbano de personas - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Transporte</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_20" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">20</field>
+            <field name="descripcion">Venta de vehiculos usados</field>
+            <field name="descripcion_es">Venta de vehiculos de uso particular de segunda mano - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Vehiculos Usados</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_21" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">21</field>
+            <field name="descripcion">Mercados cantonales y municipales - ventas al menudeo</field>
+            <field name="descripcion_es">Ventas al menudeo en mercados cantonales y municipales - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Mercado</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_22" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">22</field>
+            <field name="descripcion">Energia electrica - servicio domiciliar</field>
+            <field name="descripcion_es">Servicio de energia electrica domiciliar hasta 300 kWh - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Electricidad</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_23" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">23</field>
+            <field name="descripcion">Valores y acciones del mercado de capitales</field>
+            <field name="descripcion_es">Compraventa de titulos, acciones y valores en el mercado de capitales - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Valores</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_24" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">24</field>
+            <field name="descripcion">Insumos agricolas</field>
+            <field name="descripcion_es">Venta de insumos y productos para uso agricola - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Agricola</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_25" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">25</field>
+            <field name="descripcion">Masa de pan y productos de panaderia tradicional</field>
+            <field name="descripcion_es">Venta de masa de pan y productos de panaderia artesanal - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Panaderia</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_26" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">26</field>
+            <field name="descripcion">Matriculas y colegiaturas de establecimientos educativos privados</field>
+            <field name="descripcion_es">Matriculas y colegiaturas de establecimientos educativos privados reconocidos - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Educacion Privada</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_27" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">27</field>
+            <field name="descripcion">Periodicos, revistas y libros</field>
+            <field name="descripcion_es">Venta de periodicos, revistas y libros - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Libros</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_28" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">28</field>
+            <field name="descripcion">Servicios de agua potable y alcantarillado</field>
+            <field name="descripcion_es">Servicio de agua potable y alcantarillado municipal - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Agua</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_29" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">29</field>
+            <field name="descripcion">Venta de vehiculos electricos e hidrogeno</field>
+            <field name="descripcion_es">Venta de vehiculos electricos y de hidrogeno - Exento IVA (Decreto 31-2022)</field>
+            <field name="tipo_regimen">Exento IVA Vehiculos Electricos</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_30" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">30</field>
+            <field name="descripcion">Servicio de transporte de hidrogeno</field>
+            <field name="descripcion_es">Servicio de transporte de hidrogeno - Exento IVA (Decreto 31-2022)</field>
+            <field name="tipo_regimen">Exento IVA Hidrogeno</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_31" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">31</field>
+            <field name="descripcion">Recarga de energia para vehiculos electricos</field>
+            <field name="descripcion_es">Recarga de energia electrica para vehiculos - Exento IVA (Decreto 31-2022)</field>
+            <field name="tipo_regimen">Exento IVA Recarga Electrica</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_32" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">32</field>
+            <field name="descripcion">Energia renovable certificada</field>
+            <field name="descripcion_es">Energia renovable certificada y creditos de carbono - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Energia Renovable</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_33" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">33</field>
+            <field name="descripcion">Importacion de vehiculos electricos e hidrogeno</field>
+            <field name="descripcion_es">Importacion de vehiculos electricos y de hidrogeno - Exento IVA (Decreto 31-2022)</field>
+            <field name="tipo_regimen">Exento IVA Importacion Electrico</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_34" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">34</field>
+            <field name="descripcion">Materiales y equipos para vehiculos electricos</field>
+            <field name="descripcion_es">Materiales y equipos para cargadores de vehiculos electricos - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Equipos Electrico</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_35" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">35</field>
+            <field name="descripcion">Servicios de mantenimiento de vehiculos electricos</field>
+            <field name="descripcion_es">Servicios de mantenimiento de vehiculos electricos e hidrogeno - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Mantenimiento Electrico</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_4_36" model="ktx.phrase.config">
+            <field name="tipo_frase">4</field><field name="codigo_escenario">36</field>
+            <field name="descripcion">Otros servicios relacionados con energia limpia</field>
+            <field name="descripcion_es">Otros servicios relacionados con energia limpia y renovable - Exento IVA</field>
+            <field name="tipo_regimen">Exento IVA Energia Limpia</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 5: Factura Especial                          -->
+        <!-- ================================================== -->
+        <record id="frase_5_1" model="ktx.phrase.config">
+            <field name="tipo_frase">5</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Factura especial - proveedor se nego a emitir factura</field>
+            <field name="descripcion_es">Factura Especial - El proveedor se nego a emitir la factura correspondiente</field>
+            <field name="tipo_regimen">Factura Especial</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 6: Contribuyente Agropecuario                -->
+        <!-- ================================================== -->
+        <record id="frase_6_1" model="ktx.phrase.config">
+            <field name="tipo_frase">6</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Contribuyente agropecuario - pago sobre ventas brutas 5%</field>
+            <field name="descripcion_es">Regimen Agropecuario - Pago trimestral del 5% sobre ventas brutas</field>
+            <field name="tipo_regimen">Agropecuario Ventas Brutas</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_6_2" model="ktx.phrase.config">
+            <field name="tipo_frase">6</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Contribuyente agropecuario - pago sobre utilidades</field>
+            <field name="descripcion_es">Regimen Agropecuario - Pago del ISR sobre utilidades del periodo</field>
+            <field name="tipo_regimen">Agropecuario Utilidades</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 7: Regimen Electronico                       -->
+        <!-- ================================================== -->
+        <record id="frase_7_1" model="ktx.phrase.config">
+            <field name="tipo_frase">7</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Pequeno contribuyente del regimen electronico</field>
+            <field name="descripcion_es">Pequeno Contribuyente inscrito en el Regimen de Factura Electronica en Linea - No aplica retencion</field>
+            <field name="tipo_regimen">Pequeno Contribuyente Electronico</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_7_2" model="ktx.phrase.config">
+            <field name="tipo_frase">7</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Contribuyente agropecuario del regimen electronico</field>
+            <field name="descripcion_es">Contribuyente Agropecuario inscrito en el Regimen de Factura Electronica en Linea - No aplica retencion</field>
+            <field name="tipo_regimen">Agropecuario Electronico</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 8: Exento ISR (12 escenarios)                -->
+        <!-- ================================================== -->
+        <record id="frase_8_1" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Exento ISR - Universidades</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Universidad privada reconocida</field>
+            <field name="tipo_regimen">ISR Exento Universidad</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_2" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Exento ISR - Colegios privados reconocidos</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Establecimiento educativo privado reconocido</field>
+            <field name="tipo_regimen">ISR Exento Educacion</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_3" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">3</field>
+            <field name="descripcion">Exento ISR - Iglesias y entidades religiosas</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Iglesia o entidad religiosa debidamente registrada</field>
+            <field name="tipo_regimen">ISR Exento Religion</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_4" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">4</field>
+            <field name="descripcion">Exento ISR - Sindicatos de trabajadores</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Sindicato de trabajadores legalmente constituido</field>
+            <field name="tipo_regimen">ISR Exento Sindicato</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_5" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">5</field>
+            <field name="descripcion">Exento ISR - Partidos politicos</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Partido politico inscrito</field>
+            <field name="tipo_regimen">ISR Exento Partido</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_6" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">6</field>
+            <field name="descripcion">Exento ISR - Colegios profesionales</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Colegio profesional legalmente autorizado</field>
+            <field name="tipo_regimen">ISR Exento Colegio Profesional</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_7" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">7</field>
+            <field name="descripcion">Exento ISR - Cooperativas</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Cooperativa legalmente constituida</field>
+            <field name="tipo_regimen">ISR Exento Cooperativa</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_8" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">8</field>
+            <field name="descripcion">Exento ISR - Zona Libre de Industria y Comercio ZOLIC</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Usuario de la Zona Libre de Industria y Comercio ZOLIC</field>
+            <field name="tipo_regimen">ISR Exento ZOLIC</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_9" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">9</field>
+            <field name="descripcion">Exento ISR - Servicios de energia limpia y vehiculos electricos</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Prestadora de servicios de energia limpia y vehiculos electricos</field>
+            <field name="tipo_regimen">ISR Exento Energia Limpia</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_10" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">10</field>
+            <field name="descripcion">Exento ISR - Entidades civiles sin fines de lucro</field>
+            <field name="descripcion_es">Entidad exenta del ISR - Entidad civil sin fines de lucro debidamente inscrita</field>
+            <field name="tipo_regimen">ISR Exento ONG</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_11" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">11</field>
+            <field name="descripcion">Exento ISR - Cuotas de condominios</field>
+            <field name="descripcion_es">Cuotas de mantenimiento de condominios - Exento del ISR</field>
+            <field name="tipo_regimen">ISR Exento Condominio</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_8_12" model="ktx.phrase.config">
+            <field name="tipo_frase">8</field><field name="codigo_escenario">12</field>
+            <field name="descripcion">Exento ISR - Otras entidades reconocidas por ley</field>
+            <field name="descripcion_es">Entidad exenta del ISR por disposicion legal expresa</field>
+            <field name="tipo_regimen">ISR Exento Legal</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 9: Frases Especiales (19 escenarios)         -->
+        <!-- ================================================== -->
+        <record id="frase_9_1" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Subsidio al gas licuado de petroleo</field>
+            <field name="descripcion_es">Operacion con subsidio al gas licuado de petroleo - regulado por el Estado</field>
+            <field name="tipo_regimen">Subsidio Gas</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_2" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Apoyo al subsidio de combustibles</field>
+            <field name="descripcion_es">Apoyo estatal al subsidio de combustibles para transporte</field>
+            <field name="tipo_regimen">Subsidio Combustible</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_3" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">3</field>
+            <field name="descripcion">Impuesto sobre la renta del viajero - pasajes aereos</field>
+            <field name="descripcion_es">Impuesto sobre el pasaje aereo internacional - Decreto aplicable</field>
+            <field name="tipo_regimen">ISR Viajero</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_4" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">4</field>
+            <field name="descripcion">Ubicacion o localizacion temporal</field>
+            <field name="descripcion_es">Operacion realizada en ubicacion o localizacion temporal autorizada</field>
+            <field name="tipo_regimen">Ubicacion Temporal</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_5" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">5</field>
+            <field name="descripcion">Gastos personales no deducibles del negocio</field>
+            <field name="descripcion_es">Esta factura ampara gastos personales no deducibles del negocio</field>
+            <field name="tipo_regimen">Gastos Personales</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_6" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">6</field>
+            <field name="descripcion">Exportacion provisional de mercancias</field>
+            <field name="descripcion_es">Exportacion provisional de mercancias - sujeta a retorno</field>
+            <field name="tipo_regimen">Exportacion Provisional</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_7" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">7</field>
+            <field name="descripcion">Despacho de combustible</field>
+            <field name="descripcion_es">Despacho de combustible en estacion de servicio</field>
+            <field name="tipo_regimen">Despacho Combustible</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_8" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">8</field>
+            <field name="descripcion">Importacion temporal de bienes</field>
+            <field name="descripcion_es">Importacion temporal de bienes para perfeccionamiento activo</field>
+            <field name="tipo_regimen">Importacion Temporal</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_9" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">9</field>
+            <field name="descripcion">Recarga electronica de tarjetas</field>
+            <field name="descripcion_es">Recarga electronica de tarjetas prepago de telefonia u otros servicios</field>
+            <field name="tipo_regimen">Recarga Electronica</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_10" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">10</field>
+            <field name="descripcion">Venta de loteria y juegos de azar</field>
+            <field name="descripcion_es">Venta de billetes de loteria y juegos de azar autorizados</field>
+            <field name="tipo_regimen">Loteria</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_11" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">11</field>
+            <field name="descripcion">Operaciones de caja chica</field>
+            <field name="descripcion_es">Operacion amparada con fondo de caja chica autorizado</field>
+            <field name="tipo_regimen">Caja Chica</field><field name="include_in_footer">False</field>
+        </record>
+        <record id="frase_9_12" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">12</field>
+            <field name="descripcion">Servicios de turismo</field>
+            <field name="descripcion_es">Servicios turisticos prestados por agencia autorizada por INGUAT</field>
+            <field name="tipo_regimen">Turismo</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_13" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">13</field>
+            <field name="descripcion">Venta de bienes inmuebles</field>
+            <field name="descripcion_es">Venta o transferencia de bienes inmuebles</field>
+            <field name="tipo_regimen">Inmuebles</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_14" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">14</field>
+            <field name="descripcion">Servicios de seguros y fianzas</field>
+            <field name="descripcion_es">Prima de seguro o fianza emitida por aseguradora autorizada</field>
+            <field name="tipo_regimen">Seguros</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_15" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">15</field>
+            <field name="descripcion">Gasto de representacion</field>
+            <field name="descripcion_es">Gastos de representacion y relaciones publicas del negocio</field>
+            <field name="tipo_regimen">Representacion</field><field name="include_in_footer">False</field>
+        </record>
+        <record id="frase_9_16" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">16</field>
+            <field name="descripcion">Vivienda del trabajador</field>
+            <field name="descripcion_es">Provision de vivienda al trabajador como parte de su remuneracion</field>
+            <field name="tipo_regimen">Vivienda Trabajador</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_17" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">17</field>
+            <field name="descripcion">Espectaculos publicos</field>
+            <field name="descripcion_es">Entrada o boleto para espectaculo publico autorizado</field>
+            <field name="tipo_regimen">Espectaculos</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_18" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">18</field>
+            <field name="descripcion">Operaciones de arrendamiento financiero (leasing)</field>
+            <field name="descripcion_es">Cuota de arrendamiento financiero (leasing) sobre bien mueble o inmueble</field>
+            <field name="tipo_regimen">Leasing</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_9_19" model="ktx.phrase.config">
+            <field name="tipo_frase">9</field><field name="codigo_escenario">19</field>
+            <field name="descripcion">Otras operaciones especiales</field>
+            <field name="descripcion_es">Operacion especial sujeta a regimen especifico segun resolucion SAT</field>
+            <field name="tipo_regimen">Especial</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 10: Sector Primario                          -->
+        <!-- ================================================== -->
+        <record id="frase_10_1" model="ktx.phrase.config">
+            <field name="tipo_frase">10</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Sector primario - productos agropecuarios 1.5%</field>
+            <field name="descripcion_es">Regimen Sector Primario - Productos agropecuarios no transformados, tasa 1.5% sobre precio de venta</field>
+            <field name="tipo_regimen">Sector Primario 1.5%</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_10_2" model="ktx.phrase.config">
+            <field name="tipo_frase">10</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Sector primario - exportaciones agropecuarias 2%</field>
+            <field name="descripcion_es">Regimen Sector Primario - Exportaciones de productos agropecuarios, tasa 2% sobre precio FOB</field>
+            <field name="tipo_regimen">Sector Primario 2% Exportacion</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 11: Sector Pecuario                          -->
+        <!-- ================================================== -->
+        <record id="frase_11_1" model="ktx.phrase.config">
+            <field name="tipo_frase">11</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Sector pecuario - operaciones hidrobiologicas y apicolas</field>
+            <field name="descripcion_es">Regimen Sector Pecuario - Operaciones hidrobiologicas, apicolas y conexas</field>
+            <field name="tipo_regimen">Sector Pecuario</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_11_2" model="ktx.phrase.config">
+            <field name="tipo_frase">11</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Sector pecuario - ganado en pie y aves de corral</field>
+            <field name="descripcion_es">Regimen Sector Pecuario - Venta de ganado en pie, aves de corral y sus derivados</field>
+            <field name="tipo_regimen">Sector Pecuario Ganado</field><field name="include_in_footer">True</field>
+        </record>
+        <record id="frase_11_3" model="ktx.phrase.config">
+            <field name="tipo_frase">11</field><field name="codigo_escenario">3</field>
+            <field name="descripcion">Sector pecuario - exportaciones ganaderas</field>
+            <field name="descripcion_es">Regimen Sector Pecuario - Exportacion de productos ganaderos</field>
+            <field name="tipo_regimen">Sector Pecuario Exportacion</field><field name="include_in_footer">True</field>
+        </record>
+
+        <!-- ================================================== -->
+        <!--  TIPO 12: Facturas Especificas                     -->
+        <!-- ================================================== -->
+        <record id="frase_12_1" model="ktx.phrase.config">
+            <field name="tipo_frase">12</field><field name="codigo_escenario">1</field>
+            <field name="descripcion">Sin efecto de debito o credito fiscal - sector primario</field>
+            <field name="descripcion_es">Esta factura no genera efecto de debito ni credito fiscal del IVA (Sector Primario)</field>
+            <field name="tipo_regimen">Sin Efecto Fiscal Primario</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+        <record id="frase_12_2" model="ktx.phrase.config">
+            <field name="tipo_frase">12</field><field name="codigo_escenario">2</field>
+            <field name="descripcion">Sin efecto de debito o credito fiscal - sector pecuario</field>
+            <field name="descripcion_es">Esta factura no genera efecto de debito ni credito fiscal del IVA (Sector Pecuario)</field>
+            <field name="tipo_regimen">Sin Efecto Fiscal Pecuario</field><field name="include_in_footer">True</field>
+                    <field name="clear_taxes">True</field>
+        </record>
+
+    </data>
+</odoo>

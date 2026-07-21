@@ -1,0 +1,17 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ktx_petty_cash_fund_user,ktx.petty.cash.fund user,model_ktx_petty_cash_fund,group_petty_cash_user,1,0,0,0
+access_ktx_petty_cash_fund_manager,ktx.petty.cash.fund manager,model_ktx_petty_cash_fund,group_petty_cash_manager,1,1,1,1
+access_ktx_petty_cash_move_user,ktx.petty.cash.move user,model_ktx_petty_cash_move,group_petty_cash_user,1,1,1,0
+access_ktx_petty_cash_move_manager,ktx.petty.cash.move manager,model_ktx_petty_cash_move,group_petty_cash_manager,1,1,1,1
+access_ktx_petty_cash_replenishment_user,ktx.petty.cash.replenishment user,model_ktx_petty_cash_replenishment,group_petty_cash_user,1,1,1,0
+access_ktx_petty_cash_replenishment_manager,ktx.petty.cash.replenishment manager,model_ktx_petty_cash_replenishment,group_petty_cash_manager,1,1,1,1
+access_ktx_petty_cash_dashboard_user,ktx.petty.cash.dashboard user,model_ktx_petty_cash_dashboard,group_petty_cash_user,1,1,1,1
+access_ktx_petty_cash_reject_wizard,ktx.petty.cash.reject.wizard,model_ktx_petty_cash_reject_wizard,group_petty_cash_manager,1,1,1,1
+access_ktx_petty_cash_closing_wizard,ktx.petty.cash.closing.wizard,model_ktx_petty_cash_closing_wizard,group_petty_cash_manager,1,1,1,1
+access_ktx_petty_cash_assign_wizard,ktx.petty.cash.assign.wizard,model_ktx_petty_cash_assign_wizard,group_petty_cash_user,1,1,1,1
+access_ktx_petty_cash_staging_all,ktx.petty.cash.staging all,model_ktx_petty_cash_staging,,1,1,1,1
+access_ktx_petty_cash_company_account_all,ktx.petty.cash.company.account all,model_ktx_petty_cash_company_account,,1,1,1,1
+access_ktx_petty_cash_fund_replenishment_wizard,ktx.petty.cash.fund.replenishment.wizard,model_ktx_petty_cash_fund_replenishment_wizard,ktx_petty_cash.group_petty_cash_user,1,1,1,1
+access_ktx_petty_cash_add_expense_wizard,ktx.petty.cash.add.expense.wizard,model_ktx_petty_cash_add_expense_wizard,ktx_petty_cash.group_petty_cash_user,1,1,1,1
+access_ktx_petty_cash_reimburse_wizard,ktx.petty.cash.reimburse.wizard,model_ktx_petty_cash_reimburse_wizard,ktx_petty_cash.group_petty_cash_user,1,1,1,1
+access_ktx_petty_cash_add_expense_line,ktx.petty.cash.add.expense.line,model_ktx_petty_cash_add_expense_line,ktx_petty_cash.group_petty_cash_user,1,1,1,1

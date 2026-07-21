@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============ Static connector tokens (desktop / API) ============ -->
+    <record id="view_claude_connector_token_list" model="ir.ui.view">
+        <field name="name">claude.connector.token.list</field>
+        <field name="model">claude.connector.token</field>
+        <field name="arch" type="xml">
+            <list string="Tokens del conector">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="token_preview"/>
+                <field name="active"/>
+                <field name="expiry_date"/>
+                <field name="last_used"/>
+                <field name="request_count"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claude_connector_token_form" model="ir.ui.view">
+        <field name="name">claude.connector.token.form</field>
+        <field name="model">claude.connector.token</field>
+        <field name="arch" type="xml">
+            <form string="Token del conector">
+                <header>
+                    <button name="action_generate" type="object" class="btn-primary"
+                            string="Generar / Regenerar token"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-info" role="alert">
+                        Crea el token, guárdalo y pulsa <b>Generar</b>. El valor se
+                        muestra una sola vez: pégalo en Claude Desktop o en el
+                        parámetro <code>mcp_servers</code> de la API.
+                    </div>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id"/>
+                        <field name="active"/>
+                        <field name="expiry_date"/>
+                        <field name="token_preview" readonly="1"/>
+                        <field name="last_used" readonly="1"/>
+                        <field name="request_count" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_claude_connector_token" model="ir.actions.act_window">
+        <field name="name">Tokens del conector</field>
+        <field name="res_model">claude.connector.token</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Genera un token estático</p>
+            <p>Para usar el conector desde Claude Desktop o la API sin OAuth.</p>
+        </field>
+    </record>
+
+    <!-- ================= Personal connector (all users) ============ -->
+    <record id="action_my_claude_connector" model="ir.actions.server">
+        <field name="name">Mi conector de Claude.ai</field>
+        <field name="model_id" ref="model_claude_oauth_client"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_my_personal_connector()</field>
+    </record>
+
+    <!-- ================= OAuth clients (read-only) ================= -->
+    <record id="view_claude_oauth_client_list" model="ir.ui.view">
+        <field name="name">claude.oauth.client.list</field>
+        <field name="model">claude.oauth.client</field>
+        <field name="arch" type="xml">
+            <list string="Clientes OAuth" create="false">
+                <field name="client_name"/>
+                <field name="client_id"/>
+                <field name="user_id" optional="show"/>
+                <field name="token_endpoint_auth_method"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_claude_oauth_client" model="ir.actions.act_window">
+        <field name="name">Clientes OAuth</field>
+        <field name="res_model">claude.oauth.client</field>
+        <field name="view_mode">list</field>
+    </record>
+
+    <!-- ================= OAuth tokens (with revoke) ================= -->
+    <record id="view_claude_oauth_token_list" model="ir.ui.view">
+        <field name="name">claude.oauth.token.list</field>
+        <field name="model">claude.oauth.token</field>
+        <field name="arch" type="xml">
+            <list string="Tokens OAuth" create="false">
+                <field name="user_id"/>
+                <field name="client_id"/>
+                <field name="create_date"/>
+                <field name="access_expires_at"/>
+                <field name="revoked"/>
+                <button name="action_revoke" type="object" string="Revocar"
+                        icon="fa-ban" invisible="revoked"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="action_claude_oauth_token" model="ir.actions.act_window">
+        <field name="name">Tokens OAuth</field>
+        <field name="res_model">claude.oauth.token</field>
+        <field name="view_mode">list</field>
+    </record>
+</odoo>

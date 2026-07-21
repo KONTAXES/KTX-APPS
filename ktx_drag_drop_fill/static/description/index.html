@@ -1,0 +1,284 @@
+<section style="font-family:'Segoe UI',Arial,Helvetica,sans-serif; color:#1a2318; max-width:960px; margin:0 auto; line-height:1.6;">
+
+<style>
+  /* ---- Fill-down animation (a value cascades down a column) ---- */
+  @keyframes ddf-fill-1 { 0%,10%{opacity:0} 22%,100%{opacity:1} }
+  @keyframes ddf-fill-2 { 0%,22%{opacity:0} 34%,100%{opacity:1} }
+  @keyframes ddf-fill-3 { 0%,34%{opacity:0} 46%,100%{opacity:1} }
+  @keyframes ddf-handle-travel {
+    0%,8%   { top:34px; opacity:1 }
+    46%     { top:142px; opacity:1 }
+    58%,100%{ top:142px; opacity:0 }
+  }
+  @keyframes ddf-preview-sweep {
+    0%,8%   { top:34px; height:36px; opacity:0 }
+    12%     { opacity:1 }
+    46%     { top:34px; height:144px; opacity:1 }
+    58%,100%{ opacity:0 }
+  }
+  /* ---- Series animation (10,20 -> 30,40,50) ---- */
+  @keyframes ddf-ser-1 { 0%,30%{opacity:0;transform:translateY(3px)} 42%,100%{opacity:1;transform:none} }
+  @keyframes ddf-ser-2 { 0%,42%{opacity:0;transform:translateY(3px)} 54%,100%{opacity:1;transform:none} }
+  @keyframes ddf-ser-3 { 0%,54%{opacity:0;transform:translateY(3px)} 66%,100%{opacity:1;transform:none} }
+  /* ---- Marching-ants copy pulse ---- */
+  @keyframes ddf-ants { 0%,100%{opacity:1} 50%{opacity:.35} }
+  @keyframes ddf-toast { 0%,55%{opacity:0;transform:translateY(4px)} 65%,90%{opacity:1;transform:none} 100%{opacity:0} }
+
+  .ddf-cellrow td { border-bottom:1px solid #e3e7dd; padding:9px 12px; font-size:13.5px; }
+  .ddf-hd td { background:#f0f3ea; color:#5b6b53; font-size:11px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; }
+</style>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<div style="background:linear-gradient(135deg,#0f1f17,#173a26); border-radius:16px; padding:46px 40px; text-align:center;">
+  <div style="font-size:22px; font-weight:900; color:#2a9d5c; letter-spacing:-.5px; margin-bottom:18px;">KONTAXES</div>
+  <div style="display:inline-block; background:#132a1d; border:1px solid #1d6f42; color:#a9e2c2; font-size:11.5px; font-weight:700; padding:5px 16px; border-radius:50px; margin-bottom:18px; letter-spacing:.8px; text-transform:uppercase;">
+    Odoo 19 &nbsp;&middot;&nbsp; Productividad
+  </div>
+  <h1 style="font-size:44px; font-weight:900; color:#fff; margin:0 0 10px; line-height:1.08; letter-spacing:-1px;">Odoo como Excel</h1>
+  <div style="font-size:20px; font-weight:600; color:#4fd68a; margin-bottom:20px;">Drag &amp; Drop &middot; Selecciona, arrastra, rellena y copia</div>
+  <p style="font-size:15.5px; color:#c9d6cd; max-width:620px; margin:0 auto 26px;">
+    Convierte cualquier lista editable de Odoo &mdash; y cada campo one2many &mdash; en una hoja de calculo:
+    seleccion de celdas y rangos, relleno con el controlador tipo Excel, series numericas automaticas
+    y copiar/pegar con Ctrl+C. Todo se enciende y apaga con un solo icono.
+  </p>
+  <div>
+    <span style="display:inline-block; background:#132a1d; border:1px solid #1d6f42; color:#dfeee6; font-size:12.5px; padding:6px 13px; border-radius:8px; margin:4px;">Cero configuracion</span>
+    <span style="display:inline-block; background:#132a1d; border:1px solid #1d6f42; color:#dfeee6; font-size:12.5px; padding:6px 13px; border-radius:8px; margin:4px;">Listas, one2many y agrupadas</span>
+    <span style="display:inline-block; background:#132a1d; border:1px solid #1d6f42; color:#dfeee6; font-size:12.5px; padding:6px 13px; border-radius:8px; margin:4px;">Respeta el onchange nativo</span>
+    <span style="display:inline-block; background:#132a1d; border:1px solid #1d6f42; color:#dfeee6; font-size:12.5px; padding:6px 13px; border-radius:8px; margin:4px;">Apariencia configurable</span>
+  </div>
+</div>
+
+<!-- ═══════════════ PRICING BANNER ═══════════════ -->
+<div style="display:flex; flex-wrap:wrap; gap:12px; margin-top:14px;">
+  <div style="flex:1; min-width:170px; background:#1d6f42; color:#fff; border-radius:12px; padding:20px; text-align:center;">
+    <div style="font-size:12px; text-transform:uppercase; letter-spacing:.08em; opacity:.85;">Lanzamiento</div>
+    <div style="font-size:30px; font-weight:900; margin:4px 0;">GRATIS</div>
+    <div style="font-size:12.5px; opacity:.9;">por tiempo limitado</div>
+  </div>
+  <div style="flex:1; min-width:170px; background:#0f1f17; color:#fff; border-radius:12px; padding:20px; text-align:center;">
+    <div style="font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#4fd68a;">Durante 2026</div>
+    <div style="font-size:30px; font-weight:900; margin:4px 0;">-50%</div>
+    <div style="font-size:12.5px; color:#a9e2c2;">de descuento</div>
+  </div>
+  <div style="flex:1; min-width:170px; background:#f0f3ea; color:#1a2318; border-radius:12px; padding:20px; text-align:center;">
+    <div style="font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#5b6b53;">Precio normal</div>
+    <div style="font-size:30px; font-weight:900; margin:4px 0;">$110</div>
+    <div style="font-size:12.5px; color:#5b6b53;">USD, pago unico</div>
+  </div>
+</div>
+
+<!-- ═══════════════ LIVE DEMOS (pure CSS) ═══════════════ -->
+<div style="text-align:center; margin:44px 0 24px;">
+  <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#1d6f42; text-transform:uppercase;">En accion</div>
+  <h2 style="font-size:28px; font-weight:900; margin:6px 0 0;">Tres gestos, mil clics menos</h2>
+</div>
+
+<table style="width:100%; border-collapse:separate; border-spacing:14px 0;">
+<tr style="vertical-align:top;">
+
+  <!-- Demo 1: fill down -->
+  <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:14px; padding:18px;">
+    <h3 style="font-size:15px; font-weight:800; margin:0 0 4px;">Arrastra y rellena</h3>
+    <p style="font-size:12px; color:#6c7a64; margin:0 0 14px;">Copia el valor hacia abajo con el controlador.</p>
+    <div style="position:relative; border:1px solid #e3e7dd; border-radius:8px; overflow:visible;">
+      <table style="width:100%; border-collapse:collapse;">
+        <tr class="ddf-hd"><td>Producto</td><td style="text-align:right;">Precio</td></tr>
+        <tr class="ddf-cellrow"><td>Silla</td><td style="text-align:right; font-weight:700; color:#1a73e8;">Q 150</td></tr>
+        <tr class="ddf-cellrow"><td>Mesa</td><td style="text-align:right; color:#1a73e8; animation:ddf-fill-1 3.4s ease-in-out infinite;">Q 150</td></tr>
+        <tr class="ddf-cellrow"><td>Estante</td><td style="text-align:right; color:#1a73e8; animation:ddf-fill-2 3.4s ease-in-out infinite;">Q 150</td></tr>
+        <tr class="ddf-cellrow"><td>Lampara</td><td style="text-align:right; color:#1a73e8; animation:ddf-fill-3 3.4s ease-in-out infinite;">Q 150</td></tr>
+      </table>
+      <div style="position:absolute; right:6px; width:60%; box-sizing:border-box; border:2px dashed #1a73e8; background:rgba(26,115,232,.08); animation:ddf-preview-sweep 3.4s ease-in-out infinite; pointer-events:none;"></div>
+      <div style="position:absolute; right:-5px; width:10px; height:10px; background:#1a73e8; border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,.25); animation:ddf-handle-travel 3.4s ease-in-out infinite;"></div>
+    </div>
+  </td>
+
+  <!-- Demo 2: numeric series -->
+  <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:14px; padding:18px;">
+    <h3 style="font-size:15px; font-weight:800; margin:0 0 4px;">Continua la serie</h3>
+    <p style="font-size:12px; color:#6c7a64; margin:0 0 14px;">10, 20 &rarr; sigue 30, 40, 50 solo.</p>
+    <div style="border:1px solid #e3e7dd; border-radius:8px; overflow:hidden;">
+      <table style="width:100%; border-collapse:collapse;">
+        <tr class="ddf-hd"><td>#</td><td style="text-align:right;">Lote</td></tr>
+        <tr class="ddf-cellrow"><td>1</td><td style="text-align:right; font-weight:700; color:#1a73e8; background:rgba(26,115,232,.06);">10</td></tr>
+        <tr class="ddf-cellrow"><td>2</td><td style="text-align:right; font-weight:700; color:#1a73e8; background:rgba(26,115,232,.06);">20</td></tr>
+        <tr class="ddf-cellrow"><td>3</td><td style="text-align:right; color:#1a73e8; animation:ddf-ser-1 3.4s ease-in-out infinite;">30</td></tr>
+        <tr class="ddf-cellrow"><td>4</td><td style="text-align:right; color:#1a73e8; animation:ddf-ser-2 3.4s ease-in-out infinite;">40</td></tr>
+        <tr class="ddf-cellrow"><td>5</td><td style="text-align:right; color:#1a73e8; animation:ddf-ser-3 3.4s ease-in-out infinite;">50</td></tr>
+      </table>
+    </div>
+  </td>
+
+  <!-- Demo 3: select + copy -->
+  <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:14px; padding:18px;">
+    <h3 style="font-size:15px; font-weight:800; margin:0 0 4px;">Selecciona y copia</h3>
+    <p style="font-size:12px; color:#6c7a64; margin:0 0 14px;">Ctrl+C a Excel, con hormigas marchantes.</p>
+    <div style="position:relative; border:1px solid #e3e7dd; border-radius:8px; overflow:hidden;">
+      <table style="width:100%; border-collapse:collapse;">
+        <tr class="ddf-hd"><td>Cliente</td><td style="text-align:right;">Total</td></tr>
+        <tr class="ddf-cellrow"><td style="background:rgba(26,115,232,.10);">Azure</td><td style="text-align:right; background:rgba(26,115,232,.10);">Q 900</td></tr>
+        <tr class="ddf-cellrow"><td style="background:rgba(26,115,232,.10);">Deco</td><td style="text-align:right; background:rgba(26,115,232,.10);">Q 560</td></tr>
+        <tr class="ddf-cellrow"><td>Gemini</td><td style="text-align:right;">Q 410</td></tr>
+      </table>
+      <div style="position:absolute; left:0; top:30px; right:0; height:66px; border:2px dashed #1a73e8; box-sizing:border-box; animation:ddf-ants .9s ease-in-out infinite; pointer-events:none;"></div>
+      <div style="position:absolute; left:50%; top:44px; transform:translateX(-50%); background:#1d6f42; color:#fff; font-size:11px; font-weight:700; padding:4px 12px; border-radius:6px; animation:ddf-toast 3.4s ease-in-out infinite;">Copiado &#10003;</div>
+    </div>
+  </td>
+
+</tr>
+</table>
+
+<!-- ═══════════════ FEATURES ═══════════════ -->
+<div style="text-align:center; margin:48px 0 26px;">
+  <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#1d6f42; text-transform:uppercase;">Funciones</div>
+  <h2 style="font-size:28px; font-weight:900; margin:6px 0 0;">Todo lo de una hoja de calculo, dentro de Odoo</h2>
+</div>
+<table style="width:100%; border-collapse:separate; border-spacing:12px;">
+  <tr style="vertical-align:top;">
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">&#8597; &#8596; Relleno en 4 direcciones</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">Arrastra el controlador arriba/abajo (entre registros) o izquierda/derecha (entre campos de la misma fila).</p>
+    </td>
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">1 &rarr; 2 &rarr; 3 Series automaticas</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">En campos numericos (entero, decimal, monetario), si la seleccion insinua una progresion, la continua sola.</p>
+    </td>
+  </tr>
+  <tr style="vertical-align:top;">
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">&#9783; Seleccion multiple (Ctrl / Shift)</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">Ctrl+clic agrega celdas o rangos sueltos; Shift+clic extiende un bloque, igual que en Excel. Ctrl+C copia todo.</p>
+    </td>
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">&#8681; Doble clic: rellenar hasta el final</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">Doble clic en el controlador copia (o continua la serie) hasta la ultima fila visible.</p>
+    </td>
+  </tr>
+  <tr style="vertical-align:top;">
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">&#128279; Listas, one2many y agrupadas</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">Lineas de pedidos y facturas, listas editables e incluso agrupadas. Cada cambio dispara el onchange nativo.</p>
+    </td>
+    <td style="width:50%; background:#fff; border:1px solid #e3e7dd; border-top:3px solid #1d6f42; border-radius:14px; padding:22px;">
+      <h3 style="font-size:16px; font-weight:800; margin:0 0 8px;">&#128290; Copiar/pegar a Excel</h3>
+      <p style="font-size:13px; color:#6c7a64; margin:0;">Ctrl+C exporta la seleccion separada por tabuladores y saltos de linea, lista para pegar en Excel o Sheets.</p>
+    </td>
+  </tr>
+</table>
+
+<!-- ═══════════════ HOW IT WORKS ═══════════════ -->
+<div style="background:#f0f3ea; border-radius:14px; padding:40px 32px; margin:36px 0;">
+  <div style="text-align:center; margin-bottom:28px;">
+    <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#1d6f42; text-transform:uppercase;">Como funciona</div>
+    <h2 style="font-size:25px; font-weight:900; margin:6px 0 0;">Sin Studio, sin editar XML</h2>
+  </div>
+  <table style="width:100%; border-collapse:separate; border-spacing:12px 0;">
+    <tr style="vertical-align:top; text-align:center;">
+      <td style="width:25%; padding:6px;">
+        <div style="width:40px;height:40px;background:#1d6f42;border-radius:50%;color:#fff;font-weight:900;line-height:40px;margin:0 auto 10px;">1</div>
+        <h4 style="font-size:13px; font-weight:800; margin:0 0 4px;">Instala</h4>
+        <p style="font-size:12px; color:#6c7a64; margin:0;">Nada que configurar en las listas.</p>
+      </td>
+      <td style="width:25%; padding:6px;">
+        <div style="width:40px;height:40px;background:#1d6f42;border-radius:50%;color:#fff;font-weight:900;line-height:40px;margin:0 auto 10px;">2</div>
+        <h4 style="font-size:13px; font-weight:800; margin:0 0 4px;">Activa el icono</h4>
+        <p style="font-size:12px; color:#6c7a64; margin:0;">Arriba a la derecha; se pinta del color elegido.</p>
+      </td>
+      <td style="width:25%; padding:6px;">
+        <div style="width:40px;height:40px;background:#1d6f42;border-radius:50%;color:#fff;font-weight:900;line-height:40px;margin:0 auto 10px;">3</div>
+        <h4 style="font-size:13px; font-weight:800; margin:0 0 4px;">Selecciona</h4>
+        <p style="font-size:12px; color:#6c7a64; margin:0;">Clic sostenido o un clic (configurable).</p>
+      </td>
+      <td style="width:25%; padding:6px;">
+        <div style="width:40px;height:40px;background:#1d6f42;border-radius:50%;color:#fff;font-weight:900;line-height:40px;margin:0 auto 10px;">4</div>
+        <h4 style="font-size:13px; font-weight:800; margin:0 0 4px;">Arrastra o copia</h4>
+        <p style="font-size:12px; color:#6c7a64; margin:0;">Rellena, continua series o copia a Excel.</p>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══════════════ APPEARANCE / CONFIG ═══════════════ -->
+<table style="width:100%; border-collapse:separate; border-spacing:12px; margin-bottom:20px;">
+  <tr style="vertical-align:top;">
+    <td style="width:60%; background:#fff; border:1px solid #e3e7dd; border-radius:14px; padding:24px;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#1d6f42; text-transform:uppercase; margin-bottom:6px;">Apariencia configurable</div>
+      <h3 style="font-size:19px; font-weight:900; margin:0 0 10px;">Tu Excel, a tu manera</h3>
+      <ul style="font-size:13.5px; color:#4d5c47; margin:0; padding-left:18px;">
+        <li><b>Color</b> del marco, del controlador y del icono activo.</li>
+        <li><b>Grosor</b> del borde de seleccion.</li>
+        <li><b>Cursor</b> mientras seleccionas (celda, cruz, copiar&hellip;).</li>
+        <li><b>Modo de activacion</b>: un clic o clic sostenido.</li>
+      </ul>
+      <p style="font-size:12.5px; color:#6c7a64; margin:12px 0 0;">Todo desde el panel de la flecha junto al icono. Las preferencias se recuerdan por navegador.</p>
+    </td>
+    <td style="width:40%; background:#0f1f17; border-radius:14px; padding:24px; color:#dfeee6;">
+      <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#4fd68a; text-transform:uppercase; margin-bottom:8px;">Seguro por diseno</div>
+      <ul style="font-size:13px; margin:0; padding-left:18px;">
+        <li>Con el icono apagado, las listas se comportan 100% como el Odoo estandar.</li>
+        <li>Solo escribe en registros en borrador; documentos contabilizados o cancelados quedan protegidos.</li>
+        <li>Si el mapeo fila&harr;registro no cuadra, la accion se cancela sin escribir nada.</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+
+<!-- ═══════════════ USE CASES ═══════════════ -->
+<div style="text-align:center; margin:40px 0 22px;">
+  <div style="font-size:11px; font-weight:700; letter-spacing:2px; color:#1d6f42; text-transform:uppercase;">Casos de uso</div>
+  <h2 style="font-size:26px; font-weight:900; margin:6px 0 0;">Donde mas se nota</h2>
+</div>
+<table style="width:100%; border-collapse:separate; border-spacing:12px;">
+  <tr style="vertical-align:top;">
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Pedidos y facturas</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">El mismo impuesto, cuenta o descuento en todas las lineas de un jalon.</p>
+    </td>
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Precios masivos</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">Copia un precio o porcentaje a decenas de filas sin abrir cada registro.</p>
+    </td>
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Series y lotes</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">Numeraciones consecutivas que se completan solas al arrastrar.</p>
+    </td>
+  </tr>
+  <tr style="vertical-align:top;">
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Inventario</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">Replica ubicacion, ruta o cantidad minima en varios productos.</p>
+    </td>
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Ajustes tras importar</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">Corrige varias filas a la vez en lugar de campo por campo.</p>
+    </td>
+    <td style="width:33%; background:#fff; border:1px solid #e3e7dd; border-radius:12px; padding:18px;">
+      <h4 style="font-size:14px; font-weight:800; margin:0 0 6px;">Exportar a Excel</h4>
+      <p style="font-size:12.5px; color:#6c7a64; margin:0;">Selecciona un bloque y pegalo directo en tu hoja de calculo.</p>
+    </td>
+  </tr>
+</table>
+
+<!-- ═══════════════ CTA ═══════════════ -->
+<div style="background:linear-gradient(135deg,#0f1f17,#173a26); border-radius:16px; padding:40px 32px; text-align:center; margin:34px 0 12px; color:#fff;">
+  <div style="display:inline-block; background:#1d6f42; color:#fff; font-size:12px; font-weight:800; padding:5px 16px; border-radius:50px; margin-bottom:14px; letter-spacing:.5px;">&#9733; GRATIS por lanzamiento &middot; 50% durante 2026</div>
+  <h2 style="font-size:28px; font-weight:900; margin:0 0 10px;">Deja de repetir el mismo clic</h2>
+  <p style="font-size:14px; color:#c9d6cd; max-width:460px; margin:0 auto 20px;">Instalalo hoy y trabaja tus listas de Odoo como si fueran Excel.</p>
+  <a href="https://www.kontaxes.com" style="display:inline-block; background:#2a9d5c; color:#fff; font-size:14px; font-weight:800; padding:12px 28px; border-radius:8px; text-decoration:none;">Visitar www.kontaxes.com</a>
+</div>
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<div style="text-align:center; padding:20px; font-size:12.5px; color:#6c7a64;">
+  Desarrollado por <b style="color:#1d6f42;">KONTAXES</b> &nbsp;&middot;&nbsp;
+  <a href="https://www.kontaxes.com" style="color:#1d6f42; text-decoration:none;">www.kontaxes.com</a> &nbsp;&middot;&nbsp;
+  soporte@kontaxes.com &nbsp;&middot;&nbsp; Licencia OPL-1
+</div>
+
+</section>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

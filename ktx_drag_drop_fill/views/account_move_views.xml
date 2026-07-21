@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+        Makes the main Invoices/Bills/Credit Notes list inline-editable so
+        the fill handle can be used there too, not just inside a single
+        invoice's line items. Existing per-field readonly conditions in the
+        base view (e.g. readonly="state != 'draft'" on invoice_date) still
+        apply record by record, so posted/cancelled entries stay protected
+        automatically - only drafts become editable in place.
+    -->
+    <record id="view_invoice_tree_editable" model="ir.ui.view">
+        <field name="name">account.move.list.editable.ktx_drag_drop_fill</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_invoice_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//list" position="attributes">
+                <attribute name="editable">bottom</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -6,6 +6,11 @@ class KtxExpenseDashboard(models.TransientModel):
     _name = "ktx.expense.dashboard"
     _description = "Tablero de Liquidaciones"
 
+    kind_filter = fields.Selection(
+        selection=[("all", "Todas"), ("expense", "Gastos"), ("sale", "Ventas")],
+        string="Clase",
+        default="all",
+    )
     total_draft = fields.Integer(compute="_compute_kpis")
     total_confirmed = fields.Integer(compute="_compute_kpis")
     total_approved = fields.Integer(compute="_compute_kpis")
@@ -37,7 +42,10 @@ class KtxExpenseDashboard(models.TransientModel):
             first_day_month = today.replace(day=1)
             first_day_year = today.replace(month=1, day=1)
 
-            base = [("company_id", "=", cid)]
+            # Filtro por clase (gasto/venta) aplicado a todo el tablero
+            kind_dom = [] if rec.kind_filter in (False, "all") else [("kind", "=", rec.kind_filter)]
+
+            base = [("company_id", "=", cid)] + kind_dom
             rec.total_draft = Settlement.search_count(base + [("state", "=", "draft")])
             rec.total_confirmed = Settlement.search_count(base + [("state", "=", "confirmed")])
             rec.total_approved = Settlement.search_count(base + [("state", "=", "approved")])
@@ -54,8 +62,9 @@ class KtxExpenseDashboard(models.TransientModel):
             rec.amount_paid_year = sum(paid_year.mapped("amount_total"))
 
             Staging = self.env["ktx.settlement.staging"]
-            rec.staging_pending = Staging.search_count([("state", "=", "pending"), ("company_id", "=", cid)])
-            rec.staging_in_settlement = Staging.search_count([("state", "=", "in_settlement"), ("company_id", "=", cid)])
+            staging_base = [("company_id", "=", cid)] + kind_dom
+            rec.staging_pending = Staging.search_count(staging_base + [("state", "=", "pending")])
+            rec.staging_in_settlement = Staging.search_count(staging_base + [("state", "=", "in_settlement")])
 
     def _compute_charts(self):
         for rec in self:
@@ -63,8 +72,16 @@ class KtxExpenseDashboard(models.TransientModel):
             rec.top_partners_html = rec._build_top_partners_html()
             rec.monthly_html = rec._build_monthly_html()
 
+    def _kind_clause(self, alias="s"):
+        """Devuelve (fragmento_sql, [params]) para filtrar por clase en los
+        gráficos. Vacío cuando el filtro es 'Todas'."""
+        if self.kind_filter in (False, "all"):
+            return "", []
+        return " AND %s.kind = %%s" % alias, [self.kind_filter]
+
     def _build_top_employees_html(self):
         cid = self.env.company.id
+        kind_sql, kind_params = self._kind_clause("s")
         self.env.cr.execute("""
             SELECT rp.name, SUM(s.amount_total) as total
             FROM ktx_settlement s
@@ -72,10 +89,11 @@ class KtxExpenseDashboard(models.TransientModel):
             WHERE s.state IN ('approved','posted','in_payment','paid')
               AND s.employee_id IS NOT NULL
               AND s.company_id = %s
+        """ + kind_sql + """
             GROUP BY rp.name
             ORDER BY total DESC
             LIMIT 8
-        """, (cid,))
+        """, (cid, *kind_params))
         rows = self.env.cr.fetchall()
         if not rows:
             return "<p class='text-muted text-center py-3'>Sin datos</p>"
@@ -101,6 +119,7 @@ class KtxExpenseDashboard(models.TransientModel):
 
     def _build_top_partners_html(self):
         cid = self.env.company.id
+        kind_sql, kind_params = self._kind_clause("s")
         self.env.cr.execute("""
             SELECT rp.name, SUM(sl.amount_to_pay) as total
             FROM ktx_settlement_line sl
@@ -110,10 +129,11 @@ class KtxExpenseDashboard(models.TransientModel):
             JOIN res_partner rp ON rp.id = am.partner_id
             WHERE s.state IN ('approved','posted','in_payment','paid')
               AND s.company_id = %s
+        """ + kind_sql + """
             GROUP BY rp.name
             ORDER BY total DESC
             LIMIT 8
-        """, (cid,))
+        """, (cid, *kind_params))
         rows = self.env.cr.fetchall()
         if not rows:
             return "<p class='text-muted text-center py-3'>Sin datos</p>"
@@ -139,6 +159,7 @@ class KtxExpenseDashboard(models.TransientModel):
 
     def _build_monthly_html(self):
         cid = self.env.company.id
+        kind_sql, kind_params = self._kind_clause("ktx_settlement")
         self.env.cr.execute("""
             SELECT TO_CHAR(date, 'Mon YY') as mes,
                    DATE_TRUNC('month', date) as mes_date,
@@ -148,9 +169,10 @@ class KtxExpenseDashboard(models.TransientModel):
             WHERE state IN ('posted','in_payment','paid')
               AND date >= CURRENT_DATE - INTERVAL '12 months'
               AND company_id = %s
+        """ + kind_sql + """
             GROUP BY mes, mes_date
             ORDER BY mes_date
-        """, (cid,))
+        """, (cid, *kind_params))
         rows = self.env.cr.fetchall()
         if not rows:
             return "<p class='text-muted text-center py-3'>Sin datos de los últimos 12 meses</p>"
@@ -172,7 +194,10 @@ class KtxExpenseDashboard(models.TransientModel):
         return html
 
     def action_open_dashboard(self):
-        rec = self.env["ktx.expense.dashboard"].create({})
+        kind = self.env.context.get("dashboard_kind", "all")
+        if kind not in ("all", "expense", "sale"):
+            kind = "all"
+        rec = self.env["ktx.expense.dashboard"].create({"kind_filter": kind})
         return {
             "type": "ir.actions.act_window",
             "res_model": "ktx.expense.dashboard",

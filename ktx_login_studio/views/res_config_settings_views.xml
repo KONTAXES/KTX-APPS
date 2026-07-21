@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.ktx.login.studio</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='companies']" position="after">
+                <block title="Login Studio" id="ktx_login_studio">
+                    <setting help="Personaliza el login, registro y recuperacion de contrasena para todos los visitantes de la base de datos">
+                        <div class="content-group">
+                            <button name="action_open_ktx_login_studio" type="object"
+                                    string="Administrar Temas de Login" class="btn-link"
+                                    icon="oi-arrow-right"/>
+                        </div>
+                    </setting>
+                    <setting id="ktx_login_studio_safe_mode"
+                             help="Restaura instantaneamente el login 100% original de Odoo para todos los visitantes">
+                        <field name="ktx_login_studio_force_safe_mode"/>
+                    </setting>
+                </block>
+            </xpath>
+        </field>
+    </record>
+</odoo>

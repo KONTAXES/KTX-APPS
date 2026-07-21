@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ktx_drag_drop_fill.SystrayToggle">
+        <div class="o-navbar-item o_ktx_ddf_wrapper" style="position: relative;">
+            <button type="button"
+                    class="o_ktx_ddf_toggle btn btn-link p-0 mx-1"
+                    t-att-class="{ o_ktx_ddf_active: state.enabled }"
+                    t-att-aria-pressed="state.enabled ? 'true' : 'false'"
+                    t-att-title="title"
+                    t-on-click="onClick">
+                <svg class="o_ktx_ddf_icon" width="18" height="18" viewBox="0 0 26 26"
+                     fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <t t-if="state.enabled">
+                        <rect t-foreach="cells" t-as="cell" t-key="cell.x + '_' + cell.y"
+                              t-att-x="cell.x" t-att-y="cell.y" width="4" height="4" rx="0.5"
+                              t-att-fill="state.color"/>
+                    </t>
+                    <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="1.6"/>
+                    <line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.3"/>
+                    <line x1="3" y1="15" x2="21" y2="15" stroke="currentColor" stroke-width="1.3"/>
+                    <line x1="9" y1="3" x2="9" y2="21" stroke="currentColor" stroke-width="1.3"/>
+                    <line x1="15" y1="3" x2="15" y2="21" stroke="currentColor" stroke-width="1.3"/>
+                    <!-- Fill handle in the bottom-right corner, always visible
+                         (like the module icon). Sits slightly outside the grid
+                         so it reads as a handle; uses the chosen color when
+                         active, monochrome otherwise. -->
+                    <rect x="18.5" y="18.5" width="7" height="7" rx="1.4"
+                          t-att-fill="state.enabled ? state.color : 'currentColor'"/>
+                </svg>
+            </button>
+            <button type="button"
+                    class="o_ktx_ddf_gear btn btn-link p-0"
+                    title="Configurar apariencia"
+                    t-on-click="toggleSettings">
+                <i class="fa fa-caret-down" style="font-size: 10px;"/>
+            </button>
+            <div class="o_ktx_ddf_settings dropdown-menu shadow-sm" t-if="popoverState.open"
+                 style="position: absolute; top: 100%; right: 0; display: block;">
+                <div class="o_ktx_ddf_row">
+                    <label>Color</label>
+                    <input type="color" t-att-value="state.color" t-on-change="onColorChange"/>
+                </div>
+                <div class="o_ktx_ddf_row">
+                    <label>Grosor</label>
+                    <input type="range" min="1" max="6" step="1" t-att-value="state.thickness" t-on-input="onThicknessChange"/>
+                </div>
+                <div class="o_ktx_ddf_row">
+                    <label>Activar con</label>
+                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="onActivationChange">
+                        <t t-foreach="activationOptions" t-as="opt" t-key="opt.value">
+                            <option t-att-value="opt.value" t-att-selected="opt.value === state.activation"><t t-esc="opt.label"/></option>
+                        </t>
+                    </select>
+                </div>
+                <div class="o_ktx_ddf_row">
+                    <label>Cursor al seleccionar</label>
+                    <select class="form-select form-select-sm" style="width: auto;" t-on-change="onCursorChange">
+                        <t t-foreach="cursorOptions" t-as="opt" t-key="opt">
+                            <option t-att-value="opt" t-att-selected="opt === state.cursor"><t t-esc="opt"/></option>
+                        </t>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

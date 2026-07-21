@@ -5,15 +5,25 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
-VENDOR_BILL_TYPE = "in_invoice"
+VENDOR_TYPES = ("in_invoice", "in_receipt", "in_refund")
+SALE_TYPES = ("out_invoice", "out_receipt", "out_refund")
+AUTO_STAGING_TYPES = VENDOR_TYPES + SALE_TYPES
 JOURNAL_ENTRY_TYPE = "entry"
 
 
 def _journal_entries_allowed(env):
-    val = env["ir.config_parameter"].sudo().get_param(
-        "ktx_expense_management.allow_journal_entries", "False"
+    val = env['ir.config_parameter'].sudo().get_param(
+        'ktx_expense_management.allow_journal_entries', 'False'
     )
-    return val in ("True", "1", "true")
+    return val in ('True', '1', 'true')
+
+
+def _has_payable_line(move):
+    """True si el asiento tiene al menos una línea con cuenta por pagar."""
+    return any(
+        l.account_id.account_type == 'liability_payable'
+        for l in move.line_ids
+    )
 
 
 class AccountMove(models.Model):
@@ -48,10 +58,10 @@ class AccountMove(models.Model):
         """Auto-add to staging when confirmed from the staging context."""
         res = super().action_post()
         # If bill was created from the staging module (context flag), auto-add to staging
-        if self._context.get("ktx_auto_staging"):
+        if self.env.context.get("ktx_auto_staging"):
             allow_entries = _journal_entries_allowed(self.env)
             for move in self.filtered(lambda m: m.state == "posted"):
-                if move.move_type not in ("in_invoice", "in_receipt"):
+                if move.move_type not in AUTO_STAGING_TYPES:
                     continue
                 existing = self.env["ktx.settlement.staging"].search(
                     [("move_id", "=", move.id)], limit=1
@@ -61,11 +71,13 @@ class AccountMove(models.Model):
         return res
 
     def action_add_to_settlement(self):
-        """Agrega facturas de proveedor publicadas o asientos publicados al staging."""
+        """Agrega facturas/recibos de proveedor publicados o asientos con cuenta por pagar al staging."""
         allow_entries = _journal_entries_allowed(self.env)
 
-        # Check journal entry restriction before filtering
-        entry_moves = self.filtered(lambda m: m.move_type == JOURNAL_ENTRY_TYPE and m.state == "posted")
+        # Verificar restricción de asientos contables antes de filtrar
+        entry_moves = self.filtered(
+            lambda m: m.move_type == JOURNAL_ENTRY_TYPE and m.state == "posted"
+        )
         if entry_moves and not allow_entries:
             raise UserError(
                 _(
@@ -74,16 +86,24 @@ class AccountMove(models.Model):
                 )
             )
 
-        allowed_types = (VENDOR_BILL_TYPE, JOURNAL_ENTRY_TYPE) if allow_entries else (VENDOR_BILL_TYPE,)
         eligible = self.filtered(
-            lambda m: m.move_type in allowed_types and m.state == "posted"
+            lambda m: m.state == "posted" and (
+                m.move_type in VENDOR_TYPES
+                or m.move_type in SALE_TYPES
+                or (
+                    m.move_type == JOURNAL_ENTRY_TYPE
+                    and allow_entries
+                    and _has_payable_line(m)
+                )
+            )
         )
         if not eligible:
             raise UserError(
                 _(
-                    "Solo se pueden agregar facturas de proveedor publicadas "
-                    "a una liquidación. Active 'Incluir Asientos Contables' en "
-                    "Configuración para también permitir asientos contables."
+                    "Solo se pueden agregar facturas/recibos de proveedor o de cliente publicados, "
+                    "o asientos contables con cuenta por pagar a una liquidación.\n"
+                    "Active 'Incluir Asientos Contables' en Configuración para también "
+                    "permitir pólizas contables."
                 )
             )
 
@@ -138,7 +158,7 @@ class AccountMove(models.Model):
             "tag": "display_notification",
             "params": {
                 "title": _("Éxito"),
-                "message": _("Documentos agregados correctamente a Gastos por Liquidar."),
+                "message": _("Documentos agregados correctamente a Documentos por Liquidar."),
                 "type": "success",
                 "sticky": False,
             },

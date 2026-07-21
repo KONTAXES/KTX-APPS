@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_claude_conversation_list" model="ir.ui.view">
+        <field name="name">claude.conversation.list</field>
+        <field name="model">claude.conversation</field>
+        <field name="arch" type="xml">
+            <list string="Conversaciones" create="false">
+                <field name="name"/>
+                <field name="user_id"/>
+                <field name="company_id" optional="show"/>
+                <field name="model"/>
+                <field name="total_input_tokens" optional="hide"/>
+                <field name="total_output_tokens" optional="hide"/>
+                <field name="write_date"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claude_conversation_form" model="ir.ui.view">
+        <field name="name">claude.conversation.form</field>
+        <field name="model">claude.conversation</field>
+        <field name="arch" type="xml">
+            <form string="Conversación" create="false">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="user_id"/>
+                        <field name="company_id"/>
+                        <field name="model"/>
+                    </group>
+                    <field name="message_ids" readonly="1">
+                        <list>
+                            <field name="role"/>
+                            <field name="body"/>
+                            <field name="tool_name" optional="hide"/>
+                            <field name="tool_success" optional="hide"/>
+                        </list>
+                    </field>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_claude_conversation" model="ir.actions.act_window">
+        <field name="name">Conversaciones</field>
+        <field name="res_model">claude.conversation</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

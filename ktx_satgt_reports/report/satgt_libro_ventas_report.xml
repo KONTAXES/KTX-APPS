@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_libro_ventas" model="ir.actions.report">
+        <field name="name">Libro de Ventas y Servicios</field>
+        <field name="model">ktx.satgt.book.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_satgt_reports.report_libro_ventas_template</field>
+        <field name="report_file">ktx_satgt_reports.report_libro_ventas_template</field>
+        <field name="print_report_name">'Libro_Ventas_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="paperformat_id" ref="paperformat_satgt_libros"/>
+    </record>
+
+    <template id="report_libro_ventas_template">
+        <t t-call="web.html_container">
+            <t t-set="lines_and_totals" t-value="docs._get_book_lines()"/>
+            <t t-set="lines"   t-value="lines_and_totals[0]"/>
+            <t t-set="totals"  t-value="lines_and_totals[1]"/>
+            <t t-set="resumen" t-value="docs._get_resumen(lines, totals)"/>
+            <t t-set="folios"  t-value="docs._get_folios(lines, totals)"/>
+            <t t-set="company" t-value="env.company"/>
+            <t t-set="mes"     t-value="docs._month_name()"/>
+            <t t-set="anio"    t-value="docs._year_str()"/>
+
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                @page {
+                    size: Letter landscape;
+                    margin-top:    <t t-esc="docs.margin_top    or 10"/>mm;
+                    margin-bottom: <t t-esc="docs.margin_bottom or 10"/>mm;
+                    margin-left:   <t t-esc="docs.margin_left   or 10"/>mm;
+                    margin-right:  <t t-esc="docs.margin_right  or 10"/>mm;
+                }
+                body {
+                    background: #fff;
+                    font-family: Arial, sans-serif;
+                    font-size: 8.5pt;
+                    color: #000;
+                }
+                .rpt-header {
+                    position: relative;
+                    text-align: center;
+                    padding: 0 120px 5px 120px;
+                    border-bottom: 2px solid #000;
+                    margin-bottom: 4px;
+                    overflow: hidden;
+                }
+                .rpt-co-info { font-size: 11pt; font-weight: bold; line-height: 1.6; }
+                .rpt-titulo  { font-size: 13pt; font-weight: bold; letter-spacing: 0.5px; margin-top: 3px; }
+                .rpt-meta    { font-size: 8pt; margin-bottom: 5px; }
+                .folio-hdr {
+                    text-align: right;
+                    font-size: 7pt;
+                    color: #555;
+                    margin-bottom: 2px;
+                }
+                .folio-hdr b { font-size: 11pt; color: #000; }
+                .folio-sep {
+                    margin-top: 6px;
+                    border-top: 1px dashed #aaa;
+                    margin-bottom: 4px;
+                }
+                table.libro {
+                    width: 100%; border-collapse: collapse;
+                    font-size: 8.5pt; table-layout: auto; margin-bottom: 0;
+                }
+                table.libro th {
+                    border: 1px solid #000; padding: 2px 3px;
+                    text-align: center; vertical-align: middle; font-size: 8pt;
+                    background: #1e3a5f; color: #fff; font-weight: bold;
+                }
+                table.libro .th-section { background: #162d4a; color: #fff; font-size: 8pt; }
+                table.libro tbody td {
+                    border: 1px solid #000; padding: 2px 4px; font-size: 8.5pt;
+                    text-align: left; vertical-align: middle;
+                }
+                table.libro tfoot td {
+                    border: 1px solid #000; padding: 2px 4px;
+                    font-weight: bold; font-size: 8pt; background: #1e3a5f; color: #fff;
+                    text-align: right; vertical-align: middle;
+                }
+                .num    { text-align: right !important; white-space: nowrap; }
+                .ctr    { text-align: center; }
+                .nowrap { white-space: nowrap; }
+                .resumen-title {
+                    font-size: 11pt; font-weight: bold;
+                    text-align: center; margin: 14px 0 6px 0;
+                }
+                table.resumen {
+                    width: 65%; margin: 0 auto;
+                    border-collapse: collapse; font-size: 8pt;
+                }
+                table.resumen th {
+                    border: 1px solid #000; padding: 3px 8px;
+                    background: #1e3a5f; color: #fff; text-align: center; font-weight: bold;
+                }
+                table.resumen td { border: 1px solid #000; padding: 2px 8px; }
+                table.resumen .total-row td {
+                    background: #1e3a5f; color: #fff; font-weight: bold; border: 1px solid #000;
+                }
+            </style>
+
+            <!-- ── Sin datos ── -->
+            <t t-if="not lines">
+                <div class="rpt-header">
+                    <t t-if="company.logo">
+                        <div style="position:absolute; top:0; left:0;">
+                            <img t-att-src="image_data_uri(company.logo)"
+                                 style="max-width:115px; max-height:75px; object-fit:contain; display:block;"/>
+                        </div>
+                    </t>
+                    <div class="rpt-co-info">
+                        <t t-esc="company.name"/>
+                        <t t-if="company.street"><br/><t t-esc="company.street"/></t>
+                        <t t-if="company.street2"><br/><t t-esc="company.street2"/></t>
+                        <t t-if="company.vat"><br/>NIT: <t t-esc="company.vat"/></t>
+                    </div>
+                    <div class="rpt-titulo">LIBRO DE VENTAS Y SERVICIOS</div>
+                </div>
+                <div class="rpt-meta">
+                    Mes <b><t t-esc="mes"/></b>&#160;&#160;Año <b><t t-esc="anio"/></b>
+                </div>
+                <p style="text-align:center;color:#666;padding:20px;">
+                    Sin movimientos en el periodo seleccionado.
+                </p>
+            </t>
+
+            <!-- ── Folios con datos ── -->
+            <t t-if="lines">
+                <t t-foreach="folios" t-as="folio">
+                    <div t-att-style="not folio_first and 'page-break-before: always;' or None">
+
+                    <!-- Encabezado empresa: solo en el primer folio -->
+                    <t t-if="folio_first">
+                        <div class="rpt-header">
+                            <t t-if="company.logo">
+                                <div style="position:absolute; top:0; left:0;">
+                                    <img t-att-src="image_data_uri(company.logo)"
+                                         style="max-width:115px; max-height:75px; object-fit:contain; display:block;"/>
+                                </div>
+                            </t>
+                            <div style="position:absolute; top:0; right:0; text-align:right; font-size:7pt; color:#555;">
+                                FOLIO No.<br/>
+                                <span style="font-size:12pt; font-weight:bold; color:#000;"><t t-esc="folio['folio_no']"/></span>
+                            </div>
+                            <div class="rpt-co-info">
+                                <t t-esc="company.name"/>
+                                <t t-if="company.street"><br/><t t-esc="company.street"/></t>
+                                <t t-if="company.street2"><br/><t t-esc="company.street2"/></t>
+                                <t t-if="company.vat"><br/>NIT: <t t-esc="company.vat"/></t>
+                            </div>
+                            <div class="rpt-titulo">LIBRO DE VENTAS Y SERVICIOS</div>
+                        </div>
+                        <div class="rpt-meta">
+                            Mes <b><t t-esc="mes"/></b>&#160;&#160;
+                            Año <b><t t-esc="anio"/></b>&#160;&#160;
+                            Cantidad de Clientes <b><t t-esc="len(lines)"/></b>
+                        </div>
+                    </t>
+
+                    <!-- Número de folio para hojas 2+ -->
+                    <t t-if="not folio_first">
+                        <div class="folio-hdr">
+                            FOLIO No.&#160;<b><t t-esc="folio['folio_no']"/></b>
+                        </div>
+                    </t>
+
+                    <!-- Tabla del folio -->
+                    <table class="libro">
+                        <thead>
+                            <!-- Fila 1 -->
+                            <tr>
+                                <th rowspan="3" style="width:24px;">No.</th>
+                                <th rowspan="3" style="width:18px;">Dia</th>
+                                <t t-if="docs.col_serie">
+                                    <th rowspan="3" style="width:60px;">Serie</th>
+                                </t>
+                                <t t-if="docs.col_numero">
+                                    <th rowspan="3" style="width:80px;">Numero</th>
+                                </t>
+                                <t t-if="docs.col_nit">
+                                    <th rowspan="3" style="width:70px;">NIT</th>
+                                </t>
+                                <th rowspan="3" style="width:40px;">Cliente / Comprador</th>
+                                <th colspan="4" class="th-section">Local</th>
+                                <th colspan="4" class="th-section">Exportacion</th>
+                                <th rowspan="3" class="th-section" style="width:52px;">Pequeño<br/>Contrib.</th>
+                                <t t-if="docs.col_iva">
+                                    <th rowspan="3" style="width:55px;">IVA</th>
+                                </t>
+                                <th rowspan="3" style="width:60px;">Total</th>
+                            </tr>
+                            <!-- Fila 2 -->
+                            <tr>
+                                <th colspan="2">Gravada</th>
+                                <th colspan="2">Exenta</th>
+                                <th colspan="2">Gravada</th>
+                                <th colspan="2">Exenta</th>
+                            </tr>
+                            <!-- Fila 3 -->
+                            <tr>
+                                <th style="width:52px;">Bienes</th>
+                                <th style="width:52px;">Servicios</th>
+                                <th style="width:52px;">Bienes</th>
+                                <th style="width:52px;">Servicios</th>
+                                <th style="width:52px;">Bienes</th>
+                                <th style="width:52px;">Servicios</th>
+                                <th style="width:52px;">Bienes</th>
+                                <th style="width:52px;">Servicios</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="folio['lines']" t-as="r">
+                                <tr>
+                                    <td class="ctr"><t t-esc="r['no']"/></td>
+                                    <td class="ctr"><t t-esc="r['dia']"/></td>
+                                    <t t-if="docs.col_serie">
+                                        <td class="nowrap"><t t-esc="r['serie']"/></td>
+                                    </t>
+                                    <t t-if="docs.col_numero">
+                                        <td class="nowrap"><t t-esc="r['numero']"/></td>
+                                    </t>
+                                    <t t-if="docs.col_nit">
+                                        <td class="nowrap"><t t-esc="r['nit']"/></td>
+                                    </t>
+                                    <td><t t-esc="r['partner']"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['local_grav_bienes']) if r['local_grav_bienes'] else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['local_grav_serv'])   if r['local_grav_serv']   else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['local_exe_bienes'])  if r['local_exe_bienes']  else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['local_exe_serv'])    if r['local_exe_serv']    else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['import_grav_bienes']) if r['import_grav_bienes'] else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['import_grav_serv'])   if r['import_grav_serv']   else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['import_exe_bienes'])  if r['import_exe_bienes']  else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['import_exe_serv'])    if r['import_exe_serv']    else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(r['pequeno_cont'])       if r['pequeno_cont']       else ''"/></td>
+                                    <t t-if="docs.col_iva">
+                                        <td class="num"><t t-esc="'{:,.2f}'.format(r['iva']) if r['iva'] else ''"/></td>
+                                    </t>
+                                    <td class="num" style="font-weight:bold;"><t t-esc="'{:,.2f}'.format(r['total']) if r['total'] else ''"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td t-att-colspan="2
+                                    + (1 if docs.col_serie  else 0)
+                                    + (1 if docs.col_numero else 0)
+                                    + (1 if docs.col_nit    else 0)
+                                    + 1" style="text-align:left;"><t t-esc="folio['label']"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['local_grav_bienes'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['local_grav_serv'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['local_exe_bienes'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['local_exe_serv'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['import_grav_bienes'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['import_grav_serv'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['import_exe_bienes'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['import_exe_serv'])"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['pequeno_cont'])"/></td>
+                                <t t-if="docs.col_iva">
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['iva'])"/></td>
+                                </t>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(folio['subtotals']['total'])"/></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                    </div>
+                </t>
+
+                <!-- ── Resumen ── -->
+                <div style="margin-top:14px;">
+                    <div class="resumen-title">RESUMEN</div>
+                    <table class="resumen">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">Clasificacion</th>
+                                <th>Gravado</th>
+                                <th>No Gravado</th>
+                                <th>IVA</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="resumen" t-as="rs">
+                                <tr t-att-class="'total-row' if rs.get('is_total') else ''">
+                                    <td><t t-esc="rs['label']"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(rs['grav']) if rs['grav'] else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(rs['exe'])  if rs['exe']  else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(rs['iva'])  if rs['iva']  else ''"/></td>
+                                    <td class="num"><t t-esc="'{:,.2f}'.format(rs['total'])"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+
+                    <!-- ── Certificación ── -->
+                    <div style="margin-top:20px; font-size:8pt; line-height:1.7; text-align:justify; text-transform:uppercase;">
+                        El infrascrito perito contador
+                        <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b>
+                        registrado ante la Superintendencia de Administración Tributaria -SAT-
+                        con el número de registro
+                        <b><t t-esc="company.ktx_contador_id.vat or '_______________'"/></b>,
+                        <b>CERTIFICA:</b> Que los registros contenidos en el presente
+                        <b>LIBRO DE VENTAS Y SERVICIOS</b>,
+                        propiedad de la empresa
+                        <b><t t-esc="company.name"/></b>,
+                        correspondientes a la fecha del
+                        <b><t t-esc="docs.date_from.strftime('%d') if docs.date_from else ''"/></b>
+                        al
+                        <b><t t-esc="docs.date_to.strftime('%d') if docs.date_to else ''"/></b>
+                        del mes <b><t t-esc="mes"/></b> del año <b><t t-esc="anio"/></b>,
+                        presentan información razonable y objetiva según los movimientos realizados.
+                    </div>
+                    <table style="width:100%; margin-top:48px;">
+                        <tr>
+                            <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                                <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                                    <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b><br/>
+                                    Perito Contador<br/>
+                                    NIT: <t t-esc="company.ktx_contador_id.vat or '_______________'"/>
+                                </div>
+                            </td>
+                            <td style="width:10%;"></td>
+                            <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                                <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                                    <b><t t-esc="company.ktx_rep_legal_id.name or '___________________________'"/></b><br/>
+                                    Representante Legal<br/>
+                                    NIT: <t t-esc="company.ktx_rep_legal_id.vat or '_______________'"/>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

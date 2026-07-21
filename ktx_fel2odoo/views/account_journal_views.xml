@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_account_journal_view_form" model="ir.ui.view">
+        <field name="name">account.journal.form.ktx.fel2odoo</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <!-- Pestana propia dentro del notebook (no se toca el punto donde
+                 otros certificadores, como l10n_gt_corp, insertan sus campos
+                 justo despues de "type"; asi no hay interferencia visual). -->
+            <xpath expr="//notebook" position="inside">
+                <page string="FEL2Odoo" name="ktx_fel2odoo_page" invisible="type != 'sale'">
+                    <group>
+                        <field name="ktx_fel2odoo_enabled"/>
+                        <field name="ktx_fel2odoo_establecimiento" invisible="not ktx_fel2odoo_enabled"/>
+                        <field name="ktx_fel2odoo_tipo_documento" invisible="not ktx_fel2odoo_enabled"/>
+                        <field name="ktx_fel2odoo_auto_certificar" invisible="not ktx_fel2odoo_enabled"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

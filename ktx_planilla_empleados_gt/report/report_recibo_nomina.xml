@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="action_report_recibo_nomina" model="ir.actions.report">
+        <field name="name">Recibo de Nómina</field>
+        <field name="model">ktx.planilla.linea</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_planilla_empleados_gt.report_recibo_nomina</field>
+        <field name="report_file">ktx_planilla_empleados_gt.report_recibo_nomina</field>
+        <field name="paperformat_id" ref="paperformat_recibo_carta"/>
+        <field name="binding_model_id" ref="model_ktx_planilla_linea"/>
+        <field name="binding_type">report</field>
+        <field name="print_report_name">('Recibo ' + object.planilla_id.name + ' ' + (object.employee_id.name or '')).replace('/', '-')</field>
+    </record>
+
+    <template id="report_recibo_nomina">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="l">
+                <t t-set="o" t-value="l.planilla_id"/>
+                <t t-set="emp" t-value="l.employee_id.sudo()"/>
+                <t t-set="pago" t-value="l._pago_principal()"/>
+                <t t-set="simbolo" t-value="l.currency_id.symbol or 'Q'"/>
+                <div class="page" style="font-family: 'Helvetica', sans-serif; font-size: 10px; color: #222;">
+
+                    <!-- ══ Encabezado empresa ══ -->
+                    <div style="text-align: center; margin-bottom: 10px;">
+                        <div style="font-size: 15px; font-weight: bold; letter-spacing: 1px;"
+                             t-out="l.company_id.name"/>
+                        <div t-if="l.company_id.street" t-out="l.company_id.street"/>
+                        <div>
+                            <span t-out="l.company_id.city or 'GUATEMALA'"/>
+                            <span t-if="l.company_id.vat" class="ms-2">· NIT: <t t-out="l.company_id.vat"/></span>
+                        </div>
+                        <div style="font-size: 13px; font-weight: bold; margin-top: 8px;
+                                    border: 2px solid #444; display: inline-block; padding: 3px 24px;">
+                            <t t-if="l.tipo == 'sueldo'">RECIBO DE SALARIO</t>
+                            <t t-elif="l.tipo == 'bono14'">RECIBO DE BONIFICACIÓN ANUAL (BONO 14)</t>
+                            <t t-elif="l.tipo == 'aguinaldo'">RECIBO DE AGUINALDO</t>
+                            <t t-elif="l.tipo == 'vacaciones'">RECIBO DE VACACIONES</t>
+                            <t t-else="">RECIBO DE LIQUIDACIÓN</t>
+                        </div>
+                    </div>
+
+                    <!-- ══ Datos del empleado ══ -->
+                    <table style="width: 100%; border-collapse: collapse; font-size: 9.5px; margin-bottom: 8px;">
+                        <tr style="background-color: #f0f0f0; font-weight: bold;">
+                            <td style="border: 1px solid #999; padding: 2px 6px; width: 40%;">EMPLEADO</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px; width: 30%;">DPI</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px; width: 30%;">CONTACTO</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.name"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.identification_id or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.mobile_phone or emp.work_phone or ''"/>
+                        </tr>
+                        <tr style="background-color: #f0f0f0; font-weight: bold;">
+                            <td style="border: 1px solid #999; padding: 2px 6px;">PUESTO DESEMPEÑADO</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">NIT</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">UBICACIÓN ASIGNADA</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="l.puesto or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.ktx_pl_nit or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.ktx_pl_ubicacion or ''"/>
+                        </tr>
+                        <tr style="background-color: #f0f0f0; font-weight: bold;">
+                            <td style="border: 1px solid #999; padding: 2px 6px;">PERÍODO PAGADO</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">MÉTODO DE PAGO</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">FRECUENCIA DE PAGO</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="l._periodo_texto()"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px; text-transform: uppercase;"
+                                t-out="pago and pago.payment_method_line_id.name or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px; text-transform: uppercase;"
+                                t-out="dict(o._fields['periodicidad'].selection).get(o.periodicidad, '')"/>
+                        </tr>
+                        <tr style="background-color: #f0f0f0; font-weight: bold;">
+                            <td style="border: 1px solid #999; padding: 2px 6px;">BANCO</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">CUENTA BANCARIA</td>
+                            <td style="border: 1px solid #999; padding: 2px 6px;">TIPO</td>
+                        </tr>
+                        <tr>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.ktx_pl_banco or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px;" t-out="emp.ktx_pl_cuenta_bancaria or ''"/>
+                            <td style="border: 1px solid #999; padding: 2px 6px; text-transform: uppercase;"
+                                t-out="dict(emp._fields['ktx_pl_tipo_cuenta'].selection).get(emp.ktx_pl_tipo_cuenta) or ''"/>
+                        </tr>
+                    </table>
+
+                    <!-- ══ Conceptos y datos del pago ══ -->
+                    <div style="display: flex;">
+                        <table style="width: 62%; border-collapse: collapse; font-size: 9.5px;">
+                            <tr style="background-color: #444; color: #fff; font-weight: bold;">
+                                <td style="border: 1px solid #444; padding: 2px 6px;">CONCEPTO</td>
+                                <td style="border: 1px solid #444; padding: 2px 6px; text-align: right;">MONTOS</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(+) SUELDO ORDINARIO</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.sueldo_ordinario)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.sueldo_extraordinario">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(+) SUELDO EXTRAORDINARIO</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.sueldo_extraordinario)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.comisiones">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(+) COMISIONES</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.comisiones)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.bonificacion_incentivo">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(+) BONIFICACIÓN INCENTIVO (DEC. 78-89)</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.bonificacion_incentivo)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.otros_ingresos">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(+) OTROS INGRESOS</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.otros_ingresos)"/>
+                                </td>
+                            </tr>
+                            <tr style="font-weight: bold;">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">TOTAL DEVENGADO</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_devengado)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.igss_laboral">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(−) IGSS LABORAL</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.igss_laboral)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.isr">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(−) ISR</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.isr)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.anticipos">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(−) ANTICIPOS</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.anticipos)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.judiciales">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(−) DESCUENTOS JUDICIALES</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.judiciales)"/>
+                                </td>
+                            </tr>
+                            <tr t-if="l.otros_descuentos">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">(−) OTROS DESCUENTOS</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.otros_descuentos)"/>
+                                </td>
+                            </tr>
+                            <tr style="font-weight: bold; background-color: #f0f0f0;">
+                                <td style="border: 1px solid #999; padding: 2px 6px;">TOTAL LÍQUIDO RECIBIDO</td>
+                                <td style="border: 1px solid #999; padding: 2px 6px; text-align: right;">
+                                    <t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_liquido)"/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="width: 3%;"> </div>
+                        <table style="width: 35%; border-collapse: collapse; font-size: 9.5px; height: fit-content;">
+                            <t t-set="es_cheque" t-value="pago and 'check' in (pago.payment_method_line_id.payment_method_id.code or '') or pago and 'cheque' in (pago.payment_method_line_id.name or '').lower()"/>
+                            <tr style="background-color: #444; color: #fff; font-weight: bold;">
+                                <td style="border: 1px solid #444; padding: 2px 6px;">
+                                    <t t-if="es_cheque">NO. DE CHEQUE</t>
+                                    <t t-else="">NO. DE TRANSFERENCIA / REF.</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #999; padding: 6px;"
+                                    t-out="pago and (pago.payment_reference or pago.memo or pago.name) or 'PENDIENTE DE PAGO'"/>
+                            </tr>
+                            <tr style="background-color: #444; color: #fff; font-weight: bold;">
+                                <td style="border: 1px solid #444; padding: 2px 6px;">
+                                    <t t-if="es_cheque">FECHA CHEQUE</t>
+                                    <t t-else="">FECHA DE PAGO</t>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #999; padding: 6px;"
+                                    t-out="pago and pago.date or ''"/>
+                            </tr>
+                            <tr style="background-color: #444; color: #fff; font-weight: bold;">
+                                <td style="border: 1px solid #444; padding: 2px 6px;">MONTO EN LETRAS</td>
+                            </tr>
+                            <tr>
+                                <td style="border: 1px solid #999; padding: 6px; font-size: 8.5px;">
+                                    <t t-out="l._liquido_en_letras()"/>
+                                    <t t-if="l.currency_id.name == 'GTQ'"> QUETZALES</t>
+                                    <t t-else=""> <t t-out="l.currency_id.name"/></t>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <!-- ══ Pólizas contables ══ -->
+                    <t t-set="moves" t-value="(l.move_id | pago.move_id).filtered(lambda m: m.state == 'posted')"/>
+                    <div t-if="moves" style="margin-top: 10px;">
+                        <div style="font-weight: bold; font-size: 9px; border-bottom: 1px solid #444; margin-bottom: 3px;">
+                            PÓLIZAS CONTABLES
+                            <span style="font-weight: normal;">
+                                (partida de planilla y pago conciliados)
+                            </span>
+                        </div>
+                        <t t-foreach="moves" t-as="m">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 8px; margin-bottom: 5px;">
+                                <tr style="background-color: #e8e8e8; font-weight: bold;">
+                                    <td style="border: 1px solid #aaa; padding: 1px 4px;" colspan="2">
+                                        <t t-out="m.name"/> — <t t-out="m.ref or ''"/> (<t t-out="m.date"/>)
+                                    </td>
+                                    <td style="border: 1px solid #aaa; padding: 1px 4px; text-align: right;">Debe</td>
+                                    <td style="border: 1px solid #aaa; padding: 1px 4px; text-align: right;">Haber</td>
+                                </tr>
+                                <tr t-foreach="m.line_ids" t-as="ml">
+                                    <td style="border: 1px solid #ccc; padding: 1px 4px; width: 15%;"
+                                        t-out="ml.account_id.code or ''"/>
+                                    <td style="border: 1px solid #ccc; padding: 1px 4px;"
+                                        t-out="ml.name or ml.account_id.name"/>
+                                    <td style="border: 1px solid #ccc; padding: 1px 4px; text-align: right; width: 13%;">
+                                        <t t-if="ml.debit"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(ml.debit)"/></t>
+                                    </td>
+                                    <td style="border: 1px solid #ccc; padding: 1px 4px; text-align: right; width: 13%;">
+                                        <t t-if="ml.credit"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(ml.credit)"/></t>
+                                    </td>
+                                </tr>
+                            </table>
+                        </t>
+                    </div>
+
+                    <!-- ══ Cláusula de aceptación ══ -->
+                    <div style="margin-top: 10px; font-size: 9px; text-align: justify; line-height: 1.5;">
+                        <span style="font-weight: bold;">CLÁUSULA DE ACEPTACIÓN: </span>
+                        Yo, <span style="font-weight: bold; text-decoration: underline;" t-out="emp.name"/>,
+                        quien me identifico con el Documento Personal de Identificación (DPI)
+                        <span style="text-decoration: underline;" t-out="emp.identification_id or '________________'"/>,
+                        en pleno uso de mis facultades y por voluntad propia, hago constar que
+                        <span style="font-weight: bold;">recibí a mi entera satisfacción</span> el pago
+                        correspondiente a <span t-out="o._titulo_reporte().lower()"/> del período
+                        <span t-out="l._periodo_texto().lower()"/>, por la cantidad líquida de
+                        <span style="font-weight: bold;"><t t-out="simbolo"/> <t t-out="'{:,.2f}'.format(l.total_liquido)"/></span>
+                        (<span t-out="l._liquido_en_letras()"/>), efectuado por
+                        <span style="font-weight: bold;" t-out="l.company_id.name"/> en la frecuencia,
+                        método y fecha acordados. Con mi firma —autógrafa o electrónica, esta última con
+                        plena validez y efectos jurídicos equivalentes a la manuscrita conforme al
+                        Decreto 47-2008 del Congreso de la República, Ley para el Reconocimiento de las
+                        Comunicaciones y Firmas Electrónicas— acepto el cálculo, monto y método del pago
+                        recibido y declaro que la obligación patronal correspondiente al período y
+                        conceptos aquí detallados queda <span style="font-weight: bold;">totalmente saldada</span>,
+                        sin reserva de reclamación posterior sobre los mismos, dejando a salvo únicamente
+                        los derechos irrenunciables que establecen el artículo 106 de la Constitución
+                        Política de la República y el Código de Trabajo.
+                    </div>
+
+                    <!-- ══ Firmas ══ -->
+                    <table style="width: 100%; margin-top: 30px; font-size: 9px; border-collapse: collapse;">
+                        <tr>
+                            <td style="width: 32%; text-align: center; vertical-align: bottom;">
+                                <div style="border: 1px solid #444; height: 70px;"> </div>
+                                <div style="border-top: 2px solid #444; padding-top: 3px; font-weight: bold;">
+                                    RECIBIDO POR (FIRMA)
+                                </div>
+                                <div t-out="emp.name"/>
+                                <div>DPI: <t t-out="emp.identification_id or '____________'"/></div>
+                                <div style="margin-top: 4px;">FECHA: ______ HORA: ______</div>
+                            </td>
+                            <td style="width: 2%;"> </td>
+                            <td style="width: 32%; text-align: center; vertical-align: bottom;">
+                                <div style="border: 1px solid #444; height: 70px;"> </div>
+                                <div style="border-top: 2px solid #444; padding-top: 3px; font-weight: bold;">
+                                    GENERADO POR
+                                </div>
+                                <div t-out="o.create_uid.name or ''"/>
+                                <div> </div>
+                                <div style="margin-top: 4px;">FECHA: <t t-out="o.create_date and o.create_date.date() or ''"/></div>
+                            </td>
+                            <td style="width: 2%;"> </td>
+                            <td style="width: 32%; text-align: center; vertical-align: bottom;">
+                                <div style="border: 1px solid #444; height: 70px;"> </div>
+                                <div style="border-top: 2px solid #444; padding-top: 3px; font-weight: bold;">
+                                    OPERADO POR
+                                </div>
+                                <div t-out="pago and pago.create_uid.name or ''"/>
+                                <div> </div>
+                                <div style="margin-top: 4px;">FECHA: <t t-out="pago and pago.date or ''"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div style="text-align: center; margin-top: 8px; font-size: 7.5px; color: #888;">
+                        <t t-out="o.name"/> · Generado por Planilla GT — KONTAXES
+                    </div>
+                </div>
+                <p style="page-break-after: always;" t-if="not l_last"/>
+            </t>
+        </t>
+    </template>
+
+</odoo>

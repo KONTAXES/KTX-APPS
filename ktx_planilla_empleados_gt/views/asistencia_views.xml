@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════ Calendario ══════════════ -->
+    <record id="view_asistencia_calendar" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.calendar</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <calendar string="Asistencias"
+                      date_start="fecha"
+                      color="color"
+                      mode="month"
+                      quick_create="0"
+                      event_open_popup="true">
+                <field name="employee_id" avatar_field="avatar_128"/>
+                <field name="tipo"/>
+                <field name="hora_entrada" widget="float_time"/>
+                <field name="hora_salida" widget="float_time"/>
+                <field name="motivo"/>
+            </calendar>
+        </field>
+    </record>
+
+    <!-- ══════════════ Lista ══════════════ -->
+    <record id="view_asistencia_list" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.list</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <list string="Asistencias" multi_edit="1"
+                  decoration-success="tipo in ('asistencia', 'felicitacion')"
+                  decoration-danger="tipo in ('falta', 'suspension')"
+                  decoration-warning="tipo in ('falta_justificada', 'llamada_atencion', 'permiso_sin_goce')"
+                  decoration-info="tipo in ('vacaciones', 'permiso_goce')"
+                  decoration-muted="tipo == 'descanso'">
+                <field name="fecha"/>
+                <field name="employee_id" widget="many2one_avatar_employee"/>
+                <field name="department_id" optional="hide"/>
+                <field name="tipo" widget="badge"
+                       decoration-success="tipo in ('asistencia', 'felicitacion')"
+                       decoration-danger="tipo in ('falta', 'suspension')"
+                       decoration-warning="tipo in ('falta_justificada', 'llamada_atencion', 'permiso_sin_goce')"
+                       decoration-info="tipo in ('vacaciones', 'permiso_goce')"/>
+                <field name="hora_entrada" widget="float_time" optional="show"/>
+                <field name="hora_salida" widget="float_time" optional="show"/>
+                <field name="horas_trabajadas" widget="float_time" optional="show" sum="Total Horas"/>
+                <field name="horas_extra" widget="float_time" optional="show" sum="Total Extra"/>
+                <field name="motivo" optional="show"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════ Formulario ══════════════ -->
+    <record id="view_asistencia_form" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.form</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <form string="Asistencia">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" widget="many2one_avatar_employee"/>
+                            <field name="fecha"/>
+                            <field name="tipo" widget="radio"/>
+                        </group>
+                        <group>
+                            <field name="hora_entrada" widget="float_time"
+                                   invisible="tipo != 'asistencia'"/>
+                            <field name="hora_salida" widget="float_time"
+                                   invisible="tipo != 'asistencia'"/>
+                            <field name="horas_trabajadas" widget="float_time"
+                                   invisible="tipo != 'asistencia'"/>
+                            <field name="horas_extra" widget="float_time"
+                                   invisible="tipo != 'asistencia'"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="motivo"
+                               placeholder="Motivo, observaciones o detalle del evento…"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════ Kanban ══════════════ -->
+    <record id="view_asistencia_kanban" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.kanban</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <kanban highlight_color="color" default_group_by="tipo">
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column">
+                            <strong><field name="employee_id"/></strong>
+                            <div>
+                                <field name="fecha"/>
+                                <field name="tipo" widget="badge" class="ms-2"/>
+                            </div>
+                            <div t-if="record.motivo.raw_value" class="text-muted">
+                                <field name="motivo"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ══════════════ Pivot ══════════════ -->
+    <record id="view_asistencia_pivot" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.pivot</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <pivot string="Resumen de Asistencias">
+                <field name="employee_id" type="row"/>
+                <field name="tipo" type="col"/>
+                <field name="horas_trabajadas" type="measure"/>
+                <field name="horas_extra" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ══════════════ Búsqueda ══════════════ -->
+    <record id="view_asistencia_search" model="ir.ui.view">
+        <field name="name">ktx.planilla.asistencia.search</field>
+        <field name="model">ktx.planilla.asistencia</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Asistencias">
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="motivo"/>
+                <filter name="filter_asistencias" string="Asistencias"
+                        domain="[('tipo', '=', 'asistencia')]"/>
+                <filter name="filter_faltas" string="Faltas"
+                        domain="[('tipo', 'in', ('falta', 'falta_justificada'))]"/>
+                <filter name="filter_vacaciones" string="Vacaciones"
+                        domain="[('tipo', '=', 'vacaciones')]"/>
+                <filter name="filter_llamadas" string="Llamadas de Atención"
+                        domain="[('tipo', '=', 'llamada_atencion')]"/>
+                <filter name="filter_felicitaciones" string="Felicitaciones"
+                        domain="[('tipo', '=', 'felicitacion')]"/>
+                <separator/>
+                <filter name="filter_hoy" string="Hoy"
+                        domain="[('fecha', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_semana" string="Esta Semana"
+                        domain="[('fecha', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                <filter name="filter_mes" string="Este Mes"
+                        domain="[('fecha', '&gt;=', context_today().strftime('%Y-%m-01'))]"/>
+                <filter name="filter_fecha" string="Fecha" date="fecha"/>
+                <separator/>
+                <group name="groupby">
+                    <filter name="group_employee" string="Empleado"
+                            context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_tipo" string="Tipo"
+                            context="{'group_by': 'tipo'}"/>
+                    <filter name="group_fecha" string="Fecha"
+                            context="{'group_by': 'fecha:month'}"/>
+                    <filter name="group_department" string="Departamento"
+                            context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_asistencia" model="ir.actions.act_window">
+        <field name="name">Asistencias</field>
+        <field name="res_model">ktx.planilla.asistencia</field>
+        <field name="view_mode">calendar,list,kanban,pivot,form</field>
+        <field name="search_view_id" ref="view_asistencia_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Registre la primera asistencia
+            </p>
+            <p>
+                Capture asistencias, faltas, vacaciones, llamadas de atención y
+                felicitaciones. Use la <b>Captura Masiva</b> para llenar rangos
+                completos de fechas y la vista de calendario para verlas por
+                día, semana, mes o año.
+            </p>
+        </field>
+    </record>
+
+</odoo>

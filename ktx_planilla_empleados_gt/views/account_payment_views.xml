@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Botón «Recibo de Nómina» en el formulario de pago -->
+    <record id="view_account_payment_form_ktx_pl" model="ir.ui.view">
+        <field name="name">account.payment.form.ktx.planilla</field>
+        <field name="model">account.payment</field>
+        <field name="inherit_id" ref="account.view_account_payment_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+                <field name="ktx_pl_es_nomina" invisible="1"/>
+                <button name="action_ktx_pl_recibo_nomina"
+                        string="Recibo de Nómina"
+                        type="object"
+                        class="btn-secondary"
+                        invisible="not ktx_pl_es_nomina"/>
+            </header>
+        </field>
+    </record>
+
+    <!-- Acción «Recibo de Nómina» en Proveedores → Pagos → Acciones -->
+    <record id="action_server_recibo_nomina" model="ir.actions.server">
+        <field name="name">Recibo de Nómina</field>
+        <field name="model_id" ref="account.model_account_payment"/>
+        <field name="binding_model_id" ref="account.model_account_payment"/>
+        <field name="binding_view_types">list,form</field>
+        <field name="state">code</field>
+        <field name="code">action = records.action_ktx_pl_recibo_nomina()</field>
+    </record>
+
+</odoo>

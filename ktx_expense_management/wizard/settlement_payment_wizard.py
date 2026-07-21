@@ -139,9 +139,12 @@ class SettlementPaymentWizard(models.TransientModel):
 
         journal_currency = self.journal_id.currency_id or \
             (settlement.company_id or self.env.company).currency_id
+        # Gastos: pago saliente al beneficiario (proveedor). Ventas: cobro
+        # entrante contra la cuenta por cobrar designada (cliente).
+        is_sale = settlement.kind == "sale"
         payment_vals = {
-            "payment_type": "outbound",
-            "partner_type": "supplier",
+            "payment_type": "inbound" if is_sale else "outbound",
+            "partner_type": "customer" if is_sale else "supplier",
             "partner_id": employee_partner.id if employee_partner else False,
             "journal_id": self.journal_id.id,
             "date": self.payment_date,

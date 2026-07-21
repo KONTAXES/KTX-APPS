@@ -22,6 +22,13 @@
         sequence="10"/>
 
     <menuitem
+        id="menu_ktx_settlement_staging_sales"
+        name="Ventas por Liquidar"
+        parent="menu_ktx_expense_management_root"
+        action="action_ktx_settlement_staging_sales"
+        sequence="15"/>
+
+    <menuitem
         id="menu_ktx_settlement"
         name="Liquidaciones"
         parent="menu_ktx_expense_management_root"
@@ -39,7 +46,7 @@
         id="menu_ktx_config_settings"
         name="Configuración"
         parent="menu_ktx_expense_management_root"
-        action="action_ktx_expense_config_settings"
+        action="action_server_ktx_expense_config"
         sequence="100"
         groups="base.group_system"/>
 

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_test_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.test.wizard.form</field>
+        <field name="model">ktx.fel2odoo.test.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Probar con XML manual">
+                <div class="alert alert-info" role="alert">
+                    Modo de prueba: crea facturas a partir de XML FEL cargados a
+                    mano, con la misma logica de impuestos, frases y retenciones
+                    que la sincronizacion. Ideal mientras se activa el plan del
+                    proveedor.
+                </div>
+                <group>
+                    <group>
+                        <field name="config_id"/>
+                        <field name="company_id"/>
+                        <field name="import_type" widget="radio"/>
+                        <field name="journal_id"/>
+                        <field name="auto_confirm"/>
+                    </group>
+                </group>
+                <group string="Archivos XML FEL">
+                    <field name="attachment_ids" widget="many2many_binary" nolabel="1"/>
+                </group>
+                <footer>
+                    <button name="action_run" type="object" string="Crear facturas"
+                            class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_test_wizard_action" model="ir.actions.act_window">
+        <field name="name">Probar con XML manual</field>
+        <field name="res_model">ktx.fel2odoo.test.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

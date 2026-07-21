@@ -1,0 +1,190 @@
+<!--
+  Pagina de presentacion FEL2ODOO - FORMATO FEL GT.
+
+  ESTRATEGIA DE COMPATIBILIDAD (igual que el resto de modulos KTX):
+  estructura 100% Bootstrap (row/col) + colores hex inline, que sobreviven
+  el sanitizador de apps.odoo.com. El <style> es solo mejora opcional
+  (hover/animacion), nunca requisito de layout.
+-->
+<style>
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(28,45,90,.18); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(28,45,90,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+</style>
+
+<div class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2a37; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <!-- ============ HERO ============ -->
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.png" alt="FEL2ODOO - Formato FEL GT"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+    </div>
+    <div class="text-center pt-2 pb-1">
+      <span style="display:inline-block; background-color:#2ebe78; color:#fff; font-weight:800; font-size:14px; padding:8px 18px; border-radius:999px;">GRATIS</span>
+      <span style="display:inline-block; background-color:#7c5cbf; color:#fff; font-weight:800; font-size:14px; padding:8px 18px; border-radius:999px; margin-left:6px;">50% OFF &middot; Lanzamiento 2026</span>
+      <div style="color:#5b6b86; font-size:14px; margin-top:10px;">Precio regular <s style="color:#9aa7bd;">USD $40</s> &mdash; hoy sin costo</div>
+    </div>
+
+    <!-- ============ INTRO ============ -->
+    <div class="text-center py-4">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">DE XML A FACTURA PROFESIONAL</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">Tu DTE FEL, con formato bonito, dentro de Odoo</h2>
+      <p class="mx-auto" style="color:#5b6b86; font-size:17px; max-width:780px; margin-top:12px;">
+        El XML que certifica la SAT no es legible para tus clientes. <strong>Formato FEL GT</strong>
+        convierte ese XML (el mismo con el que se creo la factura, venga de
+        <strong>Importacion Masiva</strong> o de <strong>FEL2Odoo</strong>) en un PDF con
+        formato de factura profesional &mdash; con codigo QR de verificacion de la SAT &mdash;
+        sin subir nada a ningun sitio externo.
+      </p>
+    </div>
+
+    <!-- ============ FUNCIONALIDADES ============ -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">Todo lo que necesitas para imprimir tu FEL</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#f1ecfb; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c5cbf;"><i class="fa fa-file-pdf-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Un boton, junto a Imprimir</h3>
+          <p style="font-size:14px; color:#5b6b86;">"Imprimir FEL con Formato" aparece en la factura de venta, listo para descargar el PDF con un clic.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#eafaf6; width:50px; height:50px; line-height:50px; font-size:20px; color:#14887f;"><i class="fa fa-qrcode"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Codigo QR real de la SAT</h3>
+          <p style="font-size:14px; color:#5b6b86;">El QR enlaza al Verificador Integrado oficial de la SAT (felpub.c.sat.gob.gt), igual que en el documento original.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fbeef7; width:50px; height:50px; line-height:50px; font-size:20px; color:#714B67;"><i class="fa fa-toggle-on"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Desactivado por defecto</h3>
+          <p style="font-size:14px; color:#5b6b86;">Se activa desde Contabilidad &gt; Configuracion &gt; Ajustes. No aparece nada hasta que lo enciendes.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f3ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#2b7cd6;"><i class="fa fa-list-alt"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Toda la informacion</h3>
+          <p style="font-size:14px; color:#5b6b86;">Emisor, receptor, items, impuestos, totales, UUID, serie, numero y fecha de certificacion &mdash; igual que una factura completa.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f7ec; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-paperclip"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Se adjunta al chatter</h3>
+          <p style="font-size:14px; color:#5b6b86;">Cada PDF generado queda visible y descargable en el historial de la factura, sin perderlo nunca.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ffe9e4; width:50px; height:50px; line-height:50px; font-size:20px; color:#FF6B57;"><i class="fa fa-plug"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Compatible con tus modulos KTX</h3>
+          <p style="font-size:14px; color:#5b6b86;">Funciona con el XML de cualquier origen: Importacion Masiva XML-SAT o FEL2Odoo. Independiente y sin conflictos.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMO FUNCIONA ============ -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">COMO FUNCIONA</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">De la SAT al PDF en 3 pasos</h2>
+    </div>
+    <div class="row g-3 text-center pb-4">
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#7c5cbf; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-toggle-on"></i></div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">1. Activar</h4>
+          <p style="font-size:13px; color:#5b6b86;">Enciende la opcion en Contabilidad &gt; Configuracion.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#14887f; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-mouse-pointer"></i></div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">2. Un clic</h4>
+          <p style="font-size:13px; color:#5b6b86;">En la factura, pulsa "Imprimir FEL con Formato".</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#2ebe78; color:#fff; width:54px; height:54px; line-height:54px; font-size:22px;"><i class="fa fa-download"></i></div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">3. Listo</h4>
+          <p style="font-size:13px; color:#5b6b86;">Descarga el PDF y queda adjunto en el chatter.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMPATIBILIDAD ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#7c5cbf;"><i class="fa fa-bolt"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Odoo 19</h4>
+          <p style="font-size:12px; color:#5b6b86;">Arquitectura limpia, facil de migrar.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#2ebe78;"><i class="fa fa-flag"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">SAT Guatemala</h4>
+          <p style="font-size:12px; color:#5b6b86;">QR del verificador oficial de la SAT.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#1c4b8a;"><i class="fa fa-puzzle-piece"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Independiente</h4>
+          <p style="font-size:12px; color:#5b6b86;">Sin dependencias duras de otros modulos.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#10b981;"><i class="fa fa-link"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Sin conflictos</h4>
+          <p style="font-size:12px; color:#5b6b86;">No interfiere con modulos nativos ni con otros certificadores.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PRECIO ============ -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#f1ecfb; border:2px solid #7c5cbf;">
+      <div style="color:#5a3d8a; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Lanzamiento</div>
+      <div style="font-size:38px; font-weight:900; color:#5a3d8a; line-height:1.1; margin-top:6px;">GRATIS</div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF durante 2026</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$40 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Precio especial por tiempo limitado. Una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#1c2d5a; color:#ffffff;">
+      <h2 style="color:#ffffff; font-weight:800; font-size:26px;">Facturas FEL con formato profesional</h2>
+      <p class="mx-auto" style="color:#d7d4f0; max-width:640px; margin-top:10px; font-size:15px;">
+        Sin subir tu XML a ningun sitio externo. Compatible con Odoo 19
+        (Community y Enterprise). Hecho en Guatemala, para la contabilidad
+        guatemalteca.
+      </p>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="text-center pb-5" style="color:#8a9a9c; font-size:13px;">
+      <p style="margin-bottom:4px;">FEL2ODOO &mdash; Formato FEL GT &mdash; por KTX APPS &mdash; NIT 93823509</p>
+      <p style="margin:0;">Guatemala FEL &bull; Odoo 19 &bull; Compania KTX FEL2ODOO</p>
+      <p style="margin-top:8px; color:#b0bcc4;">Contenido generado con ayuda de IA, con estricta planificacion y gestion de KTX.</p>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

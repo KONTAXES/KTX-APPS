@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ktx_login_theme_import_wizard_view_form" model="ir.ui.view">
+        <field name="name">ktx.login.theme.import.wizard.view.form</field>
+        <field name="model">ktx.login.theme.import.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Importar paquete de extensiones">
+                <group>
+                    <field name="theme_id"/>
+                    <field name="zip_file" filename="zip_file_name"/>
+                    <field name="zip_file_name" invisible="1"/>
+                    <field name="overwrite_existing"/>
+                    <field name="publish_after_import"/>
+                </group>
+                <p class="text-muted">
+                    Sube un .zip con tus archivos CSS/JS/fuentes/imagenes. Si incluyes un
+                    <code>manifest.json</code> en la raiz (formato:
+                    <code>{"assets": [{"file": "estilo.css", "type": "css", "scope": "all"}]}</code>)
+                    se usara para definir tipo, alcance y orden; si no, se detectan por extension.
+                    Ningun archivo se ejecuta en el servidor: todo se sirve como recurso
+                    estatico al navegador. El JavaScript nunca se publica automaticamente.
+                </p>
+                <field name="summary" invisible="not summary" readonly="1"/>
+                <footer>
+                    <button name="action_import" string="Importar" type="object"
+                            class="oe_highlight" invisible="summary"/>
+                    <button string="Cerrar" special="cancel" class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_login_theme_import_wizard_action" model="ir.actions.act_window">
+        <field name="name">Importar paquete de extensiones (.zip)</field>
+        <field name="res_model">ktx.login.theme.import.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

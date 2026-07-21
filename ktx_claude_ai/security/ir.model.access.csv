@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_claude_conversation_user,claude.conversation user,model_claude_conversation,group_claude_user,1,1,1,1
+access_claude_message_user,claude.message user,model_claude_message,group_claude_user,1,1,1,1
+access_claude_request_log_user,claude.request.log user,model_claude_request_log,group_claude_user,1,0,0,0
+access_claude_request_log_admin,claude.request.log admin,model_claude_request_log,group_claude_admin,1,1,1,1
+access_claude_enabled_model_user,claude.enabled.model user,model_claude_enabled_model,group_claude_user,1,0,0,0
+access_claude_enabled_model_admin,claude.enabled.model admin,model_claude_enabled_model,group_claude_admin,1,1,1,1
+access_claude_model_selection_wizard_admin,claude.model.selection.wizard admin,model_claude_model_selection_wizard,group_claude_admin,1,1,1,1
+access_ir_model_claude_admin,ir.model claude admin,base.model_ir_model,group_claude_admin,1,0,0,0
+access_claude_oauth_client_user,claude.oauth.client user,model_claude_oauth_client,group_claude_user,1,0,0,0
+access_claude_oauth_client_admin,claude.oauth.client admin,model_claude_oauth_client,group_claude_admin,1,1,1,1
+access_claude_oauth_code_admin,claude.oauth.code admin,model_claude_oauth_code,group_claude_admin,1,1,1,1
+access_claude_oauth_token_admin,claude.oauth.token admin,model_claude_oauth_token,group_claude_admin,1,1,1,1
+access_claude_connector_token_admin,claude.connector.token admin,model_claude_connector_token,group_claude_admin,1,1,1,1

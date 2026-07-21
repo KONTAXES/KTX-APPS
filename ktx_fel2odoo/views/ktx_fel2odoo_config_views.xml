@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_config_view_form" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.config.form</field>
+        <field name="model">ktx.fel2odoo.config</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object"
+                            string="Probar conexion" class="btn-secondary"/>
+                    <button name="action_open_test_wizard" type="object"
+                            string="Importar XML" class="btn-secondary"/>
+                    <button name="action_reset_sync" type="object"
+                            string="Reiniciar sincronizacion" class="btn-secondary"/>
+                    <button name="action_reset_quota" type="object"
+                            string="Reiniciar contador API" class="btn-secondary"/>
+                    <button name="action_sync_now" type="object"
+                            string="Sincronizar ahora" class="btn-primary"
+                            style="font-weight:bold;"/>
+                    <!-- Toggle grande del automatico: corinto (inactivo) / verde (live) -->
+                    <button name="action_toggle_auto_sync" type="object"
+                            string="⏸  AUTOMATICO: INACTIVO"
+                            invisible="auto_sync_enabled"
+                            style="background-color:#714B67;color:#fff;font-weight:bold;border:none;"/>
+                    <button name="action_toggle_auto_sync" type="object"
+                            string="🟢  AUTOMATICO: ACTIVO (LIVE)"
+                            invisible="not auto_sync_enabled"
+                            class="btn-success" style="font-weight:bold;"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_logs" type="object"
+                                class="oe_stat_button" icon="fa-list">
+                            <field name="log_count" widget="statinfo" string="Corridas"/>
+                        </button>
+                        <button name="action_open_test_wizard" type="object"
+                                class="oe_stat_button" icon="fa-upload">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Importar XML</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archivado" bg_color="text-bg-danger"
+                            invisible="active"/>
+                    <widget name="web_ribbon" title="Conexion OK" bg_color="text-bg-success"
+                            invisible="not connection_ok"/>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1><field name="name" placeholder="Conexion FEL Core"/></h1>
+                    </div>
+                    <group>
+                        <group string="Empresa">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="nit"/>
+                            <field name="active" invisible="1"/>
+                            <field name="connection_ok" invisible="1"/>
+                            <field name="auto_sync_enabled" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Conexion" name="connection">
+                            <group>
+                                <group string="Proveedor (API FEL Core)">
+                                    <field name="base_url"/>
+                                    <field name="email"/>
+                                    <field name="password" password="True"/>
+                                    <field name="device_name"/>
+                                </group>
+                                <group string="Credencial SAT / FEL">
+                                    <field name="token_fel" password="True"/>
+                                    <field name="token_date" readonly="1"/>
+                                </group>
+                            </group>
+                            <div class="text-muted">
+                                Son 2 tokens: el <b>token de plataforma</b> lo genera
+                                el modulo solo con tu <b>Email</b> y <b>Password</b> de
+                                apifelcore (no se captura a mano), y el
+                                <b>token_fel</b> es el token de Agencia Virtual que te
+                                entrega el panel. Pulsa <b>Probar conexion</b> antes de
+                                activar el automatico.
+                            </div>
+                        </page>
+                        <page string="Sincronizacion" name="scope">
+                            <group>
+                                <group string="Ventas (Emitidos)">
+                                    <field name="sync_sales"/>
+                                    <field name="journal_sale_id"
+                                           required="sync_sales"
+                                           invisible="not sync_sales"
+                                           domain="[('type', '=', 'sale'), ('company_id', '=', company_id)]"/>
+                                    <field name="last_sync_sale" readonly="1"/>
+                                </group>
+                                <group string="Compras (Recibidos)">
+                                    <field name="sync_purchases"/>
+                                    <field name="journal_purchase_id"
+                                           domain="[('type', '=', 'purchase'), ('company_id', '=', company_id)]"
+                                           required="sync_purchases"
+                                           invisible="not sync_purchases"/>
+                                    <field name="last_sync_purchase" readonly="1"/>
+                                </group>
+                                <group string="Filtros y opciones">
+                                    <field name="estado_dte"/>
+                                    <field name="tipo_documento"/>
+                                    <field name="download_pdf"/>
+                                    <field name="enable_nit_button"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Emision" name="emision">
+                            <div class="alert alert-warning" role="alert">
+                                <b>Emision de facturas ante la SAT:</b> crea un documento
+                                LEGAL REAL, dificil de deshacer. Alcance actual: solo
+                                <b>facturas de venta normales (FACT)</b>, ya confirmadas
+                                (posted). Notas de credito, factura especial, factura
+                                cambiaria y exportacion aun no estan soportadas. Puede
+                                ser manual (boton en la factura) o automatica al
+                                confirmar, segun cada diario. Solo un gestor contable
+                                puede emitir o anular.
+                            </div>
+                            <group>
+                                <group string="Habilitar">
+                                    <field name="enable_emision"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-info" role="alert">
+                                Este interruptor es el maestro de la conexion. Ademas,
+                                cada <b>diario de ventas</b> debe marcarse individualmente
+                                (Contabilidad &#8594; Configuracion &#8594; Diarios, pestana
+                                "FEL2Odoo"), donde tambien se indica el establecimiento,
+                                el tipo de documento y si se certifica automaticamente al
+                                confirmar.
+                            </div>
+                        </page>
+                        <page string="Programacion e IA" name="schedule">
+                            <group>
+                                <group string="Periodos">
+                                    <field name="date_from_initial"/>
+                                    <field name="lookback_days"/>
+                                </group>
+                                <group string="Automatizacion">
+                                    <field name="auto_classify_accounts"/>
+                                    <field name="auto_confirm"/>
+                                    <field name="use_ai_classification"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Flujo completo automatico (cron)">
+                                    <field name="sync_frequency"/>
+                                    <field name="last_auto_sync" readonly="1"/>
+                                    <div colspan="2" class="text-muted">
+                                        Usa el boton grande del encabezado para
+                                        activar/desactivar el automatico. Solo se
+                                        puede activar con la conexion probada.
+                                    </div>
+                                </group>
+                                <group string="Limite de llamadas API (cuota)">
+                                    <field name="monthly_call_limit"/>
+                                    <field name="calls_used" readonly="1"/>
+                                    <field name="calls_left" readonly="1"/>
+                                    <field name="calls_month" readonly="1"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-warning" role="alert">
+                                <b>Control de consumo:</b> cada documento cuesta
+                                <b>1 llamada</b> (y otra si activa el PDF); cada consulta
+                                por rango de fechas cuenta tambien. Solo se descargan los
+                                XML <b>pendientes</b> (los ya existentes en Odoo no se
+                                vuelven a llamar). Al llegar al limite mensual la
+                                sincronizacion se detiene sola.
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_config_view_list" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.config.list</field>
+        <field name="model">ktx.fel2odoo.config</field>
+        <field name="arch" type="xml">
+            <list decoration-success="auto_sync_enabled" decoration-muted="not connection_ok">
+                <field name="name"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="nit"/>
+                <field name="connection_ok" widget="boolean_toggle"/>
+                <field name="auto_sync_enabled" widget="boolean_toggle"/>
+                <field name="sync_frequency"/>
+                <field name="calls_used"/>
+                <field name="calls_left"/>
+                <field name="monthly_call_limit"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_config_action" model="ir.actions.act_window">
+        <field name="name">Conexiones FEL</field>
+        <field name="res_model">ktx.fel2odoo.config</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cree su conexion FEL</p>
+            <p>Configure las credenciales del proveedor y la SAT para descargar
+               automaticamente sus DTE de ventas y compras, o importe XML manualmente.</p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_account_form_non_deductible" model="ir.ui.view">
+        <field name="name">account.account.form.ktx.non.deductible</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet" position="inside">
+                <group string="Reportería Fiscal SAT GT"
+                       groups="ktx_satgt_reports.group_satgt_user">
+                    <field name="ktx_non_deductible" widget="boolean_toggle"/>
+                    <field name="ktx_isr_exento" widget="boolean_toggle"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Columna conmutable en el plan de cuentas (vista lista) -->
+    <record id="view_account_list_non_deductible" model="ir.ui.view">
+        <field name="name">account.account.list.ktx.non.deductible</field>
+        <field name="model">account.account</field>
+        <field name="inherit_id" ref="account.view_account_list"/>
+        <field name="arch" type="xml">
+            <field name="code" position="after">
+                <field name="ktx_non_deductible" widget="boolean_toggle"
+                       string="No Deducible ISR" optional="show"
+                       groups="ktx_satgt_reports.group_satgt_user"/>
+                <field name="ktx_isr_exento" widget="boolean_toggle"
+                       string="Exento ISR" optional="show"
+                       groups="ktx_satgt_reports.group_satgt_user"/>
+            </field>
+        </field>
+    </record>
+</odoo>

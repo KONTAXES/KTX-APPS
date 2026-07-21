@@ -1,0 +1,439 @@
+<!--
+  Pagina de presentacion KTX Login Studio.
+  Estrategia identica a los demas modulos KTX:
+  - Estructura Bootstrap + colores hex inline + <img> (sobrevive el sanitizador
+    de apps.odoo.com, donde se eliminan <style>, gradientes, animaciones y JS).
+  - Banner GIF animado que SI se reproduce en la tienda.
+  - Bloque <style> = mejora SOLO para el backend de Odoo (la tienda lo ignora).
+  - Sin <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  .ktx-pg .ktx-hero-wrap img { border-radius: 16px; box-shadow: 0 18px 50px rgba(91,33,182,.18); }
+  .ktx-pg .ktx-stat { transition: transform .2s; }
+  .ktx-pg .ktx-stat:hover { transform: translateY(-4px); }
+  .ktx-pg .ktx-card { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(124,58,237,.18) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .2s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.12) rotate(-4deg); }
+  .ktx-pg .ktx-step { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-step:hover { transform: translateY(-4px); box-shadow: 0 14px 30px rgba(15,23,42,.12) !important; }
+  .ktx-pg .ktx-shot { transition: transform .25s, box-shadow .25s; }
+  .ktx-pg .ktx-shot:hover { transform: scale(1.015); box-shadow: 0 20px 40px rgba(15,23,42,.18) !important; }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(22px);} to {opacity:1; transform:none;} }
+  .ktx-pg .ktx-card, .ktx-pg .ktx-step { animation: ktxRise .6s ease both; }
+  /* Banner ticker: cycles the module's functionalities. Only runs in the
+     Odoo backend (apps.odoo.com strips <style>, leaving the static label
+     and banner.gif). */
+  @keyframes ktxTi {
+    0%   { opacity:0; transform: translateY(12px); }
+    3%   { opacity:1; transform: translateY(0); }
+    13%  { opacity:1; transform: translateY(0); }
+    16%  { opacity:0; transform: translateY(-12px); }
+    100% { opacity:0; }
+  }
+  .ktx-pg .ktx-ticker-bar .ktx-static { opacity:0 !important; }
+  .ktx-pg .ktx-ti {
+    position:absolute; left:16px; right:16px; top:12px;
+    opacity:0; font-weight:700; animation: ktxTi 18s linear infinite;
+  }
+  .ktx-pg .ktx-ti:nth-child(2){ animation-delay:0s; }
+  .ktx-pg .ktx-ti:nth-child(3){ animation-delay:3s; }
+  .ktx-pg .ktx-ti:nth-child(4){ animation-delay:6s; }
+  .ktx-pg .ktx-ti:nth-child(5){ animation-delay:9s; }
+  .ktx-pg .ktx-ti:nth-child(6){ animation-delay:12s; }
+  .ktx-pg .ktx-ti:nth-child(7){ animation-delay:15s; }
+  .ktx-pg .ktx-price-pop { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-price-pop:hover { transform: translateY(-5px); box-shadow: 0 18px 40px rgba(124,58,237,.22) !important; }
+  /* Animated showcase: cycling gradient + pulsing feature chips (backend only) */
+  @keyframes ktxDemoBg { 0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} }
+  .ktx-pg .ktx-demo { background: linear-gradient(-45deg,#7c3aed,#5b21b6,#10b981,#a78bfa); background-size:400% 400%; animation: ktxDemoBg 14s ease infinite; }
+  @keyframes ktxChip { 0%,100%{transform:none; box-shadow:0 2px 6px rgba(15,23,42,.06);} 50%{transform:translateY(-5px); box-shadow:0 12px 26px rgba(124,58,237,.28);} }
+  .ktx-pg .ktx-chip { animation: ktxChip 3.2s ease-in-out infinite; }
+  .ktx-pg .ktx-chip:nth-child(2){ animation-delay:.4s; }
+  .ktx-pg .ktx-chip:nth-child(3){ animation-delay:.8s; }
+  .ktx-pg .ktx-chip:nth-child(4){ animation-delay:1.2s; }
+  .ktx-pg .ktx-chip:nth-child(5){ animation-delay:1.6s; }
+  .ktx-pg .ktx-chip:nth-child(6){ animation-delay:2.0s; }
+  @keyframes ktxPulseDot { 0%,100%{opacity:.35; transform:scale(.85);} 50%{opacity:1; transform:scale(1);} }
+  .ktx-pg .ktx-dot { animation: ktxPulseDot 1.6s ease-in-out infinite; }
+</style>
+
+<div class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2937; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <!-- ============ HERO / BANNER ANIMADO ============ -->
+    <div class="ktx-hero-wrap text-center pt-4 pb-2">
+      <img src="banner.gif" alt="Login Studio"
+           class="img-fluid rounded" style="max-width:100%; height:auto;"/>
+      <div class="ktx-ticker-bar" style="position:relative; overflow:hidden; min-height:26px; background-color:#5b21b6; color:#ffffff; border-radius:12px; padding:12px 16px; margin-top:14px; text-align:center; font-size:15px;">
+        <span class="ktx-static">Personaliza cada detalle del login &mdash; sin tocar el core de Odoo</span>
+        <span class="ktx-ti"><i class="fa fa-columns"></i>&nbsp; Plantillas: Centrada, Split y Pantalla Completa</span>
+        <span class="ktx-ti"><i class="fa fa-film"></i>&nbsp; Fondos: solido, degradado animado, imagen y video</span>
+        <span class="ktx-ti"><i class="fa fa-id-badge"></i>&nbsp; Logo, favicon y titulo de pestana con tu marca</span>
+        <span class="ktx-ti"><i class="fa fa-users"></i>&nbsp; Login predeterminado y temas personales por usuario</span>
+        <span class="ktx-ti"><i class="fa fa-file-archive-o"></i>&nbsp; Extensiones CSS/JS/fuentes y carga en paquete .zip</span>
+        <span class="ktx-ti"><i class="fa fa-shield"></i>&nbsp; Modo seguro: el acceso nunca se rompe</span>
+      </div>
+    </div>
+
+    <!-- ============ STATS ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#7c3aed; color:#ffffff;">
+          <div style="font-size:32px; font-weight:800; line-height:1;">4</div>
+          <div style="font-size:13px; margin-top:6px;">Plantillas de login</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#10b981; color:#ffffff;">
+          <div style="font-size:32px; font-weight:800; line-height:1;">.zip</div>
+          <div style="font-size:13px; margin-top:6px;">Carga masiva de extensiones</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#a78bfa; color:#ffffff;">
+          <div style="font-size:32px; font-weight:800; line-height:1;">1&nbsp;clic</div>
+          <div style="font-size:13px; margin-top:6px;">Rollback a version anterior</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="ktx-stat rounded p-4 h-100" style="background-color:#5b21b6; color:#ffffff;">
+          <div style="font-size:32px; font-weight:800; line-height:1;">0</div>
+          <div style="font-size:13px; margin-top:6px;">Riesgo de bloqueo (Modo Seguro)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ INTRO ============ -->
+    <div class="text-center py-4">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">PERSONALIZACION DE LOGIN EN ODOO</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:30px; margin-top:6px;">Tu login, con tu marca, sin tocar el core</h2>
+      <p class="mx-auto" style="color:#5f5570; font-size:17px; max-width:780px; margin-top:12px;">
+        Desactiva la apariencia por defecto de Odoo y disena el login, registro y
+        recuperacion de contrasena a tu gusto: plantillas, colores, tipografias,
+        fondos animados o video, ancho y sombra de la tarjeta, tamano del logo,
+        logo, favicon y titulo de pestana con tu marca. Crea un
+        <strong style="color:#1f2937;">login predeterminado</strong> para todos y
+        <strong style="color:#1f2937;">logins personales por usuario</strong>, cada
+        uno con su propio enlace de acceso. Y si quieres ir mas alla, sube tus
+        propias extensiones CSS/JS/fuentes, una por una o en un solo
+        <strong style="color:#1f2937;">paquete .zip</strong>.
+        <strong style="color:#1f2937;">El formulario real nunca se toca</strong>,
+        asi que el acceso jamas se rompe.
+      </p>
+    </div>
+
+    <!-- ============ FLUJO DE TRABAJO ============ -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">FLUJO DE TRABAJO</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:30px; margin-top:6px;">De la idea al login publicado</h2>
+    </div>
+    <div class="row g-3 text-center pb-4">
+      <div class="col">
+        <div class="ktx-step rounded p-3 h-100" style="background-color:#ffffff; border:1px solid #e9e3fb;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#ede9fe; color:#7c3aed; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-paint-brush"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:10px;">1. Disena</h4>
+        </div>
+      </div>
+      <div class="col">
+        <div class="ktx-step rounded p-3 h-100" style="background-color:#ffffff; border:1px solid #e9e3fb;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#ede9fe; color:#7c3aed; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-upload"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:10px;">2. Sube extensiones</h4>
+        </div>
+      </div>
+      <div class="col">
+        <div class="ktx-step rounded p-3 h-100" style="background-color:#ffffff; border:1px solid #e9e3fb;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#ede9fe; color:#7c3aed; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-shield"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:10px;">3. Confirma y publica</h4>
+        </div>
+      </div>
+      <div class="col">
+        <div class="ktx-step rounded p-3 h-100" style="background-color:#ffffff; border:1px solid #e9e3fb;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#ede9fe; color:#7c3aed; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-history"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:10px;">4. Queda versionado</h4>
+        </div>
+      </div>
+      <div class="col">
+        <div class="ktx-step rounded p-3 h-100" style="background-color:#10b981; border:1px solid #10b981;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#ffffff; color:#10b981; width:48px; height:48px; line-height:48px; font-size:18px;"><i class="fa fa-lock"></i></div>
+          <h4 style="color:#ffffff; font-size:15px; margin-top:10px;">5. Nunca se rompe</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMPARATIVA ============ -->
+    <div class="row g-4 py-4">
+      <div class="col-12 col-md-6">
+        <div class="rounded p-4 h-100" style="background-color:#fff5f3; border:1px solid #ffd9d1;">
+          <h3 style="color:#c0392b; font-size:19px; font-weight:700;"><i class="fa fa-hand-paper-o"></i> Sin el modulo</h3>
+          <div style="font-size:14px; line-height:2.0; color:#7a4a44; margin-top:8px;">
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Login generico igual para todos los clientes</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Un desarrollador debe tocar plantillas QWeb</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Un CSS/JS con error puede tumbar el acceso</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Sin historial de cambios ni forma de revertir</div>
+            <div><i class="fa fa-times-circle" style="color:#e74c3c;"></i> Cada actualizacion de Odoo pone en riesgo el hack</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#f1fdf7; border:1px solid #b8ebd2;">
+          <h3 style="color:#0f7a52; font-size:19px; font-weight:700;"><i class="fa fa-rocket"></i> Con Login Studio</h3>
+          <div style="font-size:14px; line-height:2.0; color:#2c5b48; margin-top:8px;">
+            <div><i class="fa fa-check-circle" style="color:#10b981;"></i> Tema propio por compania, sin escribir codigo</div>
+            <div><i class="fa fa-check-circle" style="color:#10b981;"></i> Editor visual con vista previa en vivo</div>
+            <div><i class="fa fa-check-circle" style="color:#10b981;"></i> Extensiones servidas como archivos aislados</div>
+            <div><i class="fa fa-check-circle" style="color:#10b981;"></i> Versionado, checksum y rollback de un clic</div>
+            <div><i class="fa fa-check-circle" style="color:#10b981;"></i> Modelos Odoo estandar: facil de migrar a futuro</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FUNCIONALIDADES ============ -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:30px; margin-top:6px;">Una plataforma completa de branding de login</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-columns"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Motor de temas</h3>
+          <p style="font-size:14px; color:#5f5570;">Centrada, Split Screen, Pantalla Completa o HTML 100% propio para desactivar la apariencia por defecto.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-file-code-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Extensiones CSS/JS/fuentes</h3>
+          <p style="font-size:14px; color:#5f5570;">Sube animaciones, integraciones o tipografias propias; cada archivo se sirve por separado.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-file-archive-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Importar paquete .zip</h3>
+          <p style="font-size:14px; color:#5f5570;">Sube todas tus extensiones de una vez, con un manifest.json opcional para ordenarlas.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-history"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Versionado y rollback</h3>
+          <p style="font-size:14px; color:#5f5570;">Cada archivo guarda su version anterior; revierte a la ultima version buena en un clic.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-shield"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Modo Seguro</h3>
+          <p style="font-size:14px; color:#5f5570;">Un interruptor de emergencia restaura el login 100% original si algo sale mal.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-exclamation-triangle"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Confirmacion de riesgo</h3>
+          <p style="font-size:14px; color:#5f5570;">El JavaScript exige marcar "confirmo el riesgo" antes de poder publicarse.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-eye"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Vista previa en vivo</h3>
+          <p style="font-size:14px; color:#5f5570;">Ve los cambios al instante en Ajustes, sin guardar ni recargar la pagina.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-building"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Multiempresa</h3>
+          <p style="font-size:14px; color:#5f5570;">Un tema publicado por compania, con temas en borrador para probar antes de salir en vivo.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-font"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Tipografias propias</h3>
+          <p style="font-size:14px; color:#5f5570;">Sube tu fuente .woff2 de marca y usala directamente en el login.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-film"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Fondo con video</h3>
+          <p style="font-size:14px; color:#5f5570;">Ademas de solidos, degradados animados e imagenes, tambien puedes usar video de fondo.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-comments-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Bitacora de cambios</h3>
+          <p style="font-size:14px; color:#5f5570;">Chatter integrado: queda registrado quien subio o publico cada extension.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-arrows-alt"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Facil de migrar</h3>
+          <p style="font-size:14px; color:#5f5570;">Toda la configuracion vive en modelos Odoo estandar, lista para futuras versiones.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-users"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Login predeterminado y personal</h3>
+          <p style="font-size:14px; color:#5f5570;">Un tema predeterminado para todos, mas temas personales asignados a usuarios concretos que anulan al predeterminado solo para ellos.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-link"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Enlace de acceso propio</h3>
+          <p style="font-size:14px; color:#5f5570;">Cada login personal tiene un enlace corto y facil de recordar (ej. .../web/login/gutrust) que recuerda el tema al registrarse o recuperar contrasena.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-id-card-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Marca en la pestana</h3>
+          <p style="font-size:14px; color:#5f5570;">Favicon propio y titulo de la pestana del navegador con el nombre de cada login, mas la frase "Accede al portal de: tu marca".</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#dcfce7; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-sliders"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Controles finos</h3>
+          <p style="font-size:14px; color:#5f5570;">Ancho y sombra de la tarjeta, tamano del logo, color de enlaces y color de superposicion sobre imagen o video &mdash; todo sin escribir CSS.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SHOWCASE ANIMADO ============ -->
+    <div class="ktx-demo rounded p-5 my-4 text-center">
+      <div style="background-color:rgba(255,255,255,.14); display:inline-block; padding:6px 14px; border-radius:999px; color:#ffffff; font-size:12px; font-weight:700; letter-spacing:1px;">
+        <span class="ktx-dot" style="display:inline-block; width:8px; height:8px; border-radius:50%; background-color:#ffffff; margin-right:6px;"></span>PERSONALIZACION EN VIVO
+      </div>
+      <div style="background-color:#ffffff; border-radius:16px; max-width:360px; margin:22px auto 0; padding:28px 26px; box-shadow:0 24px 60px rgba(15,23,42,.28);">
+        <div style="width:54px; height:54px; border-radius:14px; margin:0 auto 14px; background-color:#ede9fe; color:#7c3aed; font-size:22px; line-height:54px;"><i class="fa fa-sign-in"></i></div>
+        <div style="font-weight:800; color:#1f2937; font-size:18px;">Accede al portal de: <span style="color:#7c3aed;">Tu Marca</span></div>
+        <div style="height:40px; border-radius:8px; background-color:#f1f3f5; margin-top:16px;"></div>
+        <div style="height:40px; border-radius:8px; background-color:#f1f3f5; margin-top:12px;"></div>
+        <div style="height:42px; border-radius:8px; background-color:#7c3aed; color:#ffffff; margin-top:16px; line-height:42px; font-weight:700;">Iniciar sesion</div>
+      </div>
+    </div>
+
+    <!-- ============ CHIPS ANIMADOS DE FUNCIONALIDADES ============ -->
+    <div class="text-center pt-2 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">TODO EN UN SOLO MODULO</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:26px; margin-top:6px;">Cada pieza de tu login, bajo control</h2>
+    </div>
+    <div class="d-flex flex-wrap justify-content-center gap-2 pb-4" style="max-width:820px; margin:0 auto;">
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-columns" style="color:#7c3aed;"></i>&nbsp; 4 plantillas</span>
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-film" style="color:#10b981;"></i>&nbsp; Fondo de video</span>
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-id-badge" style="color:#7c3aed;"></i>&nbsp; Marca en la pestana</span>
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-users" style="color:#10b981;"></i>&nbsp; Logins personales</span>
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-file-archive-o" style="color:#7c3aed;"></i>&nbsp; Paquete .zip</span>
+      <span class="ktx-chip" style="display:inline-block; background-color:#ffffff; border:1px solid #ece6fb; border-radius:999px; padding:9px 16px; font-size:13px; color:#5b21b6; font-weight:600;"><i class="fa fa-shield" style="color:#10b981;"></i>&nbsp; Modo seguro</span>
+    </div>
+
+    <!-- ============ COMPATIBILIDAD ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-4">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div style="font-size:26px; color:#7c3aed;"><i class="fa fa-bolt"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:8px;">Odoo 19</h4>
+          <p style="font-size:12px; color:#5f5570;">Community y Enterprise, on-premise.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div style="font-size:26px; color:#10b981;"><i class="fa fa-building"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:8px;">Multiempresa</h4>
+          <p style="font-size:12px; color:#5f5570;">Un tema publicado por compania.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div style="font-size:26px; color:#a78bfa;"><i class="fa fa-puzzle-piece"></i></div>
+          <h4 style="color:#5b21b6; font-size:15px; margin-top:8px;">Integrado</h4>
+          <p style="font-size:12px; color:#5f5570;">Usa web, auth_signup y mail nativos de Odoo.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CAPTURAS DE PANTALLA -->
+    <div class="text-center pt-3 pb-2">
+      <div style="color:#7c3aed; font-weight:700; font-size:13px; letter-spacing:2px;">EN ACCION</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:28px; margin-top:6px;">Asi se ve en tu Odoo</h2>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12">
+        <img src="sc_01_editor.png" alt="Editor de tema con vista previa en vivo"
+             class="ktx-shot img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+      <div class="col-12">
+        <img src="sc_02_login.png" alt="Resultado final: login personalizado con plantilla Split Screen"
+             class="ktx-shot img-fluid rounded shadow-sm" style="width:100%;"/>
+      </div>
+    </div>
+
+    <!-- ============ PRECIO ============ -->
+    <div class="text-center pt-5 pb-2">
+      <div style="color:#10b981; font-weight:700; font-size:13px; letter-spacing:2px;">PRECIO</div>
+      <h2 style="color:#5b21b6; font-weight:800; font-size:30px; margin-top:6px;">Gratis por lanzamiento</h2>
+      <p class="mx-auto" style="color:#5f5570; font-size:16px; max-width:720px; margin-top:10px;">
+        Aprovecha la promocion de lanzamiento: <strong style="color:#1f2937;">hoy el modulo es gratis</strong>.
+        En 2026 pasa a estar disponible con un <strong style="color:#1f2937;">50% de descuento</strong>,
+        y su precio normal sera de <strong style="color:#1f2937;">$60 USD</strong>.
+      </p>
+    </div>
+    <div class="row g-3 justify-content-center pb-4">
+      <div class="col-12 col-md-4">
+        <div class="ktx-price-pop rounded p-4 h-100 text-center shadow-sm" style="background-color:#10b981; color:#ffffff; border:2px solid #10b981;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1px; opacity:.9;">AHORA &bull; LANZAMIENTO</div>
+          <div style="font-size:40px; font-weight:800; line-height:1.1; margin-top:8px;">Gratis</div>
+          <div style="font-size:13px; margin-top:8px; opacity:.95;">Instalalo hoy sin costo</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-price-pop rounded p-4 h-100 text-center shadow-sm" style="background-color:#ffffff; border:2px solid #a78bfa;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:#7c3aed;">EN 2026 &bull; 50% OFF</div>
+          <div style="font-size:40px; font-weight:800; line-height:1.1; margin-top:8px; color:#5b21b6;">$30<span style="font-size:16px; color:#9a92ab;"> USD</span></div>
+          <div style="font-size:13px; margin-top:8px; color:#5f5570;">Descuento de continuidad</div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-price-pop rounded p-4 h-100 text-center shadow-sm" style="background-color:#ffffff; border:1px solid #ece6fb;">
+          <div style="font-size:12px; font-weight:700; letter-spacing:1px; color:#9a92ab;">PRECIO NORMAL</div>
+          <div style="font-size:40px; font-weight:800; line-height:1.1; margin-top:8px; color:#1f2937;">$60<span style="font-size:16px; color:#9a92ab;"> USD</span></div>
+          <div style="font-size:13px; margin-top:8px; color:#5f5570;">Licencia perpetua del modulo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#5b21b6; color:#ffffff;">
+      <h2 style="color:#ffffff; font-weight:800; font-size:26px;">Profesionaliza el login de tu Odoo</h2>
+      <p class="mx-auto" style="color:#e4d8fb; max-width:640px; margin-top:10px; font-size:15px;">
+        Tu marca, tus extensiones, sin riesgo de dejar a nadie fuera del sistema.
+        <strong style="color:#ffffff;">Gratis por tiempo limitado durante el lanzamiento.</strong>
+      </p>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="text-center pb-5" style="color:#9a92ab; font-size:13px;">
+      <p style="margin-bottom:4px;">Login Studio &mdash; por Kontaxes &bull;
+        <a href="https://www.kontaxes.com" style="color:#7c3aed; text-decoration:none;">www.kontaxes.com</a>
+      </p>
+      <p style="margin:0;">Odoo 19 &bull; Community &amp; Enterprise &bull; Multiempresa &bull; Soporte: soporte@kontaxes.com</p>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

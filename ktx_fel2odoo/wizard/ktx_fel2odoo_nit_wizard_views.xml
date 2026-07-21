@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_nit_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.nit.wizard.form</field>
+        <field name="model">ktx.fel2odoo.nit.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Consultar NIT">
+                <field name="state" invisible="1"/>
+                <div class="alert alert-info" role="alert">
+                    Ingrese un NIT y consulte a la SAT el nombre oficial
+                    registrado. Puede crear un contacto nuevo con ese nombre o
+                    actualizar uno existente.
+                </div>
+                <group>
+                    <group>
+                        <field name="config_id"/>
+                        <field name="company_id"/>
+                        <field name="nit" readonly="state == 'done'"/>
+                    </group>
+                </group>
+                <group string="Resultado" invisible="state != 'done'">
+                    <field name="nombre" readonly="1"/>
+                    <field name="partner_id"/>
+                </group>
+                <footer>
+                    <button name="action_query" type="object" string="Consultar"
+                            class="btn-primary" invisible="state == 'done'"/>
+                    <button name="action_apply_to_partner" type="object"
+                            string="Actualizar contacto" class="btn-primary"
+                            invisible="state != 'done' or not partner_id"/>
+                    <button name="action_create_partner" type="object"
+                            string="Crear contacto" class="btn-secondary"
+                            invisible="state != 'done'"/>
+                    <button name="action_reset" type="object"
+                            string="Nueva consulta" class="btn-secondary"
+                            invisible="state != 'done'"/>
+                    <button string="Cerrar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_nit_wizard_action" model="ir.actions.act_window">
+        <field name="name">Consultar NIT</field>
+        <field name="res_model">ktx.fel2odoo.nit.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

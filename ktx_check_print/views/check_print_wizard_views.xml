@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ktx_check_print_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.check.print.wizard.form</field>
+        <field name="model">ktx.check.print.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Imprimir Cheque Voucher">
+                <sheet>
+                    <div class="o_form_view" style="padding:0;">
+                        <field name="payment_id" invisible="1"/>
+                        <field name="preview_html"
+                               widget="html"
+                               options="{'no_wrapper': True}"
+                               style="min-height:400px; overflow-y:auto;"/>
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_download_pdf"
+                            string="Descargar PDF"
+                            type="object"
+                            class="btn-primary"
+                            close="1"/>
+                    <button name="action_print"
+                            string="Imprimir"
+                            type="object"
+                            class="btn-secondary"
+                            close="1"/>
+                    <button string="Cerrar"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

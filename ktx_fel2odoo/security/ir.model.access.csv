@@ -1,0 +1,10 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ktx_fel2odoo_config_user,ktx.fel2odoo.config user,model_ktx_fel2odoo_config,account.group_account_user,1,0,0,0
+access_ktx_fel2odoo_config_manager,ktx.fel2odoo.config manager,model_ktx_fel2odoo_config,account.group_account_manager,1,1,1,1
+access_ktx_fel2odoo_log_user,ktx.fel2odoo.log user,model_ktx_fel2odoo_log,account.group_account_user,1,0,0,0
+access_ktx_fel2odoo_log_manager,ktx.fel2odoo.log manager,model_ktx_fel2odoo_log,account.group_account_manager,1,1,1,1
+access_ktx_fel2odoo_test_wizard,ktx.fel2odoo.test.wizard,model_ktx_fel2odoo_test_wizard,account.group_account_user,1,1,1,1
+access_ktx_fel2odoo_account_rule_user,ktx.fel2odoo.account.rule user,model_ktx_fel2odoo_account_rule,account.group_account_user,1,0,0,0
+access_ktx_fel2odoo_account_rule_manager,ktx.fel2odoo.account.rule manager,model_ktx_fel2odoo_account_rule,account.group_account_manager,1,1,1,1
+access_ktx_fel2odoo_cancel_wizard,ktx.fel2odoo.cancel.wizard,model_ktx_fel2odoo_cancel_wizard,account.group_account_manager,1,1,1,1
+access_ktx_fel2odoo_nit_wizard,ktx.fel2odoo.nit.wizard,model_ktx_fel2odoo_nit_wizard,account.group_account_user,1,1,1,1

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Contacts enabled out of the box (read/create/write). On install, a
+         post_init_hook also pre-enables other common models that are present
+         (sale.order, account.move, crm.lead, project.task, ...). Deletion stays
+         OFF by default. The real limit is always the user's own Odoo rights. -->
+    <data noupdate="1">
+        <record id="claude_enabled_res_partner" model="claude.enabled.model">
+            <field name="model_id" ref="base.model_res_partner"/>
+            <field name="allow_read" eval="True"/>
+            <field name="allow_create" eval="True"/>
+            <field name="allow_write" eval="True"/>
+            <field name="allow_unlink" eval="False"/>
+            <field name="allow_action" eval="False"/>
+        </record>
+    </data>
+</odoo>

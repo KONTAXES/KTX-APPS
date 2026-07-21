@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Catalogo completo de Unidades Gravables SAT FEL - catalogoUnidadesGravables-0.1.4 -->
+<odoo>
+    <data noupdate="1">
+
+        <!-- ======= IVA ======= -->
+        <record id="tax_map_iva_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">IVA</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">IVA Tasa 12%</field><field name="tasa_referencia">12%</field>
+        </record>
+        <record id="tax_map_iva_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">IVA</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">IVA Tasa 0% (Exento)</field><field name="tasa_referencia">0%</field>
+        </record>
+
+        <!-- ======= PETROLEO ======= -->
+        <record id="tax_map_pet_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Gasolina superior</field><field name="tasa_referencia">Q4.70/gal</field>
+        </record>
+        <record id="tax_map_pet_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Gasolina regular</field><field name="tasa_referencia">Q4.60/gal</field>
+        </record>
+        <record id="tax_map_pet_3" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">3</field>
+            <field name="descripcion">Gasolina de aviacion</field><field name="tasa_referencia">Q4.70/gal</field>
+        </record>
+        <record id="tax_map_pet_4" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">4</field>
+            <field name="descripcion">Diesel</field><field name="tasa_referencia">Q1.30/gal</field>
+        </record>
+        <record id="tax_map_pet_5" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">5</field>
+            <field name="descripcion">Gas Oil</field><field name="tasa_referencia">Q1.30/gal</field>
+        </record>
+        <record id="tax_map_pet_6" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">6</field>
+            <field name="descripcion">Kerosina DPK</field><field name="tasa_referencia">Q0.50/gal</field>
+        </record>
+        <record id="tax_map_pet_7" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">7</field>
+            <field name="descripcion">Nafta</field><field name="tasa_referencia">Q0.50/gal</field>
+        </record>
+        <record id="tax_map_pet_8" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">8</field>
+            <field name="descripcion">Fuel Oil Bunker C</field><field name="tasa_referencia">Q0.00</field>
+        </record>
+        <record id="tax_map_pet_9" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">9</field>
+            <field name="descripcion">Gas licuado de petroleo a granel</field><field name="tasa_referencia">Q0.50/gal</field>
+        </record>
+        <record id="tax_map_pet_10" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">10</field>
+            <field name="descripcion">Gas licuado petroleo carburacion</field><field name="tasa_referencia">Q0.50/gal</field>
+        </record>
+        <record id="tax_map_pet_11" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">11</field>
+            <field name="descripcion">Petroleo crudo usado como combustible</field><field name="tasa_referencia">Q0.00</field>
+        </record>
+        <record id="tax_map_pet_12" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">12</field>
+            <field name="descripcion">Otros combustibles derivados del petroleo</field><field name="tasa_referencia">Q0.00</field>
+        </record>
+        <record id="tax_map_pet_13" model="ktx.tax.mapping">
+            <field name="nombre_corto">PETROLEO</field><field name="codigo_unidad_gravable">13</field>
+            <field name="descripcion">Asfaltos</field><field name="tasa_referencia">Q0.00</field>
+        </record>
+
+        <!-- ======= TURISMO HOSPEDAJE ======= -->
+        <record id="tax_map_hosp_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">TURISMO HOSPEDAJE</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Hospedaje 10%</field><field name="tasa_referencia">10%</field>
+        </record>
+        <record id="tax_map_hosp_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">TURISMO HOSPEDAJE</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Hospedaje Exento Tasa 0</field><field name="tasa_referencia">0%</field>
+        </record>
+
+        <!-- ======= TURISMO PASAJES ======= -->
+        <record id="tax_map_pas_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">TURISMO PASAJES</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Salida del pais via aerea</field><field name="tasa_referencia">USD 30.00</field>
+        </record>
+        <record id="tax_map_pas_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">TURISMO PASAJES</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Salida del pais via maritima</field><field name="tasa_referencia">USD 10.00</field>
+        </record>
+        <record id="tax_map_pas_3" model="ktx.tax.mapping">
+            <field name="nombre_corto">TURISMO PASAJES</field><field name="codigo_unidad_gravable">3</field>
+            <field name="descripcion">Salida aerea exenta Decreto 31-2022</field><field name="tasa_referencia">0%</field>
+        </record>
+
+        <!-- ======= TIMBRE DE PRENSA ======= -->
+        <record id="tax_map_timbre_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">TIMBRE DE PRENSA</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Timbre de prensa cinco por millar</field><field name="tasa_referencia">0.5%</field>
+        </record>
+
+        <!-- ======= BOMBEROS ======= -->
+        <record id="tax_map_bomb_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">BOMBEROS</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Tasa por seguro contra incendio</field><field name="tasa_referencia">2%</field>
+        </record>
+
+        <!-- ======= BEBIDAS ALCOHOLICAS ======= -->
+        <record id="tax_map_balc_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Cervezas y otras bebidas de malta</field><field name="tasa_referencia">6%</field>
+        </record>
+        <record id="tax_map_balc_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Vinos</field><field name="tasa_referencia">7.5%</field>
+        </record>
+        <record id="tax_map_balc_3" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">3</field>
+            <field name="descripcion">Vino espumoso</field><field name="tasa_referencia">7.5%</field>
+        </record>
+        <record id="tax_map_balc_4" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">4</field>
+            <field name="descripcion">Vino vermouth</field><field name="tasa_referencia">7.5%</field>
+        </record>
+        <record id="tax_map_balc_5" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">5</field>
+            <field name="descripcion">Sidras</field><field name="tasa_referencia">7.5%</field>
+        </record>
+        <record id="tax_map_balc_6" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">6</field>
+            <field name="descripcion">Bebidas alcoholicas destiladas</field><field name="tasa_referencia">8.5%</field>
+        </record>
+        <record id="tax_map_balc_7" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">7</field>
+            <field name="descripcion">Bebidas alcoholicas mezcladas</field><field name="tasa_referencia">7.5%</field>
+        </record>
+        <record id="tax_map_balc_8" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS ALCOHOLICAS</field><field name="codigo_unidad_gravable">8</field>
+            <field name="descripcion">Otras bebidas fermentadas</field><field name="tasa_referencia">7.5%</field>
+        </record>
+
+        <!-- ======= TABACO ======= -->
+        <record id="tax_map_tab_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">TABACO</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Tabaco precio de fabrica</field><field name="tasa_referencia">100%</field>
+        </record>
+        <record id="tax_map_tab_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">TABACO</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Tabaco precio sugerido al consumidor</field><field name="tasa_referencia">75%</field>
+        </record>
+
+        <!-- ======= CEMENTO ======= -->
+        <record id="tax_map_cem_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">CEMENTO</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Cemento bolsa de 42.5 kgs</field><field name="tasa_referencia">Q1.50/bolsa</field>
+        </record>
+
+        <!-- ======= BEBIDAS NO ALCOHOLICAS ======= -->
+        <record id="tax_map_bnoalc_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS NO ALCOHOLICAS</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Bebidas gaseosas y jarabes</field><field name="tasa_referencia">Q0.18/litro</field>
+        </record>
+        <record id="tax_map_bnoalc_2" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS NO ALCOHOLICAS</field><field name="codigo_unidad_gravable">2</field>
+            <field name="descripcion">Bebidas isotonicas o deportivas</field><field name="tasa_referencia">Q0.12/litro</field>
+        </record>
+        <record id="tax_map_bnoalc_3" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS NO ALCOHOLICAS</field><field name="codigo_unidad_gravable">3</field>
+            <field name="descripcion">Jugos y nectares</field><field name="tasa_referencia">Q0.10/litro</field>
+        </record>
+        <record id="tax_map_bnoalc_4" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS NO ALCOHOLICAS</field><field name="codigo_unidad_gravable">4</field>
+            <field name="descripcion">Bebidas de yogur y similares</field><field name="tasa_referencia">Q0.10/litro</field>
+        </record>
+        <record id="tax_map_bnoalc_5" model="ktx.tax.mapping">
+            <field name="nombre_corto">BEBIDAS NO ALCOHOLICAS</field><field name="codigo_unidad_gravable">5</field>
+            <field name="descripcion">Agua natural envasada</field><field name="tasa_referencia">Q0.08/litro</field>
+        </record>
+
+        <!-- ======= TARIFA PORTUARIA ======= -->
+        <record id="tax_map_puerto_1" model="ktx.tax.mapping">
+            <field name="nombre_corto">TARIFA PORTUARIA</field><field name="codigo_unidad_gravable">1</field>
+            <field name="descripcion">Tarifa portuaria por contenedor</field><field name="tasa_referencia">USD 0.05</field>
+        </record>
+
+        <!-- ======= TASA MUNICIPAL =======
+             El CodigoUnidadGravable de TASA MUNICIPAL es un codigo de municipio
+             de 7 digitos (DDMM000) con cientos de valores posibles.
+             Se usa UG=0 como comodin: si no hay entrada especifica para el codigo
+             exacto del municipio, el modulo busca este registro como fallback.
+             El usuario configura aqui el impuesto Odoo que representa la Tasa Municipal
+             y se aplica a cualquier factura que traiga TASA MUNICIPAL en el XML FEL.
+        -->
+        <record id="tax_map_tasa_mun_0" model="ktx.tax.mapping">
+            <field name="nombre_corto">TASA MUNICIPAL</field><field name="codigo_unidad_gravable">0</field>
+            <field name="descripcion">Tasa Municipal (todos los municipios)</field>
+            <field name="tasa_referencia">Variable</field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <!-- Shadows -->
+    <filter id="bigShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="3" dy="6" stdDeviation="7" flood-color="#d08070" flood-opacity="0.35"/>
+    </filter>
+    <filter id="coinShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#c0a040" flood-opacity="0.45"/>
+    </filter>
+    <filter id="billShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#4a9e6b" flood-opacity="0.35"/>
+    </filter>
+
+    <!-- Cash register body (pastel coral/peach gradient) -->
+    <linearGradient id="bodyGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffc0a8"/>
+      <stop offset="100%" stop-color="#e88870"/>
+    </linearGradient>
+    <linearGradient id="bodyFace" x1="0" y1="0" x2="0.3" y2="1">
+      <stop offset="0%" stop-color="#ffd8c0"/>
+      <stop offset="100%" stop-color="#f8a890"/>
+    </linearGradient>
+    <linearGradient id="bodySide" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#d88060"/>
+      <stop offset="100%" stop-color="#c06848"/>
+    </linearGradient>
+
+    <!-- Display screen (dark teal) -->
+    <linearGradient id="screenGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3a5a6a"/>
+      <stop offset="100%" stop-color="#577a8a"/>
+    </linearGradient>
+
+    <!-- Coin gradient (pastel gold) -->
+    <linearGradient id="coinGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fae098"/>
+      <stop offset="100%" stop-color="#e8b840"/>
+    </linearGradient>
+    <linearGradient id="coinTop" x1="0" y1="0" x2="0.5" y2="1">
+      <stop offset="0%" stop-color="#fff0b8"/>
+      <stop offset="100%" stop-color="#f0c860"/>
+    </linearGradient>
+
+    <!-- Bill gradient (pastel mint green) -->
+    <linearGradient id="billGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#b8ecc8"/>
+      <stop offset="100%" stop-color="#7dd9a0"/>
+    </linearGradient>
+    <linearGradient id="billGradAlt" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#c8e8d8"/>
+      <stop offset="100%" stop-color="#8dd9b0"/>
+    </linearGradient>
+
+    <!-- Drawer (darker coral) -->
+    <linearGradient id="drawerGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e09080"/>
+      <stop offset="100%" stop-color="#b86850"/>
+    </linearGradient>
+
+    <!-- Button gradients -->
+    <linearGradient id="btnGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd8c8"/>
+      <stop offset="100%" stop-color="#f5a890"/>
+    </linearGradient>
+    <linearGradient id="totalBtnGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#a8e8c4"/>
+      <stop offset="100%" stop-color="#5acc88"/>
+    </linearGradient>
+  </defs>
+
+  <!-- ═════════ COIN STACK (left side, behind register) ═════════ -->
+  <g filter="url(#coinShadow)">
+    <!-- Coin 1 (bottom) -->
+    <ellipse cx="34" cy="158" rx="22" ry="7" fill="url(#coinGrad)"/>
+    <rect x="12" y="151" width="44" height="7" fill="url(#coinGrad)"/>
+    <ellipse cx="34" cy="151" rx="22" ry="7" fill="url(#coinTop)"/>
+    <!-- Coin 2 (middle) -->
+    <ellipse cx="34" cy="144" rx="22" ry="7" fill="url(#coinGrad)"/>
+    <rect x="12" y="137" width="44" height="7" fill="url(#coinGrad)"/>
+    <ellipse cx="34" cy="137" rx="22" ry="7" fill="url(#coinTop)"/>
+    <!-- Coin 3 (top, with Q symbol) -->
+    <ellipse cx="34" cy="130" rx="22" ry="7" fill="url(#coinGrad)"/>
+    <rect x="12" y="123" width="44" height="7" fill="url(#coinGrad)"/>
+    <ellipse cx="34" cy="123" rx="22" ry="7" fill="url(#coinTop)"/>
+    <text x="34" y="128" text-anchor="middle" font-family="Arial,sans-serif"
+          font-size="11" font-weight="bold" fill="#8a6020">Q</text>
+  </g>
+
+  <!-- ═════════ CASH REGISTER ═════════ -->
+  <!-- 3D side (back panel, depth) -->
+  <path d="M70 56 L154 56 L162 66 L162 158 L70 158 Z"
+        fill="url(#bodySide)" filter="url(#bigShadow)"/>
+  <!-- Top diagonal fold -->
+  <path d="M146 56 L154 56 L162 66 L154 66 Z" fill="#a85a3a"/>
+
+  <!-- Main register face -->
+  <rect x="62" y="52" width="84" height="106" rx="7" fill="url(#bodyFace)"/>
+
+  <!-- Top cover bar -->
+  <rect x="62" y="52" width="84" height="14" rx="7" fill="url(#bodyGrad)"/>
+
+  <!-- Display screen housing -->
+  <rect x="68" y="58" width="72" height="20" rx="3" fill="#a85a3a"/>
+  <rect x="70" y="60" width="68" height="16" rx="2" fill="url(#screenGrad)"/>
+  <!-- Display amount -->
+  <text x="135" y="73" text-anchor="end" font-family="Courier,monospace"
+        font-size="11" font-weight="bold" fill="#b8e8d0">Q 247.50</text>
+  <!-- Screen glow line -->
+  <rect x="70" y="60" width="68" height="2" fill="#7090a0" opacity="0.6"/>
+
+  <!-- Numeric keypad (3x3 + total) -->
+  <g>
+    <!-- Row 1: 7 8 9 -->
+    <rect x="70" y="86" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="88" y="86" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="106" y="86" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <!-- Row 2: 4 5 6 -->
+    <rect x="70" y="102" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="88" y="102" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="106" y="102" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <!-- Row 3: 1 2 3 -->
+    <rect x="70" y="118" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="88" y="118" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+    <rect x="106" y="118" width="16" height="13" rx="2.5" fill="url(#btnGrad)"/>
+
+    <!-- Total button (right side, green pastel, tall) -->
+    <rect x="125" y="86" width="14" height="45" rx="3" fill="url(#totalBtnGrad)"/>
+    <text x="132" y="112" text-anchor="middle" font-family="Arial,sans-serif"
+          font-size="8" font-weight="bold" fill="#fff">=</text>
+  </g>
+
+  <!-- Drawer (open, bottom) -->
+  <rect x="56" y="138" width="96" height="24" rx="3" fill="url(#drawerGrad)" filter="url(#bigShadow)"/>
+  <!-- Drawer handle -->
+  <rect x="95" y="150" width="18" height="3.5" rx="1.5" fill="#7a4030"/>
+
+  <!-- ═════════ BILLS sticking out of drawer ═════════ -->
+  <g filter="url(#billShadow)">
+    <!-- Bill 1 (back, tilted left) -->
+    <g transform="rotate(-12 88 134)">
+      <rect x="68" y="128" width="40" height="13" rx="2" fill="url(#billGradAlt)"/>
+      <circle cx="88" cy="134.5" r="3.5" fill="none" stroke="#4a9e6b" stroke-width="0.8"/>
+      <text x="88" y="137" text-anchor="middle" font-family="Arial,sans-serif"
+            font-size="7" font-weight="bold" fill="#3a7a55">100</text>
+    </g>
+    <!-- Bill 2 (front, tilted right) -->
+    <g transform="rotate(10 116 132)">
+      <rect x="96" y="126" width="40" height="13" rx="2" fill="url(#billGrad)"/>
+      <circle cx="116" cy="132.5" r="3.5" fill="none" stroke="#3a7a55" stroke-width="0.8"/>
+      <text x="116" y="135" text-anchor="middle" font-family="Arial,sans-serif"
+            font-size="7" font-weight="bold" fill="#2d5e40">50</text>
+    </g>
+  </g>
+
+  <!-- ═════════ FLOATING COIN (top-right, decoration) ═════════ -->
+  <g filter="url(#coinShadow)">
+    <ellipse cx="170" cy="58" rx="15" ry="5" fill="url(#coinGrad)"/>
+    <rect x="155" y="52" width="30" height="6" fill="url(#coinGrad)"/>
+    <ellipse cx="170" cy="52" rx="15" ry="5" fill="url(#coinTop)"/>
+    <text x="170" y="55" text-anchor="middle" font-family="Arial,sans-serif"
+          font-size="7" font-weight="bold" fill="#8a6020">$</text>
+  </g>
+
+  <!-- ═════════ FLOATING COIN (bottom-right, small) ═════════ -->
+  <g filter="url(#coinShadow)">
+    <circle cx="175" cy="148" r="9" fill="url(#coinGrad)"/>
+    <circle cx="175" cy="146" r="9" fill="url(#coinTop)"/>
+    <text x="175" y="149" text-anchor="middle" font-family="Arial,sans-serif"
+          font-size="8" font-weight="bold" fill="#8a6020">¢</text>
+  </g>
+</svg>

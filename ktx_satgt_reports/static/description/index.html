@@ -1,0 +1,483 @@
+<!--
+  Página de presentación: Reportería Fiscal SAT GT — por KONTAXES
+  Compatible con apps.odoo.com (sin <html>/<head>/<body>, CSS inline + <style>).
+-->
+<style>
+  .ktx-sat { font-family: 'Segoe UI', Arial, sans-serif; color: #1f2937; }
+  .ktx-sat .ktx-stat  { transition: transform .2s; }
+  .ktx-sat .ktx-stat:hover  { transform: translateY(-4px); }
+  .ktx-sat .ktx-card  { transition: transform .2s, box-shadow .2s; }
+  .ktx-sat .ktx-card:hover  { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(16,185,129,.18) !important; }
+  .ktx-sat .ktx-card:hover .ktx-ico { transform: scale(1.12) rotate(-4deg); }
+  .ktx-sat .ktx-ico   { transition: transform .2s; }
+  @keyframes ktxRise { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform:none; } }
+  .ktx-sat .ktx-card, .ktx-sat .ktx-step { animation: ktxRise .55s ease both; }
+</style>
+
+<div class="ktx-sat" style="background:#fff;">
+<div class="container" style="max-width:1080px;">
+
+  <!-- HERO BANNER -->
+  <div class="text-center pt-4 pb-2">
+    <img src="banner.gif" alt="Reportería Fiscal SAT GT" class="img-fluid rounded"
+         style="max-width:100%; height:auto; border-radius:16px; box-shadow:0 18px 50px rgba(79,91,213,.22);"/>
+  </div>
+
+  <!-- PRECIO / LANZAMIENTO -->
+  <div class="rounded my-4 p-4 text-center" style="background:#fff8f0; border:2px solid #f59e0b;">
+    <div style="color:#b45309; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">
+      &#9733; Precio especial de lanzamiento Beta 2026 &#9733;
+    </div>
+    <div style="margin-top:8px; display:flex; align-items:baseline; justify-content:center; gap:12px; flex-wrap:wrap;">
+      <span style="font-size:48px; font-weight:900; color:#059669; line-height:1;">GRATIS</span>
+      <span style="font-size:16px; color:#6b7280; font-weight:500; text-decoration:line-through;">Precio regular: $200 USD</span>
+    </div>
+    <div style="margin-top:8px;">
+      <span style="background:#d1fae5; color:#065f46; font-size:13px; font-weight:700; padding:4px 14px; border-radius:999px; margin-right:8px;">
+        BETA — Gratis ahora
+      </span>
+      <span style="background:#fef3c7; color:#92400e; font-size:13px; font-weight:700; padding:4px 14px; border-radius:999px;">
+        Precio de lanzamiento 2026: $100 (50% OFF)
+      </span>
+    </div>
+    <p style="color:#78716c; font-size:13px; margin-top:10px; margin-bottom:0;">
+      El módulo está en fase de pruebas. Próximamente recibirá actualizaciones con nuevas funcionalidades.<br/>
+      <strong>Una sola compra — uso permanente en tu instancia.</strong>
+    </p>
+  </div>
+
+  <!-- ALERTA GUATEMALA / LOCAL -->
+  <div class="rounded p-3 my-3" style="background:#eff6ff; border-left:4px solid #3b82f6; display:flex; gap:14px; align-items:flex-start;">
+    <span style="font-size:22px; line-height:1.2;">&#127468;&#127481;</span>
+    <div>
+      <div style="font-weight:700; color:#1e40af; font-size:14px;">Localización exclusiva para Guatemala (SAT)</div>
+      <div style="color:#374151; font-size:13px; margin-top:4px;">
+        Este módulo está diseñado específicamente para la normativa de la
+        <strong>Superintendencia de Administración Tributaria (SAT) de Guatemala</strong>.
+        La versión actual cubre operaciones <strong>locales</strong>.
+        El soporte para <strong>importaciones y exportaciones</strong> estará disponible en próximas actualizaciones.
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGERENCIAS -->
+  <div class="rounded p-3 my-3" style="background:#f0fdf4; border-left:4px solid #10b981; display:flex; gap:14px; align-items:flex-start;">
+    <span style="font-size:22px; line-height:1.2;">&#128172;</span>
+    <div>
+      <div style="font-weight:700; color:#065f46; font-size:14px;">Tu opinión impulsa el módulo</div>
+      <div style="color:#374151; font-size:13px; margin-top:4px;">
+        Aceptamos sugerencias para mejorar el módulo. Si usas una funcionalidad específica del SAT que no está cubierta,
+        o tienes ideas para mejorar los reportes, escríbenos a
+        <a href="mailto:info@kontaxes.com" style="color:#059669; font-weight:700;">info@kontaxes.com</a>
+        o visita <a href="https://www.kontaxes.com" style="color:#059669; font-weight:700;">www.kontaxes.com</a>.
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="row g-3 text-center py-4">
+    <div class="col-6 col-md-3">
+      <div class="ktx-stat rounded p-4 h-100" style="background:#4f5bd5; color:#fff;">
+        <div style="font-size:28px; font-weight:800; line-height:1;">SAT</div>
+        <div style="font-size:13px; margin-top:6px;">Formato oficial GT</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="ktx-stat rounded p-4 h-100" style="background:#10b981; color:#fff;">
+        <div style="font-size:28px; font-weight:800; line-height:1;">4</div>
+        <div style="font-size:13px; margin-top:6px;">Libros contables PDF</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="ktx-stat rounded p-4 h-100" style="background:#f59e0b; color:#fff;">
+        <div style="font-size:28px; font-weight:800; line-height:1;">6</div>
+        <div style="font-size:13px; margin-top:6px;">Declaraciones sombra</div>
+      </div>
+    </div>
+    <div class="col-6 col-md-3">
+      <div class="ktx-stat rounded p-4 h-100" style="background:#7c3aed; color:#fff;">
+        <div style="font-size:28px; font-weight:800; line-height:1;">IVA+ISR</div>
+        <div style="font-size:13px; margin-top:6px;">+ISO por régimen</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO -->
+  <div class="text-center py-4">
+    <div style="color:#4f5bd5; font-weight:700; font-size:13px; letter-spacing:2px;">REPORTERÍA FISCAL PARA GUATEMALA</div>
+    <h2 style="color:#3730a3; font-weight:800; font-size:30px; margin-top:6px;">Cumple con el SAT desde Odoo</h2>
+    <p class="mx-auto" style="color:#374151; font-size:17px; max-width:820px; margin-top:12px;">
+      Genera los <strong>Libros de Compras, Ventas, Diario y Mayor</strong> en el formato exacto que exige la SAT
+      en PDF y Excel, y prepara tu <strong>Declaración Sombra</strong> (IVA, ISR e ISO) antes de ingresar al
+      portal SAT — todo directamente desde la contabilidad de Odoo 19, sin exportar ni reelaborar datos.
+    </p>
+  </div>
+
+  <!-- FLUJO -->
+  <div class="text-center pt-3 pb-2">
+    <div style="color:#4f5bd5; font-weight:700; font-size:13px; letter-spacing:2px;">FLUJO DE TRABAJO</div>
+    <h2 style="color:#3730a3; font-weight:800; font-size:26px; margin-top:6px;">De la factura al reporte SAT en 3 pasos</h2>
+  </div>
+  <div class="row g-3 pb-4">
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 text-center" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="rounded-circle d-inline-block text-center" style="background:#eef2ff; color:#4f5bd5; width:50px; height:50px; line-height:50px; font-size:22px;"><strong>1</strong></div>
+        <h4 style="color:#3730a3; font-size:15px; margin-top:12px;">Clasifica tus impuestos</h4>
+        <p style="font-size:13px; color:#4b5563; margin:0;">Asigna la categoría SAT GT (Gravado/Exento, IVA, ISR, Combustible…) una sola vez a cada impuesto de Odoo.</p>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 text-center" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="rounded-circle d-inline-block text-center" style="background:#d1fae5; color:#10b981; width:50px; height:50px; line-height:50px; font-size:22px;"><strong>2</strong></div>
+        <h4 style="color:#3730a3; font-size:15px; margin-top:12px;">Configura tu empresa</h4>
+        <p style="font-size:13px; color:#4b5563; margin:0;">Selecciona el régimen IVA e ISR y vincula las cuentas contables para retenciones, remanentes e ISR.</p>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 text-center" style="background:#4f5bd5;">
+        <div class="rounded-circle d-inline-block text-center" style="background:#fff; color:#4f5bd5; width:50px; height:50px; line-height:50px; font-size:22px;"><strong>3</strong></div>
+        <h4 style="color:#fff; font-size:15px; margin-top:12px;">Genera tus reportes</h4>
+        <p style="font-size:13px; color:#c7d2fe; margin:0;">Elige el libro o declaración, selecciona el período y descarga en PDF o Excel. El sistema clasifica automáticamente.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FUNCIONALIDADES -->
+  <div class="text-center pt-4 pb-2">
+    <div style="color:#4f5bd5; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+    <h2 style="color:#3730a3; font-weight:800; font-size:30px; margin-top:6px;">Todo lo que necesitas para el SAT</h2>
+  </div>
+  <div class="row g-4 pb-4">
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#d1fae5; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-book"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Libro de Compras SAT</h3>
+        <p style="font-size:13px; color:#4b5563;">Formato exacto SAT GT con columnas Local/Importación × Gravada/Exenta × Bienes/Servicios, IVA, folio configurable, resumen final y certificación del contador.</p>
+        <div style="margin-top:8px;">
+          <span style="background:#dcfce7; color:#166534; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">PDF</span>
+          <span style="background:#dbeafe; color:#1e40af; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:4px;">Excel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#d1fae5; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-book"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Libro de Ventas SAT</h3>
+        <p style="font-size:13px; color:#4b5563;">Mismo formato para ventas con columnas Local/Exportación, NIT del cliente, número DTE, notas de crédito/débito con signo correcto y totales automáticos.</p>
+        <div style="margin-top:8px;">
+          <span style="background:#dcfce7; color:#166534; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">PDF</span>
+          <span style="background:#dbeafe; color:#1e40af; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:4px;">Excel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#f59e0b;"><i class="fa fa-user"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Libro Pequeño Contribuyente</h3>
+        <p style="font-size:13px; color:#4b5563;">Libro combinado (compras + ventas en una sola hoja horizontal) para el régimen de Pequeño Contribuyente. Se activa automáticamente según el régimen configurado.</p>
+        <div style="margin-top:8px;"><span style="background:#dcfce7; color:#166534; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">PDF automático</span></div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#eef2ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4f5bd5;"><i class="fa fa-list-ol"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Libro Diario</h3>
+        <p style="font-size:13px; color:#4b5563;">Libro Diario contable en formato SAT GT con partidas numeradas, debe/haber, totales acumulados por página y certificación del perito contador.</p>
+        <div style="margin-top:8px;"><span style="background:#dcfce7; color:#166534; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">PDF</span></div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#eef2ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#4f5bd5;"><i class="fa fa-table"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Libro Mayor</h3>
+        <p style="font-size:13px; color:#4b5563;">Libro Mayor por cuenta contable con saldo acumulado, debe/haber, apertura y certificación. Exportación a Excel incluida.</p>
+        <div style="margin-top:8px;">
+          <span style="background:#dcfce7; color:#166534; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">PDF</span>
+          <span style="background:#dbeafe; color:#1e40af; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px; margin-left:4px;">Excel</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#ede9fe; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c3aed;"><i class="fa fa-files-o"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Declaración Sombra</h3>
+        <p style="font-size:13px; color:#4b5563;">Simula los formularios SAT antes de ingresarlos: IVA General (D-1), IVA Pequeño Contribuyente, ISR Mensual, Trimestral y Anual (Opcional y Utilidades), ISO Trimestral.</p>
+        <div style="margin-top:8px;"><span style="background:#ede9fe; color:#5b21b6; font-size:11px; font-weight:700; padding:2px 8px; border-radius:4px;">6 formularios</span></div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background:#fff; border:1px solid #c7d2fe;">
+        <div class="ktx-ico rounded d-inline-block text-center" style="background:#fef3c7; width:50px; height:50px; line-height:50px; font-size:20px; color:#f59e0b;"><i class="fa fa-tag"></i></div>
+        <h3 style="font-size:16px; font-weight:700; margin-top:14px; color:#1f2937;">Clasificación por Impuesto</h3>
+        <p style="font-size:13px; color:#4b5563;">Configura una sola vez la categoría SAT de cada impuesto Odoo (Gravado/Exento/IVA/ISR/Combustible…). El sistema clasifica automáticamente todas las facturas.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CAPTURAS / EN ACCIÓN -->
+  <div class="text-center pt-4 pb-2">
+    <div style="color:#4f5bd5; font-weight:700; font-size:13px; letter-spacing:2px;">EL MÓDULO EN ACCIÓN</div>
+    <h2 style="color:#3730a3; font-weight:800; font-size:30px; margin-top:6px;">Así se ve dentro de Odoo</h2>
+    <p class="mx-auto" style="color:#374151; font-size:15px; max-width:760px; margin-top:8px;">
+      Capturas reales del módulo funcionando sobre la contabilidad de Odoo 19.
+    </p>
+  </div>
+  <div class="row g-4 pb-4">
+
+    <div class="col-12">
+      <div class="rounded shadow-sm" style="background:#fff; border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#4f5bd5; color:#fff; padding:10px 16px; font-weight:700; font-size:14px;">
+          1. Configuración: clasificación fiscal en el plan de cuentas y menú de Reportes Fiscales GT
+        </div>
+        <img src="screenshot-configuracion.png" alt="Configuración fiscal y menú de reportes SAT GT"
+             class="img-fluid" style="width:100%; display:block;"/>
+        <div style="padding:10px 16px; font-size:13px; color:#4b5563;">
+          Marca cada cuenta como <strong>Gasto No Deducible ISR</strong> o <strong>Ingreso Exento ISR</strong> con un clic,
+          y accede a los Libros de Compras, Ventas, Diario, Mayor y la Declaración Sombra desde
+          <strong>Contabilidad &rsaquo; Reportes &rsaquo; Reportes Fiscales GT</strong>.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="rounded shadow-sm" style="background:#fff; border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#10b981; color:#fff; padding:10px 16px; font-weight:700; font-size:14px;">
+          2. Clasificación de impuestos e Información Fiscal por empresa
+        </div>
+        <img src="screenshot-clasificacion.png" alt="Pestaña Clasificación SAT GT en el impuesto e Información Fiscal de la empresa"
+             class="img-fluid" style="width:100%; display:block;"/>
+        <div style="padding:10px 16px; font-size:13px; color:#4b5563;">
+          Define en cada impuesto la columna del libro (Gravado/Exento, IVA, Combustible…) desde la pestaña
+          <strong>Clasificación SAT GT</strong>, y configura régimen IVA/ISR, ISO y las cuentas contables
+          de retenciones, remanentes y exenciones por empresa.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="rounded shadow-sm" style="background:#fff; border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#7c3aed; color:#fff; padding:10px 16px; font-weight:700; font-size:14px;">
+          3. Declaración Sombra — IVA General (SAT-2237) e ISR Mensual
+        </div>
+        <img src="screenshot-declaracion-iva-isr.png" alt="Declaración Sombra IVA General SAT-2237 e ISR Mensual"
+             class="img-fluid" style="width:100%; display:block;"/>
+        <div style="padding:10px 16px; font-size:13px; color:#4b5563;">
+          Reproduce el formulario SAT-2237 con débito y crédito fiscal por sección, retenciones de IVA y
+          remanentes; y el ISR Mensual del régimen Opcional Simplificado con base gravada al 5% / 7%,
+          retenciones disponibles e impuesto a pagar.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="rounded shadow-sm" style="background:#fff; border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#f59e0b; color:#fff; padding:10px 16px; font-weight:700; font-size:14px;">
+          4. Declaración Sombra — ISR Trimestral (SAT-1361) e ISO Trimestral (SAT-1608)
+        </div>
+        <img src="screenshot-declaracion-isr-iso.png" alt="Declaración Sombra ISR Trimestral SAT-1361 e ISO Trimestral SAT-1608"
+             class="img-fluid" style="width:100%; display:block;"/>
+        <div style="padding:10px 16px; font-size:13px; color:#4b5563;">
+          Determinación acumulada del ISR Sobre Utilidades por trimestre con pérdida/renta imponible y
+          liquidación, e ISO trimestral calculado sobre activos netos e ingresos brutos.
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12">
+      <div class="rounded shadow-sm" style="background:#fff; border:1px solid #e2e8f0; overflow:hidden;">
+        <div style="background:#1f2937; color:#fff; padding:10px 16px; font-weight:700; font-size:14px;">
+          5. Libros en formato SAT — Libro Diario y Libro de Compras (PDF / Excel)
+        </div>
+        <img src="screenshot-libros-pdf.png" alt="Libro Diario y Libro de Compras en formato SAT GT"
+             class="img-fluid" style="width:100%; display:block;"/>
+        <div style="padding:10px 16px; font-size:13px; color:#4b5563;">
+          Libros con folio configurable, encabezado con NIT y período, columnas exactas del formato SAT,
+          subtotales por página y certificación del perito contador. Exportables a PDF y Excel.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- REGÍMENES -->
+  <div class="rounded p-4 my-4" style="background:#f5f3ff; border:1px solid #c4b5fd;">
+    <div class="text-center pb-3">
+      <div style="color:#7c3aed; font-weight:700; font-size:13px; letter-spacing:2px;">REGÍMENES SOPORTADOS</div>
+      <h2 style="color:#4c1d95; font-weight:800; font-size:26px; margin-top:6px;">Cualquier tipo de contribuyente guatemalteco</h2>
+    </div>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #c4b5fd;">
+          <div class="d-flex align-items-center" style="gap:12px;">
+            <div class="rounded-circle text-center flex-shrink-0" style="background:#ede9fe; color:#7c3aed; width:42px; height:42px; line-height:42px; font-size:16px;"><i class="fa fa-percent"></i></div>
+            <div>
+              <div style="font-weight:700; color:#4c1d95; font-size:15px;">IVA Régimen General</div>
+              <div style="font-size:13px; color:#6d28d9;">Libros SAT, Declaración Sombra D-1, remanente y retenciones recibidas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #c4b5fd;">
+          <div class="d-flex align-items-center" style="gap:12px;">
+            <div class="rounded-circle text-center flex-shrink-0" style="background:#fef3c7; color:#f59e0b; width:42px; height:42px; line-height:42px; font-size:16px;"><i class="fa fa-user"></i></div>
+            <div>
+              <div style="font-weight:700; color:#4c1d95; font-size:15px;">Pequeño Contribuyente</div>
+              <div style="font-size:13px; color:#6d28d9;">Libro combinado compras/ventas, declaración sombra 5% sobre ventas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #c4b5fd;">
+          <div class="d-flex align-items-center" style="gap:12px;">
+            <div class="rounded-circle text-center flex-shrink-0" style="background:#d1fae5; color:#10b981; width:42px; height:42px; line-height:42px; font-size:16px;"><i class="fa fa-line-chart"></i></div>
+            <div>
+              <div style="font-weight:700; color:#4c1d95; font-size:15px;">ISR Opcional Simplificado</div>
+              <div style="font-size:13px; color:#6d28d9;">5% hasta Q30,000/mes · 7% sobre el exceso · retenciones y declaración anual</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #c4b5fd;">
+          <div class="d-flex align-items-center" style="gap:12px;">
+            <div class="rounded-circle text-center flex-shrink-0" style="background:#eef2ff; color:#4f5bd5; width:42px; height:42px; line-height:42px; font-size:16px;"><i class="fa fa-calculator"></i></div>
+            <div>
+              <div style="font-weight:700; color:#4c1d95; font-size:15px;">ISR Sobre Utilidades</div>
+              <div style="font-size:13px; color:#6d28d9;">Renta imponible = Ingresos − Gastos + GND · 25% · pagos trimestrales · acreditación ISO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRÓXIMAMENTE -->
+  <div class="rounded p-4 my-4" style="background:#f8fafc; border:1px solid #e2e8f0;">
+    <div class="text-center pb-2">
+      <div style="color:#64748b; font-weight:700; font-size:12px; letter-spacing:2px;">PRÓXIMAMENTE</div>
+      <h2 style="color:#1e293b; font-weight:800; font-size:22px; margin-top:4px;">Actualizaciones planificadas</h2>
+    </div>
+    <div class="row g-3 text-center">
+      <div class="col-6 col-md-4">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #e2e8f0;">
+          <div style="font-size:22px; color:#64748b;">&#128202;</div>
+          <div style="font-weight:700; font-size:13px; color:#374151; margin-top:6px;">Resumen Fiscal &amp; Dashboard</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">Panel interactivo con IVA, ISR e ISO calculados según régimen, retenciones y posición fiscal en tiempo real</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #e2e8f0;">
+          <div style="font-size:22px; color:#64748b;">&#127970;</div>
+          <div style="font-weight:700; font-size:13px; color:#374151; margin-top:6px;">Multi-empresa</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">Configuración independiente por empresa y consolidado fiscal para grupos empresariales</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-4">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #e2e8f0;">
+          <div style="font-size:22px; color:#64748b;">&#127758;</div>
+          <div style="font-weight:700; font-size:13px; color:#374151; margin-top:6px;">Importaciones y Exportaciones</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">Columnas de operaciones internacionales en los libros SAT</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #e2e8f0;">
+          <div style="font-size:22px; color:#64748b;">&#128200;</div>
+          <div style="font-weight:700; font-size:13px; color:#374151; margin-top:6px;">Reporte de Inventarios</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">Reporte anual requerido para el régimen Sobre Utilidades</div>
+        </div>
+      </div>
+      <div class="col-6 col-md-6">
+        <div class="rounded p-3 h-100" style="background:#fff; border:1px solid #e2e8f0;">
+          <div style="font-size:22px; color:#64748b;">&#128197;</div>
+          <div style="font-weight:700; font-size:13px; color:#374151; margin-top:6px;">Comparativa de Períodos</div>
+          <div style="font-size:12px; color:#64748b; margin-top:4px;">Comparación mes a mes y año a año en el Resumen Fiscal</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPATIBILIDAD -->
+  <div class="row g-3 text-center py-4">
+    <div class="col-6 col-md-4">
+      <div class="rounded p-4 h-100" style="background:#fff; border:1px solid #c7d2fe;">
+        <div style="font-size:26px; color:#4f5bd5;"><i class="fa fa-bolt"></i></div>
+        <h4 style="color:#3730a3; font-size:15px; margin-top:8px;">Odoo 19</h4>
+        <p style="font-size:12px; color:#4b5563; margin:0;">Community y Enterprise</p>
+      </div>
+    </div>
+    <div class="col-6 col-md-4">
+      <div class="rounded p-4 h-100" style="background:#fff; border:1px solid #c7d2fe;">
+        <div style="font-size:26px; color:#10b981;"><i class="fa fa-link"></i></div>
+        <h4 style="color:#3730a3; font-size:15px; margin-top:8px;">Sin dependencias de terceros</h4>
+        <p style="font-size:12px; color:#4b5563; margin:0;">Solo Contabilidad nativa de Odoo. Compatible con los demás módulos KTX.</p>
+      </div>
+    </div>
+    <div class="col-12 col-md-4">
+      <div class="rounded p-4 h-100" style="background:#fff; border:1px solid #c7d2fe;">
+        <div style="font-size:26px; color:#f59e0b;"><i class="fa fa-shield"></i></div>
+        <h4 style="color:#3730a3; font-size:15px; margin-top:8px;">Seguridad por roles</h4>
+        <p style="font-size:12px; color:#4b5563; margin:0;">Grupos SAT Usuario y Administrador</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRECIO FINAL -->
+  <div class="rounded text-center p-4 my-4" style="background:#eef2ff; border:2px solid #4f5bd5;">
+    <div style="color:#4f5bd5; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio especial de lanzamiento</div>
+    <div style="font-size:42px; font-weight:900; color:#059669; line-height:1.1; margin-top:8px;">GRATIS</div>
+    <div style="margin-top:8px; color:#64748b; font-size:14px;">
+      Precio regular: <s>$200 USD</s> &nbsp;|&nbsp;
+      Precio de lanzamiento 2026: <strong style="color:#3730a3;">$100 USD (50% OFF)</strong>
+    </div>
+    <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">
+      Versión Beta — incluye todas las funcionalidades actuales y todas las actualizaciones del módulo.<br/>
+      <strong>Una sola compra, uso permanente en tu instancia de Odoo.</strong>
+    </p>
+  </div>
+
+  <!-- CTA -->
+  <div class="rounded text-center p-5 my-4" style="background:#4f5bd5; color:#fff;">
+    <h2 style="color:#fff; font-weight:800; font-size:26px;">Fiscalidad guatemalteca directamente en Odoo 19</h2>
+    <p class="mx-auto" style="color:#c7d2fe; max-width:640px; margin-top:10px; font-size:15px;">
+      Libros SAT en PDF y Excel · Declaración Sombra — todo en un módulo, sin salir de tu contabilidad.<br/>
+      Hecho por contadores guatemaltecos, para contadores guatemaltecos.
+    </p>
+    <div style="margin-top:16px;">
+      <a href="https://www.kontaxes.com" target="_blank" rel="noopener"
+         style="display:inline-block; background:#fff; color:#4f5bd5; font-weight:800; font-size:15px; text-decoration:none; padding:12px 30px; border-radius:999px;">
+        Ver demo en vivo &rarr;
+      </a>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="text-center pb-5" style="color:#6b7280; font-size:13px; border-top:1px solid #e5e7eb; padding-top:24px; margin-top:16px;">
+    <p style="margin-bottom:6px; font-weight:600; color:#374151;">Reportería Fiscal SAT GT — por KONTAXES</p>
+    <p style="margin:0;">
+      Odoo 19 &bull; Community &amp; Enterprise &bull; Exclusivo para Guatemala &bull;
+      <a href="mailto:info@kontaxes.com" style="color:#4f5bd5;">info@kontaxes.com</a> &bull;
+      <a href="https://www.kontaxes.com" style="color:#4f5bd5;">www.kontaxes.com</a>
+    </p>
+    <p style="margin-top:8px; color:#9ca3af; font-size:12px;">
+      ¿Tienes sugerencias? Escríbenos — tu retroalimentación hace crecer el módulo.
+    </p>
+  </div>
+
+</div><!-- /.container -->
+</div><!-- /.ktx-sat -->
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

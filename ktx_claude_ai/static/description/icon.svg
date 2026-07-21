@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
+  <defs>
+    <!-- Orange petal (cardinal N/S/E/W) -->
+    <path id="petal-orange" d="M0,-38 L5,-16 L0,-8 L-5,-16 Z"/>
+    <!-- Purple petal (diagonal NE/SE/SW/NW) — slightly shorter -->
+    <path id="petal-purple" d="M0,-34 L4,-15 L0,-8 L-4,-15 Z"/>
+  </defs>
+
+  <!-- Dark rounded background -->
+  <rect width="128" height="128" rx="22" fill="#1e1b1e"/>
+
+  <!-- Purple ring -->
+  <circle cx="64" cy="64" r="47" fill="none" stroke="#8b3fa8" stroke-width="11"/>
+
+  <!-- 8 petals around center, alternating orange/purple -->
+  <g transform="translate(64,64)">
+    <use href="#petal-orange" transform="rotate(0)"   fill="#e8703a"/>
+    <use href="#petal-purple" transform="rotate(45)"  fill="#8b3fa8"/>
+    <use href="#petal-orange" transform="rotate(90)"  fill="#e8703a"/>
+    <use href="#petal-purple" transform="rotate(135)" fill="#8b3fa8"/>
+    <use href="#petal-orange" transform="rotate(180)" fill="#e8703a"/>
+    <use href="#petal-purple" transform="rotate(225)" fill="#8b3fa8"/>
+    <use href="#petal-orange" transform="rotate(270)" fill="#e8703a"/>
+    <use href="#petal-purple" transform="rotate(315)" fill="#8b3fa8"/>
+  </g>
+
+  <!-- Center circle outline then fill -->
+  <circle cx="64" cy="64" r="9.5" fill="#1e1b1e" stroke="#e8703a" stroke-width="2"/>
+  <circle cx="64" cy="64" r="7"   fill="#e8703a"/>
+</svg>

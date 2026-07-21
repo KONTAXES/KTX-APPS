@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="ir_cron_ktx_fel2odoo_sync" model="ir.cron">
+        <field name="name">FEL2Odoo: Sincronizar DTE desde la SAT</field>
+        <field name="model_id" ref="model_ktx_fel2odoo_config"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_sync_all()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="nextcall"
+               eval="(DateTime.now() + timedelta(hours=6)).strftime('%Y-%m-%d %H:%M:%S')"/>
+        <field name="active" eval="True"/>
+    </record>
+</odoo>

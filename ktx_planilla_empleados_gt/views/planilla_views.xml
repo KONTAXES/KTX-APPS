@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ══════════════ Formulario ══════════════ -->
+    <record id="view_planilla_form" model="ir.ui.view">
+        <field name="name">ktx.planilla.form</field>
+        <field name="model">ktx.planilla</field>
+        <field name="arch" type="xml">
+            <form string="Planilla">
+                <header>
+                    <button name="action_calcular" string="Calcular"
+                            type="object" class="btn-primary"
+                            invisible="state not in ('draft', 'calculated') or tipo == 'liquidacion'"/>
+                    <button name="action_contabilizar" string="Contabilizar"
+                            type="object" class="btn-primary"
+                            invisible="state != 'calculated'"
+                            confirm="Se generará una partida contable por cada empleado. ¿Continuar?"/>
+                    <button name="action_registrar_pagos" string="Registrar Pagos"
+                            type="object" class="btn-primary"
+                            invisible="state != 'posted'"/>
+                    <button name="action_imprimir_pdf" string="Imprimir PDF"
+                            type="object" class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <button name="action_exportar_excel" string="Descargar Excel"
+                            type="object" class="btn-secondary"
+                            invisible="state == 'draft'"/>
+                    <button name="action_regresar_borrador" string="Regresar a Borrador"
+                            type="object"
+                            invisible="state != 'calculated'"/>
+                    <button name="action_cancelar" string="Cancelar"
+                            type="object" class="btn-danger"
+                            invisible="state in ('paid', 'cancel')"
+                            confirm="Se cancelarán las partidas contables no pagadas de esta planilla. ¿Continuar?"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,calculated,posted,paid"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Pagada" bg_color="text-bg-success"
+                            invisible="state != 'paid'"/>
+                    <widget name="web_ribbon" title="Cancelada" bg_color="text-bg-danger"
+                            invisible="state != 'cancel'"/>
+                    <widget name="web_ribbon" title="Anticipo" bg_color="text-bg-info"
+                            invisible="not es_anticipo or state in ('paid', 'cancel')"/>
+                    <field name="es_anticipo" invisible="1"/>
+                    <div class="alert alert-info" role="alert"
+                         invisible="not es_anticipo">
+                        <b>Anticipo de salario:</b> esta planilla se registra
+                        como anticipo (Anticipos a Empleados contra Sueldos por
+                        Pagar), sin IGSS, ISR ni provisiones. La planilla
+                        <b>mensual</b> del período consolidará el salario
+                        completo, aplicará las retenciones legales y compensará
+                        este anticipo automáticamente.
+                    </div>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_ver_asientos" type="object"
+                                class="oe_stat_button" icon="fa-book"
+                                invisible="asientos_count == 0">
+                            <field name="asientos_count" widget="statinfo"
+                                   string="Partidas"/>
+                        </button>
+                        <button name="action_ver_pagos" type="object"
+                                class="oe_stat_button" icon="fa-money"
+                                invisible="pagos_count == 0">
+                            <field name="pagos_count" widget="statinfo"
+                                   string="Pagos"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                        <h3><field name="mes_nombre" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Tipo y Período">
+                            <field name="tipo" readonly="state != 'draft'"/>
+                            <field name="periodicidad" readonly="state != 'draft'"
+                                   invisible="tipo != 'sueldo'"/>
+                            <field name="numero" readonly="state not in ('draft', 'calculated')"/>
+                            <field name="date_from" readonly="state != 'draft'"/>
+                            <field name="date_to" readonly="state != 'draft'"/>
+                        </group>
+                        <group string="Contabilidad">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="journal_id" readonly="state in ('posted', 'paid')"/>
+                            <field name="fecha_contable" readonly="state in ('posted', 'paid')"/>
+                            <field name="liquidacion_id" invisible="not liquidacion_id"/>
+                            <field name="payment_progress" widget="progressbar"
+                                   invisible="state not in ('posted', 'paid')"/>
+                        </group>
+                    </group>
+                    <group string="Empleados a Incluir (vacío = todos los activos con la misma frecuencia)"
+                           invisible="tipo == 'liquidacion'">
+                        <field name="employee_ids" nolabel="1" colspan="2"
+                               widget="many2many_tags_avatar"
+                               readonly="state != 'draft'"/>
+                    </group>
+                    <notebook>
+                        <page string="Líneas de Planilla" name="lineas">
+                            <field name="line_ids"
+                                   readonly="state in ('posted', 'paid', 'cancel')">
+                                <list editable="bottom"
+                                      decoration-success="pagada"
+                                      decoration-muted="total_liquido == 0">
+                                    <field name="secuencia" width="40px"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="puesto" optional="show"/>
+                                    <field name="dias_laborados" optional="hide"/>
+                                    <field name="dias_falta" optional="show"/>
+                                    <field name="horas_extra" optional="hide" widget="float_time"/>
+                                    <field name="sueldo_ordinario" sum="Total"/>
+                                    <field name="sueldo_extraordinario" sum="Total" optional="show"/>
+                                    <field name="comisiones" sum="Total" optional="show"/>
+                                    <field name="bonificacion_incentivo" sum="Total"/>
+                                    <field name="otros_ingresos" sum="Total" optional="show"/>
+                                    <field name="total_devengado" sum="Total"/>
+                                    <field name="igss_laboral" sum="Total"/>
+                                    <field name="isr" sum="Total" optional="show"/>
+                                    <field name="anticipos" sum="Total" optional="show"/>
+                                    <field name="judiciales" sum="Total" optional="show"/>
+                                    <field name="otros_descuentos" sum="Total" optional="show"/>
+                                    <field name="total_descuentos" sum="Total"/>
+                                    <field name="total_liquido" sum="Total"/>
+                                    <field name="pagada" widget="boolean_toggle" readonly="1" optional="show"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                    <field name="move_id" column_invisible="1"/>
+                                    <button name="action_recalcular" type="object"
+                                            icon="fa-refresh" title="Recalcular línea"
+                                            invisible="parent.state not in ('draft', 'calculated')"/>
+                                    <button name="action_registrar_pago" type="object"
+                                            icon="fa-money" title="Registrar pago"
+                                            invisible="pagada or not move_id"/>
+                                    <button name="action_imprimir_recibo" type="object"
+                                            icon="fa-print" title="Imprimir recibo"/>
+                                </list>
+                            </field>
+                            <group class="oe_subtotal_footer">
+                                <field name="total_devengado"/>
+                                <field name="total_descuentos"/>
+                                <field name="total_liquido" class="oe_subtotal_footer_separator"/>
+                            </group>
+                        </page>
+                        <page string="Costo Patronal y Provisiones" name="patronal">
+                            <group>
+                                <group string="Cuotas Patronales">
+                                    <field name="total_patronal"/>
+                                </group>
+                                <group string="Provisiones de Prestaciones">
+                                    <field name="total_provisiones"/>
+                                </group>
+                            </group>
+                            <field name="line_ids" readonly="1">
+                                <list>
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="igss_patronal" sum="Total"/>
+                                    <field name="irtra" sum="Total"/>
+                                    <field name="intecap" sum="Total"/>
+                                    <field name="total_patronal" sum="Total"/>
+                                    <field name="prov_indemnizacion" sum="Total"/>
+                                    <field name="prov_aguinaldo" sum="Total"/>
+                                    <field name="prov_bono14" sum="Total"/>
+                                    <field name="prov_vacaciones" sum="Total"/>
+                                    <field name="total_provisiones" sum="Total"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Anticipos del Mes" name="anticipos"
+                              invisible="tipo != 'sueldo' or periodicidad != 'mensual'">
+                            <div class="text-muted mb-2">
+                                Planillas de anticipo (quincenal, semanal, diario)
+                                del mismo mes. Al calcular esta planilla mensual,
+                                el líquido de los anticipos contabilizados se
+                                descuenta y compensa por empleado.
+                            </div>
+                            <field name="anticipo_linea_ids" readonly="1">
+                                <list decoration-success="pagada"
+                                      decoration-muted="state == 'cancel'">
+                                    <field name="planilla_id"/>
+                                    <field name="employee_id" widget="many2one_avatar_employee"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                    <field name="total_devengado" sum="Total"/>
+                                    <field name="total_liquido" sum="Total Anticipado"/>
+                                    <field name="pagada" widget="boolean_toggle" readonly="1"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Notas" name="notas">
+                            <field name="notas" placeholder="Notas internas de la planilla…"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- ══════════════ Lista ══════════════ -->
+    <record id="view_planilla_list" model="ir.ui.view">
+        <field name="name">ktx.planilla.list</field>
+        <field name="model">ktx.planilla</field>
+        <field name="arch" type="xml">
+            <list string="Planillas"
+                  decoration-info="state == 'calculated'"
+                  decoration-success="state == 'paid'"
+                  decoration-muted="state == 'cancel'">
+                <field name="name"/>
+                <field name="tipo" widget="badge"
+                       decoration-info="tipo == 'sueldo'"
+                       decoration-success="tipo == 'bono14'"
+                       decoration-warning="tipo in ('aguinaldo', 'vacaciones')"
+                       decoration-danger="tipo == 'liquidacion'"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="empleados_count" string="Empleados"/>
+                <field name="total_devengado" sum="Total"/>
+                <field name="total_descuentos" sum="Total"/>
+                <field name="total_liquido" sum="Total"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'calculated'"
+                       decoration-warning="state == 'posted'"
+                       decoration-success="state == 'paid'"/>
+                <field name="currency_id" column_invisible="1"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ══════════════ Kanban ══════════════ -->
+    <record id="view_planilla_kanban" model="ir.ui.view">
+        <field name="name">ktx.planilla.kanban</field>
+        <field name="model">ktx.planilla</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" class="o_kanban_mobile">
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex flex-column">
+                            <div class="d-flex justify-content-between">
+                                <strong><field name="name"/></strong>
+                                <field name="tipo" widget="badge"/>
+                            </div>
+                            <div class="text-muted">
+                                <field name="mes_nombre"/>
+                            </div>
+                            <div class="d-flex justify-content-between mt-2">
+                                <span>
+                                    <i class="fa fa-users me-1" title="Empleados"/>
+                                    <field name="empleados_count"/>
+                                </span>
+                                <strong>
+                                    <field name="total_liquido" widget="monetary"/>
+                                </strong>
+                            </div>
+                            <field name="payment_progress" widget="progressbar"
+                                   t-if="record.state.raw_value in ('posted', 'paid')"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ══════════════ Búsqueda ══════════════ -->
+    <record id="view_planilla_search" model="ir.ui.view">
+        <field name="name">ktx.planilla.search</field>
+        <field name="model">ktx.planilla</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Planillas">
+                <field name="name"/>
+                <field name="employee_ids"/>
+                <filter name="filter_sueldo" string="Sueldos"
+                        domain="[('tipo', '=', 'sueldo')]"/>
+                <filter name="filter_bono14" string="Bono 14"
+                        domain="[('tipo', '=', 'bono14')]"/>
+                <filter name="filter_aguinaldo" string="Aguinaldo"
+                        domain="[('tipo', '=', 'aguinaldo')]"/>
+                <filter name="filter_vacaciones" string="Vacaciones"
+                        domain="[('tipo', '=', 'vacaciones')]"/>
+                <filter name="filter_liquidacion" string="Liquidaciones"
+                        domain="[('tipo', '=', 'liquidacion')]"/>
+                <separator/>
+                <filter name="filter_borrador" string="Borrador"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="filter_pendiente_pago" string="Pendientes de Pago"
+                        domain="[('state', '=', 'posted')]"/>
+                <filter name="filter_pagadas" string="Pagadas"
+                        domain="[('state', '=', 'paid')]"/>
+                <separator/>
+                <filter name="filter_periodo" string="Período" date="date_to"/>
+                <group name="groupby">
+                    <filter name="group_tipo" string="Tipo"
+                            context="{'group_by': 'tipo'}"/>
+                    <filter name="group_state" string="Estado"
+                            context="{'group_by': 'state'}"/>
+                    <filter name="group_mes" string="Mes"
+                            context="{'group_by': 'date_to:month'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_planilla" model="ir.actions.act_window">
+        <field name="name">Planillas</field>
+        <field name="res_model">ktx.planilla</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="search_view_id" ref="view_planilla_search"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Cree su primera planilla
+            </p>
+            <p>
+                Seleccione el tipo (sueldos, Bono 14, aguinaldo, vacaciones),
+                el período y presione <b>Calcular</b>: el sistema toma los
+                empleados registrados, sus asistencias y calcula IGSS, ISR,
+                bonificación incentivo, provisiones y el líquido a pagar.
+            </p>
+        </field>
+    </record>
+
+</odoo>

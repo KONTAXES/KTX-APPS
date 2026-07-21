@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Cuentas de sueldo en la pestaña contable del contacto,
+         junto a las cuentas por cobrar / por pagar -->
+    <record id="view_partner_property_form_ktx_pl" model="ir.ui.view">
+        <field name="name">res.partner.form.ktx.planilla</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <field name="property_account_payable_id" position="after">
+                <field name="ktx_pl_account_gasto_id"
+                       groups="account.group_account_readonly"/>
+                <field name="ktx_pl_account_pagar_id"
+                       groups="account.group_account_readonly"/>
+            </field>
+        </field>
+    </record>
+
+</odoo>

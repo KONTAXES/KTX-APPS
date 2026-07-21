@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_ktx_petty_cash_closing_wizard_form" model="ir.ui.view">
+        <field name="name">ktx.petty.cash.closing.wizard.form</field>
+        <field name="model">ktx.petty.cash.closing.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Cerrar Caja Chica">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>Cerrar Caja Chica</h2>
+                        <h3><field name="fund_id" readonly="1"/></h3>
+                    </div>
+                    <group>
+                        <group string="Cierre">
+                            <field name="closing_date"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="closing_balance"/>
+                            <field name="move_count" string="Movimientos abiertos"/>
+                            <field name="total_amount" string="Total gastos"/>
+                        </group>
+                        <group string="Nuevo Fondo">
+                            <field name="new_fund_name"/>
+                            <field name="new_fund_date_start"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Notas opcionales del cierre..."/>
+                    </group>
+                    <div class="alert alert-info" role="alert">
+                        <i class="fa fa-info-circle me-1"/>
+                        Se cerrará este fondo y se creará uno nuevo con el saldo final
+                        (<field name="closing_balance" nolabel="1" readonly="1" widget="monetary"
+                            options="{'currency_field': 'currency_id'}"/>)
+                        como monto inicial.
+                    </div>
+                </sheet>
+                <footer>
+                    <button name="action_close_fund" string="Cerrar Caja"
+                        type="object" class="btn-primary"
+                        confirm="¿Confirma el cierre? Se cerrará el fondo actual y se creará uno nuevo con el saldo final."/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>

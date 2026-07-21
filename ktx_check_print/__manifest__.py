@@ -1,0 +1,31 @@
+# -*- coding: utf-8 -*-
+{
+    "name": "Impresión de Cheques",
+    "version": "19.0.1.0.7",
+    "category": "Accounting/Accounting",
+    "summary": "Impresión de cheques con voucher y póliza contable desde pagos de Odoo",
+    "description": "Impresion de cheques con voucher y poliza contable desde pagos de Odoo, con monto en letras en espanol.",
+    "author": "KONTAXES",
+    "website": "https://www.kontaxes.com",
+    "license": "OPL-1",
+    "price": 0.0,
+    "currency": "USD",
+    "depends": ["account"],
+    "data": [
+        "security/ir.model.access.csv",
+        "data/paperformat_data.xml",
+        "report/check_print_report.xml",
+        "views/account_payment_views.xml",
+        "views/account_journal_views.xml",
+        "views/check_print_wizard_views.xml",
+        "views/res_config_settings_views.xml",
+    ],
+    "application": True,
+    "installable": True,
+    "auto_install": False,
+    "images": [
+        "static/description/banner.gif",
+        "static/description/banner.png",
+    ],
+    "web_icon": "ktx_check_print,static/description/icon.png",
+}

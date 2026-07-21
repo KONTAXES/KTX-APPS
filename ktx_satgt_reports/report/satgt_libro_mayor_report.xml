@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_satgt_mayor" model="report.paperformat">
+        <field name="name">SAT GT - Libro Mayor (Letter Portrait)</field>
+        <field name="default" eval="False"/>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">3</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_libro_mayor" model="ir.actions.report">
+        <field name="name">Libro Mayor</field>
+        <field name="model">ktx.satgt.book.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_satgt_reports.report_libro_mayor_template</field>
+        <field name="report_file">ktx_satgt_reports.report_libro_mayor_template</field>
+        <field name="print_report_name">'Libro_Mayor_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="paperformat_id" ref="paperformat_satgt_mayor"/>
+    </record>
+
+    <template id="report_libro_mayor_template">
+        <t t-call="web.html_container">
+            <t t-set="accounts"     t-value="docs._get_mayor_lines()"/>
+            <t t-set="company"      t-value="env.company"/>
+            <t t-set="mes"          t-value="docs._month_name()"/>
+            <t t-set="anio"         t-value="docs._year_str()"/>
+            <t t-set="grand_debit"  t-value="sum(a['total_debit']  for a in accounts)"/>
+            <t t-set="grand_credit" t-value="sum(a['total_credit'] for a in accounts)"/>
+
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                @page {
+                    size: Letter portrait;
+                    margin-top:    <t t-esc="docs.margin_top    or 15"/>mm;
+                    margin-bottom: <t t-esc="docs.margin_bottom or 10"/>mm;
+                    margin-left:   <t t-esc="docs.margin_left   or 10"/>mm;
+                    margin-right:  <t t-esc="docs.margin_right  or 10"/>mm;
+                }
+                body { background: #fff; font-family: Arial, sans-serif; font-size: 7.5pt; color: #000; }
+
+                /* ── Main table ── */
+                table.mayor {
+                    width: calc(100% - 1px); border-collapse: collapse;
+                    table-layout: fixed; font-size: 7.5pt;
+                }
+                /* Force column widths: wkhtmltopdf respects these via the hidden first row */
+                table.mayor thead tr.col-sizer td {
+                    height: 0; line-height: 0; font-size: 0;
+                    padding: 0; border: none; background: transparent;
+                }
+
+                /* ── Repeating page header (thead) ── */
+                table.mayor thead { display: table-header-group; }
+
+                /* ── Column headers ── */
+                table.mayor thead tr.col-hdr th {
+                    border: 1px solid #000; padding: 2px 2px;
+                    text-align: center; vertical-align: middle;
+                    font-size: 7pt; background: #fff; color: #000; font-weight: bold;
+                }
+
+                /* ── Body rows ── */
+                table.mayor tbody td {
+                    border: 1px solid #000; padding: 2px 2px;
+                    font-size: 7.5pt; text-align: left; vertical-align: top;
+                    word-wrap: break-word; overflow: visible;
+                }
+                .acc-header td {
+                    background: #fff; color: #000; font-weight: bold;
+                    padding: 3px 4px; border: 1px solid #000;
+                }
+                .acc-total td {
+                    background: #fef3c7; color: #000; font-weight: bold;
+                    padding: 2px 2px; border: 1px solid #000;
+                    font-size: 7pt; text-align: right; vertical-align: middle;
+                }
+                .acc-spacer td {
+                    border: none; height: 14px; background: #e8edf2;
+                }
+
+                /* ── Grand total row ── */
+                .grand-total td {
+                    background: #fff; color: #000; font-weight: bold;
+                    padding: 3px 4px; border: 1px solid #000;
+                    font-size: 7.5pt; text-align: right; vertical-align: middle;
+                }
+                .grand-total td.lbl { text-align: left; }
+
+                .num    { text-align: right !important; white-space: nowrap; }
+                .ctr    { text-align: center; }
+                .nowrap { white-space: nowrap; }
+            </style>
+
+            <table class="mayor">
+                <!-- Portrait Letter ~741px. Fixed ~570px; auto ~171px for Descripción -->
+                <colgroup>
+                    <col style="width:18px;"/>
+                    <col style="width:50px;"/>
+                    <col style="width:100px;"/>
+                    <col style="width:88px;"/>
+                    <col/>
+                    <col style="width:55px;"/>
+                    <col style="width:42px;"/>
+                    <col style="width:62px;"/>
+                    <col style="width:62px;"/>
+                    <col style="width:68px;"/>
+                </colgroup>
+
+                <!-- ── Repeating header ── -->
+                <thead>
+                    <!-- Fila fantasma: wkhtmltopdf usa la primera fila del thead
+                         para fijar anchos en table-layout:fixed -->
+                    <tr class="col-sizer">
+                        <td style="width:18px;"></td>
+                        <td style="width:50px;"></td>
+                        <td style="width:100px;"></td>
+                        <td style="width:88px;"></td>
+                        <td></td>
+                        <td style="width:55px;"></td>
+                        <td style="width:42px;"></td>
+                        <td style="width:62px;"></td>
+                        <td style="width:62px;"></td>
+                        <td style="width:68px;"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="10" style="border:none; padding:0;">
+                            <div style="overflow:hidden; border-bottom:2px solid #000;
+                                        padding-bottom:5px; margin-bottom:4px;">
+                                <!-- Fixed-width float so centering is always symmetric -->
+                                <t t-if="company.logo">
+                                    <div style="float:left; width:115px; text-align:left;">
+                                        <img t-att-src="image_data_uri(company.logo)"
+                                             style="max-width:115px; max-height:75px; object-fit:contain;"/>
+                                    </div>
+                                </t>
+                                <div t-attf-style="margin:0 #{115 if company.logo else 0}px 0 #{115 if company.logo else 0}px; text-align:center;">
+                                    <div style="font-size:13pt;font-weight:bold;letter-spacing:.5px;">LIBRO MAYOR</div>
+                                    <div style="font-size:11pt;font-weight:bold;line-height:1.5;">
+                                        <t t-esc="company.name"/>
+                                        <t t-if="company.street"><br/><t t-esc="company.street"/></t>
+                                        <t t-if="company.street2"><br/><t t-esc="company.street2"/></t>
+                                        <t t-if="company.vat"><br/>NIT:&#160;<t t-esc="company.vat"/></t>
+                                    </div>
+                                    <div style="font-size:8pt;margin-top:3px;">
+                                        Período:&#160;<b><t t-esc="docs._period_str()"/></b>
+                                        &#160;&#160;|&#160;&#160;
+                                        Cuentas:&#160;<b><t t-esc="len(accounts)"/></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="col-hdr">
+                        <th style="width:18px;">No.</th>
+                        <th style="width:50px;">Fecha</th>
+                        <th style="width:100px;">Póliza</th>
+                        <th style="width:88px;">Ref. Documento</th>
+                        <th>Descripción</th>
+                        <th style="width:55px;">Contacto</th>
+                        <th style="width:42px;">Dólares</th>
+                        <th style="width:62px;">Debe</th>
+                        <th style="width:62px;">Haber</th>
+                        <th style="width:68px;">Saldo</th>
+                    </tr>
+                </thead>
+
+                <!-- ── Sin datos ── -->
+                <t t-if="not accounts">
+                    <tbody>
+                        <tr>
+                            <td colspan="10" style="text-align:center;padding:20px;color:#666;">
+                                Sin movimientos en el periodo seleccionado.
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+
+                <!-- ── Cuentas (one tbody per account for natural flow) ── -->
+                <t t-foreach="accounts" t-as="acc">
+                    <tbody>
+                        <!-- Spacer before each account (except the very first) for visual separation -->
+                        <t t-if="not acc_first">
+                            <tr class="acc-spacer"><td colspan="10"></td></tr>
+                        </t>
+                        <!-- Account header row -->
+                        <tr class="acc-header">
+                            <td colspan="10">
+                                <b><t t-esc="acc['account_code']"/>&#160;&#8212;&#160;<t t-esc="acc['account_name']"/></b>
+                                &#160;&#160;|&#160;&#160;
+                                Saldo Inicial:&#160;
+                                <t t-esc="'{:,.2f}'.format(acc['opening'])"/>
+                            </td>
+                        </tr>
+                        <!-- Detail lines -->
+                        <t t-foreach="acc['lines']" t-as="ln">
+                            <tr>
+                                <td class="ctr"><t t-esc="ln['no']"/></td>
+                                <td class="ctr" style="white-space:nowrap;"><t t-esc="ln['date'].strftime('%d/%m/%Y') if ln['date'] else ''"/></td>
+                                <td style="font-size:7.5pt;"><t t-esc="ln['ref']"/></td>
+                                <td style="font-size:7.5pt;"><t t-esc="ln['ref_doc']"/></td>
+                                <td style="font-size:7.5pt;"><t t-esc="ln['label']"/></td>
+                                <td style="font-size:7pt;color:#334155;"><t t-esc="ln['partner']"/></td>
+                                <td class="num" style="color:#0369a1;font-size:7pt;">
+                                    <t t-if="ln['amount_foreign']">
+                                        <t t-esc="ln['currency_sym']"/>&#160;<t t-esc="'{:,.2f}'.format(ln['amount_foreign'])"/>
+                                    </t>
+                                </td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(ln['debit'])  if ln['debit']  else ''"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(ln['credit']) if ln['credit'] else ''"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(ln['balance'])"/></td>
+                            </tr>
+                        </t>
+                        <!-- Account total row -->
+                        <tr class="acc-total">
+                            <td colspan="7" style="text-align:left;font-size:7.5pt;font-weight:bold;">
+                                SALDO FINAL:&#160;<t t-esc="acc['account_code']"/>&#160;&#8212;&#160;<t t-esc="acc['account_name']"/>
+                            </td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(acc['total_debit'])"/></td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(acc['total_credit'])"/></td>
+                            <td class="num" style="font-weight:bold;"><t t-esc="'{:,.2f}'.format(acc['closing'])"/></td>
+                        </tr>
+                    </tbody>
+                </t>
+
+                <!-- ── Totales generales ── -->
+                <t t-if="accounts">
+                    <tbody>
+                        <tr class="grand-total">
+                            <td colspan="7" class="lbl">TOTALES GENERALES DEL LIBRO MAYOR</td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(grand_debit)"/></td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(grand_credit)"/></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </t>
+            </table>
+
+            <!-- ── Certificación ── -->
+            <t t-if="accounts">
+                <div style="margin-top:20px; font-size:8pt; line-height:1.7; text-align:justify; text-transform:uppercase;">
+                    El infrascrito perito contador
+                    <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b>
+                    registrado ante la Superintendencia de Administración Tributaria -SAT-
+                    con el número de registro
+                    <b><t t-esc="company.ktx_contador_id.vat or '_______________'"/></b>,
+                    <b>CERTIFICA:</b> Que los registros contenidos en el presente
+                    <b>LIBRO MAYOR</b>,
+                    propiedad de la empresa
+                    <b><t t-esc="company.name"/></b>,
+                    correspondientes a la fecha del
+                    <b><t t-esc="docs.date_from.strftime('%d') if docs.date_from else ''"/></b>
+                    al
+                    <b><t t-esc="docs.date_to.strftime('%d') if docs.date_to else ''"/></b>
+                    del mes de <b><t t-esc="mes"/></b> del año <b><t t-esc="anio"/></b>,
+                    PRESENTAN LA INFORMACIÓN RAZONABLE Y OBJETIVA SEGÚN LA DOCUMENTACIÓN QUE SE TUVO A LA VISTA.
+                </div>
+                <table style="width:100%; margin-top:48px;">
+                    <tr>
+                        <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                            <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                                <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b><br/>
+                                Perito Contador<br/>
+                                NIT:&#160;<t t-esc="company.ktx_contador_id.vat or '_______________'"/>
+                            </div>
+                        </td>
+                        <td style="width:10%;"></td>
+                        <td style="width:45%; text-align:center; font-size:8pt; padding:0 8px; vertical-align:top;">
+                            <div style="border-top:1px solid #000; width:200px; margin:0 auto; padding-top:4px;">
+                                <b><t t-esc="company.ktx_rep_legal_id.name or '___________________________'"/></b><br/>
+                                Representante Legal<br/>
+                                NIT:&#160;<t t-esc="company.ktx_rep_legal_id.vat or '_______________'"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

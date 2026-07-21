@@ -1,0 +1,285 @@
+<!--
+  Pagina de presentacion: FEL2ODOO - AUTOMATE FEL GT.
+
+  ESTRATEGIA DE COMPATIBILIDAD (igual que el resto de modulos KTX):
+  - apps.odoo.com elimina <style>, gradientes, animaciones, flex/grid inline y JS.
+    Por eso la ESTRUCTURA usa SOLO clases Bootstrap (row/col) + colores hex
+    inline + <img>, que SI sobreviven el sanitizador y se ven ordenadas y
+    profesionales aunque se elimine el <style>.
+  - El bloque <style> de abajo (hover, animaciones, "banner" animado) es una
+    MEJORA opcional que solo aplica donde se permite CSS (backend de Odoo,
+    navegador); en la tienda se ignora sin romper nada, porque ningun elemento
+    depende de el para su layout ni su legibilidad.
+  - No se usan <html>/<head>/<body>: Odoo inyecta este HTML como fragmento.
+-->
+<style>
+  .ktx-pg .ktx-hero { position: relative; overflow: hidden; }
+  .ktx-pg .ktx-hero .ktx-orb { position: absolute; border-radius: 50%; filter: blur(8px); opacity: .55; }
+  .ktx-pg .ktx-hero .ktx-orb1 { width: 220px; height: 220px; background: #7c5cbf; top: -60px; right: -40px; animation: ktxFloat 7s ease-in-out infinite; }
+  .ktx-pg .ktx-hero .ktx-orb2 { width: 160px; height: 160px; background: #2ebe78; bottom: -50px; left: -30px; animation: ktxFloat 9s ease-in-out infinite reverse; }
+  @keyframes ktxFloat { 0%,100% { transform: translateY(0) translateX(0); } 50% { transform: translateY(18px) translateX(10px); } }
+  .ktx-pg .ktx-chip { transition: transform .2s, box-shadow .2s; }
+  .ktx-pg .ktx-chip:hover { transform: translateY(-3px) scale(1.03); }
+  .ktx-pg .ktx-card { transition: transform .25s, box-shadow .25s; }
+  .ktx-pg .ktx-card:hover { transform: translateY(-6px); box-shadow: 0 18px 44px rgba(80,60,140,.20) !important; }
+  .ktx-pg .ktx-badge-ico { transition: transform .25s; }
+  .ktx-pg .ktx-card:hover .ktx-badge-ico { transform: scale(1.15) rotate(-5deg); }
+  .ktx-pg .ktx-step { transition: transform .2s; }
+  .ktx-pg .ktx-step:hover { transform: translateY(-4px); }
+  @keyframes ktxRise { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  .ktx-pg .ktx-card, .ktx-pg .ktx-step, .ktx-pg .ktx-flow { animation: ktxRise .6s ease both; }
+  @keyframes ktxDash { to { stroke-dashoffset: 0; } }
+  @keyframes ktxPulse { 0%,100% { opacity: 1; } 50% { opacity: .45; } }
+  .ktx-pg .ktx-live { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #2ebe78; animation: ktxPulse 1.4s ease-in-out infinite; }
+</style>
+
+<div class="ktx-pg" style="font-family:'Segoe UI',Arial,sans-serif; color:#1f2a37; background-color:#ffffff;">
+  <div class="container" style="max-width:1080px;">
+
+    <!-- ============ HERO / BANNER ANIMADO ============ -->
+    <div class="ktx-hero rounded text-center px-3 py-5 my-4" style="background-color:#1c2d5a; color:#ffffff;">
+      <div class="ktx-orb ktx-orb1"></div>
+      <div class="ktx-orb ktx-orb2"></div>
+      <div style="position:relative;">
+        <img src="banner.png" alt="FEL2ODOO - Automate FEL GT"
+             class="img-fluid rounded mb-4" style="max-width:100%; height:auto; box-shadow:0 18px 50px rgba(0,0,0,.35);"/>
+        <div style="color:#c9d4ff; font-weight:700; font-size:13px; letter-spacing:2px;">GUATEMALA &bull; FACTURA ELECTRONICA EN LINEA (FEL)</div>
+        <h1 style="color:#ffffff; font-weight:800; font-size:34px; margin-top:8px;">Tus facturas FEL, en Odoo, en automatico</h1>
+        <p class="mx-auto" style="color:#d7ddf5; font-size:17px; max-width:760px; margin-top:12px;">
+          Descarga, importa, contabiliza y <strong>emite</strong> facturas electronicas de la SAT
+          sin salir de Odoo. Compras y ventas, por API o carga masiva de XML.
+        </p>
+        <div class="pt-3">
+          <span class="ktx-chip d-inline-block m-1" style="background-color:#2ebe78; color:#fff; font-weight:800; font-size:14px; padding:8px 18px; border-radius:999px;"><span class="ktx-live"></span> Sincronizacion automatica</span>
+          <span class="ktx-chip d-inline-block m-1" style="background-color:#7c5cbf; color:#fff; font-weight:800; font-size:14px; padding:8px 18px; border-radius:999px;">Emision ante la SAT</span>
+          <span class="ktx-chip d-inline-block m-1" style="background-color:#ffffff; color:#1c2d5a; font-weight:800; font-size:14px; padding:8px 18px; border-radius:999px;">PDF + XML adjuntos</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ INTRO ============ -->
+    <div class="text-center py-4">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">EL PROBLEMA QUE RESUELVE</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">Se acabo capturar facturas a mano</h2>
+      <p class="mx-auto" style="color:#5b6b86; font-size:17px; max-width:800px; margin-top:12px;">
+        En Guatemala cada compra y cada venta ya es un <strong>DTE FEL</strong> certificado por la SAT.
+        <strong>FEL2Odoo</strong> trae esos documentos a Odoo automaticamente &mdash; con sus impuestos,
+        frases SAT, contactos y cuentas &mdash; y ademas te deja <strong>emitir</strong> tus propias
+        facturas de venta ante la SAT, todo desde el mismo Odoo y sin subir nada a sitios externos.
+      </p>
+    </div>
+
+    <!-- ============ DOS MODOS ============ -->
+    <div class="row g-4 pb-2">
+      <div class="col-12 col-md-6">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f3ff; width:54px; height:54px; line-height:54px; font-size:22px; color:#2b7cd6;"><i class="fa fa-cloud-download"></i></div>
+          <h3 style="font-size:19px; font-weight:700; margin-top:14px;">1. Automatico por API</h3>
+          <p style="font-size:15px; color:#5b6b86;">Conecta con el proveedor intermediario (apifelcore.com), consulta por periodos y descarga solo los DTE nuevos. Crea las facturas y, si quieres, las confirma solo.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-6">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#eafaf6; width:54px; height:54px; line-height:54px; font-size:22px; color:#14887f;"><i class="fa fa-files-o"></i></div>
+          <h3 style="font-size:19px; font-weight:700; margin-top:14px;">2. Carga masiva de XML</h3>
+          <p style="font-size:15px; color:#5b6b86;">¿Tienes los XML a mano? Subelos todos de una vez. Se asignan impuestos por linea segun el catalogo de la SAT, sin capturar nada a mano.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ FUNCIONALIDADES ============ -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">FUNCIONALIDADES</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">Todo el ciclo FEL, dentro de Odoo</h2>
+    </div>
+    <div class="row g-4 pb-4">
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#f1ecfb; width:50px; height:50px; line-height:50px; font-size:20px; color:#7c5cbf;"><i class="fa fa-paper-plane"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Emision ante la SAT</h3>
+          <p style="font-size:14px; color:#5b6b86;">Certifica facturas de venta directamente desde Odoo. Se configura por diario (establecimiento, manual o automatica al confirmar) y esta restringida a gestores contables.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#ffe9e4; width:50px; height:50px; line-height:50px; font-size:20px; color:#FF6B57;"><i class="fa fa-ban"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Anulacion con motivo</h3>
+          <p style="font-size:14px; color:#5b6b86;">Anula ante la SAT una factura emitida con el flujo estandar de Odoo (restablecer a borrador y Cancelar). Si no escribes motivo, usa uno generico.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#eafaf6; width:50px; height:50px; line-height:50px; font-size:20px; color:#14887f;"><i class="fa fa-file-pdf-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">XML y PDF del DTE</h3>
+          <p style="font-size:14px; color:#5b6b86;">Cada factura queda con su XML original adjunto. Opcionalmente descarga tambien el PDF oficial del DTE y lo adjunta al chatter, visible y descargable.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f7ec; width:50px; height:50px; line-height:50px; font-size:20px; color:#10b981;"><i class="fa fa-percent"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Impuestos y frases SAT</h3>
+          <p style="font-size:14px; color:#5b6b86;">Mapea IVA, IDP, Tasa Municipal y demas por linea, y aplica retenciones ISR/IVA segun las frases del catalogo oficial de la SAT (Tipo/Escenario).</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#e6f3ff; width:50px; height:50px; line-height:50px; font-size:20px; color:#2b7cd6;"><i class="fa fa-sitemap"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Clasificacion de cuentas</h3>
+          <p style="font-size:14px; color:#5b6b86;">Opcional: sugiere la cuenta contable por descripcion e historial del proveedor, con asistencia por IA opcional (modulo aparte). Desactivado por defecto.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="ktx-card rounded p-4 h-100 shadow-sm" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="ktx-badge-ico rounded d-inline-block text-center" style="background-color:#fff6e0; width:50px; height:50px; line-height:50px; font-size:20px; color:#d99400;"><i class="fa fa-clock-o"></i></div>
+          <h3 style="font-size:17px; font-weight:700; margin-top:14px;">Cron, cuota y bitacora</h3>
+          <p style="font-size:14px; color:#5b6b86;">Sincronizacion programada (6h/12h/diaria/semanal/mensual), control de cuota mensual con corte automatico, y una bitacora con diagnostico por cada corrida.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMO CONFIGURAR ============ -->
+    <div class="text-center pt-4 pb-2">
+      <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">COMO CONFIGURARLO</div>
+      <h2 style="color:#1c2d5a; font-weight:800; font-size:30px; margin-top:6px;">Listo en 4 pasos</h2>
+      <p class="mx-auto" style="color:#5b6b86; font-size:15px; max-width:720px; margin-top:8px;">
+        El plan del proveedor intermediario (apifelcore.com) se contrata aparte y NO
+        esta incluido en el precio de este modulo.
+      </p>
+    </div>
+    <div class="row g-3 pb-4">
+      <div class="col-12 col-md-3">
+        <div class="ktx-step rounded p-4 h-100 text-center" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#7c5cbf; color:#fff; width:48px; height:48px; line-height:48px; font-size:20px; font-weight:800;">1</div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">Crear la conexion</h4>
+          <p style="font-size:13px; color:#5b6b86;">En <strong>FEL2Odoo &gt; Conexiones</strong>, ingresa tus credenciales del proveedor y el NIT del emisor.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="ktx-step rounded p-4 h-100 text-center" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#2b7cd6; color:#fff; width:48px; height:48px; line-height:48px; font-size:20px; font-weight:800;">2</div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">Probar conexion</h4>
+          <p style="font-size:13px; color:#5b6b86;">Pulsa <strong>Probar</strong>. La sincronizacion automatica solo se habilita cuando la conexion queda verificada.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="ktx-step rounded p-4 h-100 text-center" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#14887f; color:#fff; width:48px; height:48px; line-height:48px; font-size:20px; font-weight:800;">3</div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">Diario de ventas</h4>
+          <p style="font-size:13px; color:#5b6b86;">¿Vas a emitir? En el diario de ventas activa FEL2Odoo y define establecimiento y si se certifica al confirmar.</p>
+        </div>
+      </div>
+      <div class="col-12 col-md-3">
+        <div class="ktx-step rounded p-4 h-100 text-center" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div class="rounded-circle d-inline-block text-center" style="background-color:#2ebe78; color:#fff; width:48px; height:48px; line-height:48px; font-size:20px; font-weight:800;">4</div>
+          <h4 style="color:#1c2d5a; font-size:16px; margin-top:12px;">Sincronizar</h4>
+          <p style="font-size:13px; color:#5b6b86;">Ejecuta la sincronizacion (o deja el cron). Se crean las facturas con sus impuestos, XML y (opcional) PDF.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ COMO SE USA (FLUJO) ============ -->
+    <div class="ktx-flow rounded p-4 my-4" style="background-color:#f7f6fc; border:1px solid #ecebf5;">
+      <div class="text-center pb-3">
+        <div style="color:#7c5cbf; font-weight:700; font-size:13px; letter-spacing:2px;">COMO SE USA EN EL DIA A DIA</div>
+      </div>
+      <div class="row g-3 text-center align-items-center">
+        <div class="col-6 col-md">
+          <div style="font-size:26px; color:#2b7cd6;"><i class="fa fa-refresh"></i></div>
+          <div style="font-size:13px; color:#1c2d5a; font-weight:700; margin-top:6px;">Sincroniza / sube XML</div>
+        </div>
+        <div class="col-6 col-md">
+          <div style="font-size:26px; color:#7c5cbf;"><i class="fa fa-file-text-o"></i></div>
+          <div style="font-size:13px; color:#1c2d5a; font-weight:700; margin-top:6px;">Facturas creadas</div>
+        </div>
+        <div class="col-6 col-md">
+          <div style="font-size:26px; color:#14887f;"><i class="fa fa-check-square-o"></i></div>
+          <div style="font-size:13px; color:#1c2d5a; font-weight:700; margin-top:6px;">Impuestos y cuentas</div>
+        </div>
+        <div class="col-6 col-md">
+          <div style="font-size:26px; color:#10b981;"><i class="fa fa-paperclip"></i></div>
+          <div style="font-size:13px; color:#1c2d5a; font-weight:700; margin-top:6px;">XML + PDF adjuntos</div>
+        </div>
+        <div class="col-6 col-md">
+          <div style="font-size:26px; color:#2ebe78;"><i class="fa fa-paper-plane"></i></div>
+          <div style="font-size:13px; color:#1c2d5a; font-weight:700; margin-top:6px;">Emite / anula</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SEGURIDAD ============ -->
+    <div class="row g-3 text-center py-4">
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#7c5cbf;"><i class="fa fa-lock"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Credenciales seguras</h4>
+          <p style="font-size:12px; color:#5b6b86;">Los secretos nunca se muestran ni se registran en la bitacora.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#2b7cd6;"><i class="fa fa-users"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Acceso por grupos</h4>
+          <p style="font-size:12px; color:#5b6b86;">Emision y anulacion restringidas a gestores contables.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#14887f;"><i class="fa fa-shield"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">XML sin riesgos</h4>
+          <p style="font-size:12px; color:#5b6b86;">Proteccion contra XXE: no se procesan datos externos como codigo.</p>
+        </div>
+      </div>
+      <div class="col-6 col-md-3">
+        <div class="rounded p-4 h-100" style="background-color:#ffffff; border:1px solid #ecebf5;">
+          <div style="font-size:26px; color:#10b981;"><i class="fa fa-bolt"></i></div>
+          <h4 style="color:#1c2d5a; font-size:15px; margin-top:8px;">Odoo 19</h4>
+          <p style="font-size:12px; color:#5b6b86;">Arquitectura limpia, facil de migrar a futuras versiones.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ PRECIO ============ -->
+    <div class="rounded text-center p-4 my-4" style="background-color:#eef2ff; border:2px solid #1c2d5a;">
+      <div style="color:#1c2d5a; font-weight:700; font-size:12px; letter-spacing:2px; text-transform:uppercase;">Precio de Lanzamiento</div>
+      <div style="font-size:38px; font-weight:900; color:#1c2d5a; line-height:1.1; margin-top:6px;">GRATIS</div>
+      <div style="margin-top:8px;">
+        <span style="background:#dcfce7; color:#166534; font-size:13px; font-weight:700; padding:3px 12px; border-radius:999px;">50% OFF durante 2026</span>
+        <span style="color:#64748b; font-size:13px; margin-left:8px;">Precio regular: <s>$200 USD</s></span>
+      </div>
+      <p style="color:#475569; font-size:13px; margin-top:10px; margin-bottom:0;">Aprovecha el lanzamiento: una sola compra, uso de por vida en tu instancia.</p>
+    </div>
+
+    <!-- ============ AVISO PROVEEDOR ============ -->
+    <div class="rounded p-4 my-4" style="background-color:#fff6e0; border:1px solid #f0d78a;">
+      <div style="color:#8a6d1a; font-size:14px;">
+        <strong><i class="fa fa-info-circle"></i> Importante:</strong>
+        el precio de este modulo NO incluye el plan del proveedor intermediario
+        <strong>apifelcore.com</strong>, que gestiona la conexion con la SAT. Ese plan
+        se contrata aparte directamente con el proveedor, segun el volumen de documentos.
+      </div>
+    </div>
+
+    <!-- ============ CTA ============ -->
+    <div class="rounded text-center p-5 my-4" style="background-color:#1c2d5a; color:#ffffff;">
+      <h2 style="color:#ffffff; font-weight:800; font-size:26px;">Automatiza tu FEL hoy</h2>
+      <p class="mx-auto" style="color:#d7ddf5; max-width:660px; margin-top:10px; font-size:15px;">
+        Compras y ventas, importacion y emision, XML y PDF &mdash; todo dentro de Odoo 19
+        (Community y Enterprise). Hecho en Guatemala, para la contabilidad guatemalteca.
+      </p>
+    </div>
+
+    <!-- ============ FOOTER ============ -->
+    <div class="text-center pb-5" style="color:#8a9a9c; font-size:13px;">
+      <p style="margin-bottom:4px;">FEL2ODOO &mdash; Automate FEL GT &mdash; por KTX APPS &mdash; NIT 93823509</p>
+      <p style="margin:0;">Guatemala FEL &bull; Odoo 19 &bull; SAT &bull; apifelcore.com</p>
+      <p style="margin-top:8px; color:#b0bcc4;">Contenido generado con ayuda de IA, con estricta planificacion y gestion de KTX.</p>
+    </div>
+
+  </div>
+</div>
+
+<div style="text-align:center; margin:30px auto 10px; padding:20px 16px; max-width:680px; border-top:1px solid #e5e7eb;">
+  <div style="font-size:13px; color:#6b7280; margin-bottom:10px;">¿Dudas, demo o soporte? Escríbenos por WhatsApp</div>
+  <a href="https://wa.me/50235174713" target="_blank" rel="noopener" style="display:inline-block; background:#25D366; color:#ffffff; font-weight:700; text-decoration:none; padding:11px 24px; border-radius:999px; font-size:15px;">💬 WhatsApp +502 3517 4713</a>
+  <div style="margin-top:12px; font-size:13px; color:#6b7280;"><a href="https://www.kontaxes.com" target="_blank" rel="noopener" style="color:#4f5bd5; text-decoration:none; font-weight:700;">www.kontaxes.com</a></div>
+</div>

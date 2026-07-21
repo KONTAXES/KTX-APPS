@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Usuario: consulta y captura de asistencias -->
+    <record id="group_planilla_user" model="res.groups">
+        <field name="name">Planilla GT / Usuario</field>
+    </record>
+
+    <!-- Encargado de planilla: calcula, confirma y paga planillas -->
+    <record id="group_planilla_officer" model="res.groups">
+        <field name="name">Planilla GT / Encargado</field>
+        <field name="implied_ids" eval="[(4, ref('group_planilla_user'))]"/>
+    </record>
+
+    <!-- Administrador: acceso total + configuración -->
+    <record id="group_planilla_manager" model="res.groups">
+        <field name="name">Planilla GT / Administrador</field>
+        <field name="implied_ids" eval="[(4, ref('group_planilla_officer'))]"/>
+    </record>
+
+    <!-- RRHH Encargado → Encargado de Planilla -->
+    <record id="hr.group_hr_user" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_planilla_officer'))]"/>
+    </record>
+
+    <!-- RRHH Administrador → Administrador de Planilla -->
+    <record id="hr.group_hr_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_planilla_manager'))]"/>
+    </record>
+
+    <!-- Contabilidad Administrador → Administrador de Planilla -->
+    <record id="account.group_account_manager" model="res.groups">
+        <field name="implied_ids" eval="[(4, ref('group_planilla_manager'))]"/>
+    </record>
+
+    <!-- Regla multicompañía -->
+    <record id="rule_planilla_company" model="ir.rule">
+        <field name="name">Planilla GT: multicompañía</field>
+        <field name="model_id" ref="model_ktx_planilla"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_planilla_linea_company" model="ir.rule">
+        <field name="name">Línea de Planilla GT: multicompañía</field>
+        <field name="model_id" ref="model_ktx_planilla_linea"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_asistencia_company" model="ir.rule">
+        <field name="name">Asistencia GT: multicompañía</field>
+        <field name="model_id" ref="model_ktx_planilla_asistencia"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="rule_liquidacion_company" model="ir.rule">
+        <field name="name">Liquidación GT: multicompañía</field>
+        <field name="model_id" ref="model_ktx_planilla_liquidacion"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+
+</odoo>

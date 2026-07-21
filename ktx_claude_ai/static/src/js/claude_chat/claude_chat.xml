@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="ktx_claude_ai.ClaudeChat">
+        <div class="o_claude_chat d-flex h-100">
+            <!-- Sidebar: conversations -->
+            <div class="o_claude_sidebar d-flex flex-column">
+                <button class="btn btn-primary m-2" t-on-click="() => this.newConversation()">
+                    <i class="fa fa-plus me-1"/> Nueva conversación
+                </button>
+                <div class="o_claude_conv_list flex-grow-1 overflow-auto">
+                    <t t-foreach="state.conversations" t-as="conv" t-key="conv.id">
+                        <div class="o_claude_conv_item p-2"
+                             t-att-class="{ 'o_active': conv.id === state.activeId }"
+                             t-on-click="() => this.selectConversation(conv.id)">
+                            <i class="fa fa-comment-o me-2"/>
+                            <span t-esc="conv.name"/>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- Main: thread + composer -->
+            <div class="o_claude_main d-flex flex-column flex-grow-1">
+                <div class="o_claude_header p-2 border-bottom d-flex align-items-center justify-content-between">
+                    <strong t-esc="activeName"/>
+                    <button t-if="state.activeId"
+                            class="btn btn-sm btn-outline-danger ms-2"
+                            title="Eliminar conversación"
+                            t-on-click="() => this.deleteConversation()">
+                        <i class="fa fa-trash-o"/>
+                    </button>
+                </div>
+
+                <div class="o_claude_thread flex-grow-1 overflow-auto p-3" t-ref="thread">
+                    <t t-foreach="state.messages" t-as="msg" t-key="msg.id">
+                        <!-- User -->
+                        <div t-if="msg.role === 'user'" class="o_claude_row o_user d-flex justify-content-end mb-2">
+                            <div class="o_claude_bubble o_user_bubble" t-esc="msg.body"/>
+                        </div>
+                        <!-- Assistant — render markdown as HTML -->
+                        <div t-elif="msg.role === 'assistant'" class="o_claude_row o_assistant d-flex mb-2">
+                            <div t-if="msg.bodyHtml" class="o_claude_bubble o_assistant_bubble o_claude_md" t-out="msg.bodyHtml"/>
+                            <div t-else="" class="o_claude_bubble o_assistant_bubble" t-esc="msg.body"/>
+                        </div>
+                        <!-- Reasoning -->
+                        <div t-elif="msg.role === 'thinking'" class="o_claude_row mb-2">
+                            <div class="o_claude_thinking text-muted fst-italic">
+                                <i class="fa fa-lightbulb-o me-1"/><span t-esc="msg.body"/>
+                            </div>
+                        </div>
+                        <!-- Tool card -->
+                        <div t-elif="msg.role === 'tool'" class="o_claude_row mb-2">
+                            <div class="o_claude_tool p-2"
+                                 t-att-class="{ 'o_tool_error': !msg.tool_success }">
+                                <i class="fa me-1"
+                                   t-att-class="msg.tool_success ? 'fa-cog text-success' : 'fa-exclamation-triangle text-danger'"/>
+                                <span t-esc="msg.body"/>
+                            </div>
+                        </div>
+                        <!-- Error -->
+                        <div t-elif="msg.role === 'error'" class="o_claude_row mb-2">
+                            <div class="o_claude_error text-danger p-2">
+                                <i class="fa fa-exclamation-circle me-1"/><span t-esc="msg.body"/>
+                            </div>
+                        </div>
+                    </t>
+
+                    <div t-if="state.loading" class="o_claude_row o_assistant d-flex mb-2">
+                        <div class="o_claude_bubble o_assistant_bubble o_claude_typing">
+                            <i class="fa fa-spinner fa-spin me-1"/> Claude está trabajando…
+                        </div>
+                    </div>
+                </div>
+
+                <div class="o_claude_composer p-2 border-top d-flex">
+                    <textarea class="form-control me-2"
+                              rows="1"
+                              placeholder="Escribe tu instrucción para Claude…"
+                              t-att-disabled="state.loading"
+                              t-model="state.draft"
+                              t-on-keydown="onKeydown"/>
+                    <button class="btn btn-primary"
+                            t-att-disabled="state.loading"
+                            t-on-click="() => this.send()">
+                        <i class="fa fa-paper-plane"/>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

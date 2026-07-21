@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_import_document_view_list" model="ir.ui.view">
+        <field name="name">ktx.import.document.list</field>
+        <field name="model">ktx.import.document</field>
+        <field name="arch" type="xml">
+            <list string="Documentos XML FEL"
+                  decoration-success="state == 'imported'"
+                  decoration-info="state == 'valid'"
+                  decoration-warning="state in ('duplicate','wrong_nit')"
+                  decoration-danger="state in ('incompatible','error')"
+                  decoration-muted="state in ('pending', 'anulado', 'cais', 'civa')">
+                <field name="session_id"/>
+                <field name="filename"/>
+                <field name="tipo_documento"/>
+                <field name="serie"/>
+                <field name="numero_autorizacion" string="No. Autorizacion"/>
+                <field name="fecha_emision" string="Fecha"/>
+                <field name="nit_emisor" string="NIT Emisor"/>
+                <field name="nombre_emisor" string="Emisor"/>
+                <field name="nit_receptor" string="NIT Receptor"/>
+                <field name="gran_total" string="Total"/>
+                <field name="moneda"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'imported'"
+                       decoration-info="state == 'valid'"
+                       decoration-muted="state in ('pending', 'anulado', 'cais', 'civa')"
+                       decoration-warning="state in ('duplicate','wrong_nit')"
+                       decoration-danger="state in ('incompatible','error')"/>
+                <field name="invoice_id"/>
+                <field name="error_message" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_import_document_view_form" model="ir.ui.view">
+        <field name="name">ktx.import.document.form</field>
+        <field name="model">ktx.import.document</field>
+        <field name="arch" type="xml">
+            <form string="Documento XML FEL" create="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="filename" readonly="1"/></h1>
+                    </div>
+                    <group>
+                        <group string="Datos del Documento">
+                            <field name="tipo_documento" readonly="1"/>
+                            <field name="serie" readonly="1"/>
+                            <field name="numero_autorizacion" readonly="1"/>
+                            <field name="fecha_emision" readonly="1"/>
+                            <field name="moneda" readonly="1"/>
+                            <field name="gran_total" readonly="1"/>
+                        </group>
+                        <group string="Emisor / Receptor">
+                            <field name="nit_emisor" readonly="1"/>
+                            <field name="nombre_emisor" readonly="1"/>
+                            <field name="nit_receptor" readonly="1"/>
+                            <field name="nombre_receptor" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Estado">
+                        <field name="state" readonly="1" widget="badge"
+                               decoration-success="state == 'imported'"
+                               decoration-info="state == 'valid'"
+                               decoration-muted="state in ('pending', 'anulado', 'cais', 'civa')"
+                               decoration-warning="state in ('duplicate','wrong_nit')"
+                               decoration-danger="state in ('incompatible','error')"/>
+                        <field name="invoice_id" readonly="1"/>
+                        <field name="error_message" readonly="1"
+                               invisible="not error_message"/>
+                    </group>
+                    <group string="Frases SAT" invisible="not frases_resumen">
+                        <field name="frases_resumen" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_import_document_view_search" model="ir.ui.view">
+        <field name="name">ktx.import.document.search</field>
+        <field name="model">ktx.import.document</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Documentos">
+                <field name="filename" string="Archivo"/>
+                <field name="numero_autorizacion" string="No. Autorizacion"/>
+                <field name="serie" string="Serie"/>
+                <field name="nit_emisor" string="NIT Emisor"/>
+                <field name="nit_receptor" string="NIT Receptor"/>
+                <field name="nombre_emisor" string="Emisor"/>
+                <field name="nombre_receptor" string="Receptor"/>
+                <field name="gran_total" string="Monto"/>
+                <filter string="Vigentes" name="valid" domain="[('state','=','valid')]"/>
+                <filter string="Anulados" name="anulado" domain="[('state','=','anulado')]"/>
+                <filter string="CAIS" name="cais" domain="[('state','=','cais')]"/>
+                <filter string="CIVA" name="civa" domain="[('state','=','civa')]"/>
+                <filter string="Duplicados" name="dup" domain="[('state','=','duplicate')]"/>
+                <filter string="No compatibles" name="incompat" domain="[('state','=','incompatible')]"/>
+                <filter string="NIT incorrecto" name="wrong_nit" domain="[('state','=','wrong_nit')]"/>
+                <filter string="Importados" name="imported" domain="[('state','=','imported')]"/>
+                <filter string="Con error" name="error" domain="[('state','=','error')]"/>
+                <group>
+                    <filter string="Sesion" name="gb_session" domain="[]" context="{'group_by':'session_id'}"/>
+                    <filter string="Estado" name="gb_state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Tipo Documento" name="gb_tipo" domain="[]" context="{'group_by':'tipo_documento'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="ktx_import_document_action" model="ir.actions.act_window">
+        <field name="name">Documentos XML FEL</field>
+        <field name="res_model">ktx.import.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="ktx_import_document_view_search"/>
+    </record>
+
+</odoo>

@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="ktx_claude_ai.ClaudeSystray">
+        <t t-if="state.show">
+            <div class="o_claude_systray">
+
+                <!-- ── Systray button in the top bar ── -->
+                <button class="o_claude_systray_btn" t-on-click="toggle"
+                        title="Claude AI" aria-label="Claude AI">
+                    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path fill="currentColor" d="M12,2 L12.9,5.8 L12,7.2 L11.1,5.8Z"/>
+                        <path fill="currentColor" d="M22,12 L18.2,12.9 L16.8,12 L18.2,11.1Z"/>
+                        <path fill="currentColor" d="M12,22 L11.1,18.2 L12,16.8 L12.9,18.2Z"/>
+                        <path fill="currentColor" d="M2,12 L5.8,11.1 L7.2,12 L5.8,12.9Z"/>
+                        <path fill="currentColor" d="M19.1,4.9 L16.4,7.6 L15,6.2 L17.7,3.5Z"/>
+                        <path fill="currentColor" d="M19.1,19.1 L16.4,16.4 L17.8,15 L20.5,17.7Z"/>
+                        <path fill="currentColor" d="M4.9,19.1 L7.6,16.4 L9,17.8 L6.3,20.5Z"/>
+                        <path fill="currentColor" d="M4.9,4.9 L7.6,7.6 L6.2,9 L3.5,6.3Z"/>
+                        <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+                    </svg>
+                </button>
+
+                <!-- ── Minimized: floating bubble ── -->
+                <div t-if="state.open and state.minimized"
+                     class="o_claude_fab"
+                     t-on-click="restore"
+                     title="Restaurar Claude AI"
+                     role="button" tabindex="0">
+                    <svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path fill="currentColor" d="M12,2 L12.9,5.8 L12,7.2 L11.1,5.8Z"/>
+                        <path fill="currentColor" d="M22,12 L18.2,12.9 L16.8,12 L18.2,11.1Z"/>
+                        <path fill="currentColor" d="M12,22 L11.1,18.2 L12,16.8 L12.9,18.2Z"/>
+                        <path fill="currentColor" d="M2,12 L5.8,11.1 L7.2,12 L5.8,12.9Z"/>
+                        <path fill="currentColor" d="M19.1,4.9 L16.4,7.6 L15,6.2 L17.7,3.5Z"/>
+                        <path fill="currentColor" d="M19.1,19.1 L16.4,16.4 L17.8,15 L20.5,17.7Z"/>
+                        <path fill="currentColor" d="M4.9,19.1 L7.6,16.4 L9,17.8 L6.3,20.5Z"/>
+                        <path fill="currentColor" d="M4.9,4.9 L7.6,7.6 L6.2,9 L3.5,6.3Z"/>
+                        <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+                    </svg>
+                </div>
+
+                <!-- ── Full panel (not minimized) ── -->
+                <div t-if="state.open and !state.minimized" class="o_claude_panel">
+
+                    <!-- Header row 1: branding + window controls -->
+                    <div class="o_claude_panel_header">
+                        <div class="o_claude_header_top">
+                            <span class="o_claude_panel_title">
+                                <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+                                    <path fill="currentColor" d="M12,2 L12.9,5.8 L12,7.2 L11.1,5.8Z"/>
+                                    <path fill="currentColor" d="M22,12 L18.2,12.9 L16.8,12 L18.2,11.1Z"/>
+                                    <path fill="currentColor" d="M12,22 L11.1,18.2 L12,16.8 L12.9,18.2Z"/>
+                                    <path fill="currentColor" d="M2,12 L5.8,11.1 L7.2,12 L5.8,12.9Z"/>
+                                    <path fill="currentColor" d="M19.1,4.9 L16.4,7.6 L15,6.2 L17.7,3.5Z"/>
+                                    <path fill="currentColor" d="M19.1,19.1 L16.4,16.4 L17.8,15 L20.5,17.7Z"/>
+                                    <path fill="currentColor" d="M4.9,19.1 L7.6,16.4 L9,17.8 L6.3,20.5Z"/>
+                                    <path fill="currentColor" d="M4.9,4.9 L7.6,7.6 L6.2,9 L3.5,6.3Z"/>
+                                    <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+                                </svg>
+                                <span>Claude</span>
+                            </span>
+
+                            <!-- Token counter -->
+                            <span t-if="tokenSummary" class="o_claude_token_badge"
+                                  title="Tokens consumidos en esta conversación">
+                                <t t-esc="tokenSummary"/>
+                            </span>
+
+                            <span class="o_claude_win_controls">
+                                <button t-on-click="minimize" title="Minimizar" aria-label="Minimizar">
+                                    <i class="fa fa-minus"/>
+                                </button>
+                                <button t-on-click="close" title="Cerrar" aria-label="Cerrar">
+                                    <i class="fa fa-times"/>
+                                </button>
+                            </span>
+                        </div>
+
+                        <!-- Header row 2: conversation + company controls -->
+                        <div class="o_claude_header_controls">
+                            <select t-if="state.companies.length > 1"
+                                    class="o_claude_company_select"
+                                    t-on-change="onCompanyChange"
+                                    title="Empresa activa">
+                                <option t-foreach="state.companies" t-as="co" t-key="co.id"
+                                        t-att-value="co.id"
+                                        t-att-selected="co.id === state.activeCompanyId">
+                                    <t t-esc="co.name"/>
+                                </option>
+                            </select>
+
+                            <select class="o_claude_conv_select"
+                                    t-on-change="onConversationChange"
+                                    title="Conversaciones">
+                                <option t-foreach="state.conversations" t-as="c" t-key="c.id"
+                                        t-att-value="c.id"
+                                        t-att-selected="c.id === state.activeId">
+                                    <t t-esc="c.name"/>
+                                </option>
+                            </select>
+
+                            <button t-on-click="newConversation"
+                                    title="Nueva conversación" aria-label="Nueva conversación">
+                                <i class="fa fa-plus"/>
+                            </button>
+                            <button t-if="state.activeId"
+                                    t-on-click="deleteConversation"
+                                    title="Eliminar conversación" aria-label="Eliminar conversación"
+                                    class="o_claude_btn_danger">
+                                <i class="fa fa-trash-o"/>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Thread -->
+                    <div class="o_claude_thread" t-ref="thread">
+                        <div t-if="!state.messages.length and !state.loading"
+                             class="o_claude_empty">
+                            <p>Soy Claude. Pídeme algo sobre tu Odoo, por ejemplo:</p>
+                            <ul>
+                                <li>«lista mis 5 contactos»</li>
+                                <li>«crea un contacto Acme»</li>
+                                <li>«restablece a borrador la factura 5»</li>
+                            </ul>
+                        </div>
+
+                        <t t-foreach="state.messages" t-as="m" t-key="m.id">
+                            <div t-if="m.role === 'user'" class="o_claude_msg o_claude_user">
+                                <div class="o_claude_bubble" t-esc="m.body"/>
+                            </div>
+                            <div t-elif="m.role === 'assistant'"
+                                 class="o_claude_msg o_claude_assistant">
+                                <div t-if="m.bodyHtml" class="o_claude_bubble o_claude_md" t-out="m.bodyHtml"/>
+                                <div t-else="" class="o_claude_bubble" t-esc="m.body"/>
+                            </div>
+                            <div t-elif="m.role === 'thinking'" class="o_claude_thinking">
+                                <i class="fa fa-lightbulb-o"/>
+                                <span t-esc="m.body"/>
+                            </div>
+                            <div t-elif="m.role === 'tool'"
+                                 class="o_claude_tool"
+                                 t-att-class="{ 'o_claude_tool_err': !m.tool_success }">
+                                <i class="fa fa-cog"/>
+                                <span t-esc="m.body"/>
+                            </div>
+                            <div t-elif="m.role === 'error'" class="o_claude_err">
+                                <i class="fa fa-exclamation-triangle"/>
+                                <span t-esc="m.body"/>
+                            </div>
+                        </t>
+
+                        <div t-if="state.loading" class="o_claude_typing">
+                            <span class="o_claude_dot"/>
+                            <span class="o_claude_dot"/>
+                            <span class="o_claude_dot"/>
+                        </div>
+                    </div>
+
+                    <!-- Image previews -->
+                    <div t-if="state.pendingImages.length" class="o_claude_image_previews">
+                        <div t-foreach="state.pendingImages" t-as="img" t-key="img_index"
+                             class="o_claude_image_thumb">
+                            <img t-att-src="img.preview" t-att-alt="img.name"/>
+                            <button class="o_claude_image_remove"
+                                    t-on-click="() => this.removeImage(img_index)"
+                                    t-att-title="'Quitar ' + img.name">
+                                <i class="fa fa-times"/>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Composer -->
+                    <div class="o_claude_composer">
+                        <input t-ref="fileInput" type="file"
+                               accept="image/jpeg,image/png,image/gif,image/webp"
+                               multiple="true"
+                               style="display:none"
+                               t-on-change="onFileChange"/>
+
+                        <textarea t-ref="input" t-model="state.draft"
+                                  t-on-keydown="onKeydown" rows="1"
+                                  placeholder="Escribe tu instrucción para Claude…"/>
+
+                        <button class="o_claude_icon_btn" t-on-click="openFileInput"
+                                title="Adjuntar imagen" aria-label="Adjuntar imagen">
+                            <i class="fa fa-image"/>
+                        </button>
+
+                        <button class="o_claude_icon_btn"
+                                t-att-class="{ 'o_claude_mic_active': state.listening }"
+                                t-on-click="toggleVoice"
+                                title="Voz" aria-label="Voz">
+                            <i t-att-class="state.listening ? 'fa fa-stop' : 'fa fa-microphone'"/>
+                        </button>
+
+                        <button class="o_claude_send" t-on-click="send"
+                                t-att-disabled="state.loading"
+                                title="Enviar" aria-label="Enviar">
+                            <i class="fa fa-paper-plane"/>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </t>
+    </t>
+
+</templates>

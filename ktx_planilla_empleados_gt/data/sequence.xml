@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_ktx_planilla" model="ir.sequence">
+            <field name="name">Planilla GT</field>
+            <field name="code">ktx.planilla</field>
+            <field name="prefix">PLA/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_ktx_planilla_liquidacion" model="ir.sequence">
+            <field name="name">Liquidación de Prestaciones GT</field>
+            <field name="code">ktx.planilla.liquidacion</field>
+            <field name="prefix">LIQ/%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

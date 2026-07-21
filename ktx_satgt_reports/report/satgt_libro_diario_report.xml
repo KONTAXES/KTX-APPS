@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="paperformat_satgt_diario" model="report.paperformat">
+        <field name="name">SAT GT - Libro Diario</field>
+        <field name="default" eval="False"/>
+        <field name="format">Letter</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">15</field>
+        <field name="margin_bottom">10</field>
+        <field name="margin_left">10</field>
+        <field name="margin_right">10</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">3</field>
+        <field name="dpi">96</field>
+    </record>
+
+    <record id="action_report_libro_diario" model="ir.actions.report">
+        <field name="name">Libro Diario</field>
+        <field name="model">ktx.satgt.book.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_satgt_reports.report_libro_diario_template</field>
+        <field name="report_file">ktx_satgt_reports.report_libro_diario_template</field>
+        <field name="print_report_name">'Libro_Diario_%s_%s' % (object.date_from, object.date_to)</field>
+        <field name="paperformat_id" ref="paperformat_satgt_diario"/>
+    </record>
+
+    <template id="report_libro_diario_template">
+        <t t-call="web.html_container">
+            <t t-set="d"            t-value="docs._get_diario_lines()"/>
+            <t t-set="entries"      t-value="d[0]"/>
+            <t t-set="total_debit"  t-value="d[1]"/>
+            <t t-set="total_credit" t-value="d[2]"/>
+            <t t-set="company"      t-value="env.company"/>
+            <t t-set="mes"          t-value="docs._month_name()"/>
+            <t t-set="anio"         t-value="docs._year_str()"/>
+
+            <style>
+                * { box-sizing: border-box; margin: 0; padding: 0; }
+                @page {
+                    size: Letter portrait;
+                    margin-top:    <t t-esc="docs.margin_top    or 15"/>mm;
+                    margin-bottom: <t t-esc="docs.margin_bottom or 10"/>mm;
+                    margin-left:   <t t-esc="docs.margin_left   or 10"/>mm;
+                    margin-right:  <t t-esc="docs.margin_right  or 10"/>mm;
+                }
+                body { background:#fff; font-family:Arial,sans-serif; font-size:8pt; color:#000; }
+
+                /* ── Main table ── */
+                table.diario {
+                    width: calc(100% - 1px); border-collapse: collapse;
+                    table-layout: fixed; font-size: 7.5pt;
+                }
+
+                /* ── Repeating page header (thead) ── */
+                table.diario thead { display: table-header-group; }
+
+                /* ── Column headers ── */
+                table.diario thead tr.col-hdr th {
+                    border: 1px solid #000; padding: 2px 4px;
+                    text-align: center; vertical-align: middle;
+                    background: #fff; color: #000; font-weight: bold;
+                }
+
+                /* ── Body rows ── */
+                table.diario tbody td {
+                    border: 1px solid #000; padding: 2px 4px; vertical-align: middle;
+                    overflow: hidden;
+                }
+                .entry-hdr td {
+                    background: #fff; color: #000; font-weight: bold;
+                    border: 1px solid #000; padding: 3px 5px;
+                }
+                .entry-total td {
+                    border-top: none;
+                    border-left: 1px solid #000; border-right: 1px solid #000;
+                    border-bottom: 3px double #000;
+                    padding: 2px 4px; font-style: italic; color: #1e293b; font-size: 7pt;
+                    background: #fafafa;
+                }
+                .entry-total .num { font-weight: bold; font-style: normal; color: #000; text-align: right; }
+                .entry-spacer td  { border: none; height: 14px; background: #e8edf2; }
+
+                /* ── Grand total row ── */
+                .grand-total td {
+                    border: 1px solid #000; padding: 3px 5px;
+                    font-weight: bold; font-size: 7.5pt;
+                    background: #fff; color: #000;
+                    text-align: right; vertical-align: middle;
+                }
+                .grand-total td.lbl { text-align: left; }
+
+                .num    { text-align: right !important; white-space: nowrap; }
+                .ctr    { text-align: center; }
+                .nowrap { white-space: nowrap; }
+            </style>
+
+            <table class="diario">
+                <colgroup>
+                    <col style="width:46px;"/>
+                    <col style="width:21%;"/>
+                    <col/>
+                    <col style="width:17%;"/>
+                    <col style="width:68px;"/>
+                    <col style="width:68px;"/>
+                </colgroup>
+
+                <!-- ── Repeating header (company info + column labels) ── -->
+                <thead>
+                    <tr>
+                        <td colspan="6" style="border:none; padding:0;">
+                            <div style="overflow:hidden; border-bottom:2px solid #000;
+                                        padding-bottom:5px; margin-bottom:4px;">
+                                <!-- Fixed-width float container so centering is always symmetric -->
+                                <t t-if="company.logo">
+                                    <div style="float:left; width:115px; text-align:left;">
+                                        <img t-att-src="image_data_uri(company.logo)"
+                                             style="max-width:115px; max-height:75px; object-fit:contain;"/>
+                                    </div>
+                                </t>
+                                <div t-attf-style="margin:0 #{115 if company.logo else 0}px 0 #{115 if company.logo else 0}px; text-align:center;">
+                                    <div style="font-size:13pt;font-weight:bold;letter-spacing:.5px;">LIBRO DIARIO</div>
+                                    <div style="font-size:10pt;font-weight:bold;line-height:1.5;">
+                                        <t t-esc="company.name"/>
+                                        <t t-if="company.street"><br/><t t-esc="company.street"/></t>
+                                        <t t-if="company.street2"><br/><t t-esc="company.street2"/></t>
+                                        <t t-if="company.vat"><br/>NIT:&#160;<t t-esc="company.vat"/></t>
+                                    </div>
+                                    <div style="font-size:7.5pt;margin-top:3px;">
+                                        Período:&#160;<b><t t-esc="docs._period_str()"/></b>
+                                        &#160;&#160;|&#160;&#160;
+                                        Partidas:&#160;<b><t t-esc="len(entries)"/></b>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="col-hdr">
+                        <th>Cuenta</th>
+                        <th>Nombre Cuenta</th>
+                        <th>Descripción</th>
+                        <th>Contacto</th>
+                        <th>Debe</th>
+                        <th>Haber</th>
+                    </tr>
+                </thead>
+
+                <!-- ── Sin datos ── -->
+                <t t-if="not entries">
+                    <tbody>
+                        <tr>
+                            <td colspan="6" style="text-align:center;padding:20px;color:#666;">
+                                Sin movimientos en el periodo seleccionado.
+                            </td>
+                        </tr>
+                    </tbody>
+                </t>
+
+                <!-- ── Partidas contables (one tbody per entry for natural flow) ── -->
+                <t t-foreach="entries" t-as="entry">
+                    <tbody>
+                        <tr class="entry-hdr">
+                            <td colspan="6">
+                                Partida No.&#160;<t t-esc="entry['no']"/>
+                                &#160;&#160;|&#160;&#160;
+                                <t t-esc="entry['date'].strftime('%d/%m/%Y') if entry['date'] else ''"/>
+                                &#160;&#160;|&#160;&#160;
+                                Póliza:&#160;<t t-esc="entry['name']"/>
+                                <t t-if="entry['ref']">
+                                    &#160;&#8212;&#160;<t t-esc="entry['ref']"/>
+                                </t>
+                            </td>
+                        </tr>
+                        <t t-foreach="entry['lines']" t-as="ln">
+                            <tr>
+                                <td class="nowrap"><t t-esc="ln['account_code']"/></td>
+                                <td><t t-esc="ln['account_name']"/></td>
+                                <td style="font-size:7.5pt;"><t t-esc="ln['label']"/></td>
+                                <td style="font-size:7pt;color:#334155;"><t t-esc="ln['partner']"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(ln['debit'])  if ln['debit']  else ''"/></td>
+                                <td class="num"><t t-esc="'{:,.2f}'.format(ln['credit']) if ln['credit'] else ''"/></td>
+                            </tr>
+                        </t>
+                        <tr class="entry-total">
+                            <td colspan="4" style="font-style:italic;color:#555;font-size:7pt;">
+                                <t t-set="parts" t-value="[x for x in [
+                                    entry['serie'] + ' ' + entry['ref_doc'] if (entry['serie'] or entry['ref_doc']) else '',
+                                    entry['ref'] if entry['ref'] and entry['ref'] != entry['ref_doc'] else '',
+                                    entry['narration'],
+                                ] if x]"/>
+                                <t t-esc="' | '.join(parts)"/>
+                            </td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(entry['entry_debit'])"/></td>
+                            <td class="num"><t t-esc="'{:,.2f}'.format(entry['entry_credit'])"/></td>
+                        </tr>
+                        <tr class="entry-spacer"><td colspan="6"></td></tr>
+                    </tbody>
+                </t>
+
+                <!-- ── Totales generales ── -->
+                <t t-if="entries">
+                    <tbody>
+                        <tr class="grand-total">
+                            <td colspan="4" class="lbl">TOTALES GENERALES</td>
+                            <td><t t-esc="'{:,.2f}'.format(total_debit)"/></td>
+                            <td><t t-esc="'{:,.2f}'.format(total_credit)"/></td>
+                        </tr>
+                    </tbody>
+                </t>
+            </table>
+
+            <!-- ── Certificación ── -->
+            <t t-if="entries">
+                <div style="margin-top:20px;font-size:7.5pt;line-height:1.7;text-align:justify;text-transform:uppercase;">
+                    El infrascrito perito contador
+                    <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b>
+                    registrado ante la Superintendencia de Administración Tributaria -SAT-
+                    con el número de registro
+                    <b><t t-esc="company.ktx_contador_id.vat or '_______________'"/></b>,
+                    <b>CERTIFICA:</b> Que los registros contenidos en el presente
+                    <b>LIBRO DIARIO</b>,
+                    propiedad de la empresa <b><t t-esc="company.name"/></b>,
+                    correspondientes a la fecha del
+                    <b><t t-esc="docs.date_from.strftime('%d') if docs.date_from else ''"/></b>
+                    al
+                    <b><t t-esc="docs.date_to.strftime('%d') if docs.date_to else ''"/></b>
+                    del mes de <b><t t-esc="mes"/></b> del año <b><t t-esc="anio"/></b>,
+                    PRESENTAN LA INFORMACIÓN RAZONABLE Y OBJETIVA SEGÚN LA DOCUMENTACIÓN QUE SE TUVO A LA VISTA.
+                </div>
+                <table style="width:100%;margin-top:48px;">
+                    <tr>
+                        <td style="width:45%;text-align:center;font-size:7.5pt;padding:0 8px;vertical-align:top;">
+                            <div style="border-top:1px solid #000;width:200px;margin:0 auto;padding-top:4px;">
+                                <b><t t-esc="company.ktx_contador_id.name or '___________________________'"/></b><br/>
+                                Perito Contador<br/>
+                                NIT:&#160;<t t-esc="company.ktx_contador_id.vat or '_______________'"/>
+                            </div>
+                        </td>
+                        <td style="width:10%;"/>
+                        <td style="width:45%;text-align:center;font-size:7.5pt;padding:0 8px;vertical-align:top;">
+                            <div style="border-top:1px solid #000;width:200px;margin:0 auto;padding-top:4px;">
+                                <b><t t-esc="company.ktx_rep_legal_id.name or '___________________________'"/></b><br/>
+                                Representante Legal<br/>
+                                NIT:&#160;<t t-esc="company.ktx_rep_legal_id.vat or '_______________'"/>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </t>
+        </t>
+    </template>
+</odoo>

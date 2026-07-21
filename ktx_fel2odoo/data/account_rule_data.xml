@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!--
+      Estandar de reglas de clasificacion de cuentas contables para Guatemala,
+      pensado para cubrir los gastos mas comunes de TODOS los sectores.
+
+      El destino se indica por NOMBRE de cuenta (account_name): al importar, se
+      resuelve contra el plan de la empresa buscando una cuenta de gasto cuyo
+      nombre contenga el texto (sin distinguir acentos). Asi funciona en
+      cualquier plan de cuentas de Guatemala (l10n_gt o personalizado), porque
+      los nombres en espanol son consistentes.
+
+      Son reglas GLOBALES (company_id vacio) y editables: el usuario puede
+      cambiar la cuenta destino, la palabra clave, el orden o desactivarlas.
+      noupdate="1" evita que una actualizacion del modulo pise sus cambios.
+
+      La palabra clave se busca como subcadena en la descripcion de la linea,
+      sin distinguir mayusculas ni acentos. El orden (sequence) hace que las
+      reglas mas especificas ganen a las genericas.
+    -->
+    <data noupdate="1">
+
+        <!-- ============ COMBUSTIBLES Y LUBRICANTES ============ -->
+        <record id="rule_gasolina" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">gasolina</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_diesel" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">diesel</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_combustible" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">combustible</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_gasohol" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">gasohol</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_lubricante" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">lubricante</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_gas_propano" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">gas propano</field>
+            <field name="account_name">Combustible</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ ENERGIA ELECTRICA ============ -->
+        <record id="rule_energia_electrica" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">energia electrica</field>
+            <field name="account_name">Energia Electrica</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_eegsa" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">eegsa</field>
+            <field name="account_name">Energia Electrica</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_energuate" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">energuate</field>
+            <field name="account_name">Energia Electrica</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_deocsa" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">deocsa</field>
+            <field name="account_name">Energia Electrica</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_deorsa" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">deorsa</field>
+            <field name="account_name">Energia Electrica</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ TELECOMUNICACIONES / INTERNET ============ -->
+        <record id="rule_telefono" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">telefon</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_internet" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">internet</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_telecomunicaciones" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">telecomunicaciones</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_cable" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">18</field>
+            <field name="keyword">cable</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ ALQUILERES / ARRENDAMIENTOS ============ -->
+        <record id="rule_alquiler_vehiculo" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">6</field>
+            <field name="keyword">alquiler de vehiculo</field>
+            <field name="account_name">Alquiler de Vehiculo</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_alquiler" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">alquiler</field>
+            <field name="account_name">Alquiler</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_arrendamiento" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">arrendamiento</field>
+            <field name="account_name">Alquiler</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ SERVICIOS PROFESIONALES ============ -->
+        <record id="rule_servicios_contables" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">6</field>
+            <field name="keyword">servicios contables</field>
+            <field name="account_name">Servicios Contables</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_contabilidad" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">8</field>
+            <field name="keyword">contabilidad</field>
+            <field name="account_name">Servicios Contables</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_auditoria" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">8</field>
+            <field name="keyword">auditoria</field>
+            <field name="account_name">Auditoria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_consultoria" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">8</field>
+            <field name="keyword">consultoria</field>
+            <field name="account_name">Consultoria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_servicios_legales" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">6</field>
+            <field name="keyword">servicios legales</field>
+            <field name="account_name">Servicios Legales</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_abogado" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">honorarios legales</field>
+            <field name="account_name">Servicios Legales</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_honorarios" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">honorarios</field>
+            <field name="account_name">Honorarios</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_servicios_profesionales" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">servicios profesionales</field>
+            <field name="account_name">Honorarios</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ PAPELERIA Y UTILES DE OFICINA ============ -->
+        <record id="rule_papeleria" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">papeleria</field>
+            <field name="account_name">Papeleria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_utiles_oficina" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">utiles de oficina</field>
+            <field name="account_name">Papeleria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_toner" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">toner</field>
+            <field name="account_name">Papeleria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_tinta" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">tinta</field>
+            <field name="account_name">Papeleria</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_enseres" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">enseres</field>
+            <field name="account_name">Utiles y Enseres</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ PUBLICIDAD Y MERCADEO ============ -->
+        <record id="rule_publicidad" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">publicidad</field>
+            <field name="account_name">Publicidad</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_pauta" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">pauta</field>
+            <field name="account_name">Publicidad</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_mercadeo" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">mercadeo</field>
+            <field name="account_name">Publicidad</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_branding" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">branding</field>
+            <field name="account_name">Branding</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ ALIMENTACION / ATENCIONES ============ -->
+        <record id="rule_alimentacion" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">alimentacion</field>
+            <field name="account_name">Alimentacion</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_refaccion" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">refaccion</field>
+            <field name="account_name">Alimentacion</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_catering" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">catering</field>
+            <field name="account_name">Alimentacion</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_atencion_clientes" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">atencion a clientes</field>
+            <field name="account_name">Atencion a Clientes</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ VIAJES Y TRANSPORTE ============ -->
+        <record id="rule_viatico" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">viatico</field>
+            <field name="account_name">Viaticos</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_hospedaje" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">hospedaje</field>
+            <field name="account_name">Viaticos</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_hotel" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">hotel</field>
+            <field name="account_name">Viaticos</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_transporte" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">transporte</field>
+            <field name="account_name">Transporte</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_flete" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">flete</field>
+            <field name="account_name">Transporte</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_mensajeria" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">mensajeria</field>
+            <field name="account_name">Transporte</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_encomienda" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">encomienda</field>
+            <field name="account_name">Transporte</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ SEGUROS ============ -->
+        <record id="rule_seguro" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">seguro</field>
+            <field name="account_name">Seguros</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_poliza" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">poliza</field>
+            <field name="account_name">Seguros</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_fianza" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">fianza</field>
+            <field name="account_name">Seguros</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ GASTOS BANCARIOS / FINANCIEROS ============ -->
+        <record id="rule_gastos_bancarios" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">comision bancaria</field>
+            <field name="account_name">Gastos Bancarios</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_gastos_bancarios2" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">gastos bancarios</field>
+            <field name="account_name">Gastos Bancarios</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ MANTENIMIENTO Y REPARACIONES ============ -->
+        <record id="rule_mantenimiento" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">mantenimiento</field>
+            <field name="account_name">Mantenimiento</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_reparacion" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">reparacion</field>
+            <field name="account_name">Mantenimiento</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_repuesto" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">repuesto</field>
+            <field name="account_name">Mantenimiento</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ UNIFORMES ============ -->
+        <record id="rule_uniforme" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">12</field>
+            <field name="keyword">uniforme</field>
+            <field name="account_name">Uniformes</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ SERVICIOS CONTRATADOS / SOFTWARE / LIMPIEZA / SEGURIDAD ============ -->
+        <record id="rule_software" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">14</field>
+            <field name="keyword">software</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_licencia" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">licencia de software</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_suscripcion" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">suscripcion</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_hosting" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">hosting</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_limpieza" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">limpieza</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_seguridad" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">seguridad y vigilancia</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_vigilancia" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">vigilancia</field>
+            <field name="account_name">Servicios Contratados</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ IMPUESTOS ============ -->
+        <record id="rule_idp" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">8</field>
+            <field name="keyword">idp</field>
+            <field name="account_name">IDP</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_tasa_municipal" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">8</field>
+            <field name="keyword">tasa municipal</field>
+            <field name="account_name">Tasa Municipal</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_iusi" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">iusi</field>
+            <field name="account_name">Otros Impuestos</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_ornato" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">10</field>
+            <field name="keyword">ornato</field>
+            <field name="account_name">Otros Impuestos</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ COSTO DE VENTAS / MERCADERIA / MATERIA PRIMA ============ -->
+        <record id="rule_mercaderia" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">18</field>
+            <field name="keyword">mercaderia</field>
+            <field name="account_name">Costos de Ventas</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        <record id="rule_materia_prima" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">18</field>
+            <field name="keyword">materia prima</field>
+            <field name="account_name">Costos de Ventas</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <!-- ============ HERRAMIENTAS ============ -->
+        <record id="rule_herramienta" model="ktx.fel2odoo.account.rule">
+            <field name="sequence">16</field>
+            <field name="keyword">herramienta</field>
+            <field name="account_name">Herramienta</field>
+            <field name="operation">purchase</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+    </data>
+</odoo>

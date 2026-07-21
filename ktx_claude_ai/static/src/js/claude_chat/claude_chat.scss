@@ -1,0 +1,116 @@
+.o_claude_chat {
+    background-color: var(--o-view-background-color, #fff);
+
+    .o_claude_sidebar {
+        width: 260px;
+        min-width: 220px;
+        border-right: 1px solid var(--border-color, #dee2e6);
+        background-color: #f8f9fa;
+
+        .o_claude_conv_item {
+            cursor: pointer;
+            border-radius: 4px;
+            margin: 2px 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &:hover {
+                background-color: #ececec;
+            }
+            &.o_active {
+                background-color: #e0e0ff;
+                font-weight: 600;
+            }
+        }
+    }
+
+    .o_claude_main {
+        min-width: 0;
+    }
+
+    .o_claude_thread {
+        background-color: #fafafa;
+    }
+
+    .o_claude_bubble {
+        max-width: 75%;
+        padding: 8px 12px;
+        border-radius: 12px;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+    .o_user_bubble {
+        background-color: #4a4af0;
+        color: #fff;
+        border-bottom-right-radius: 2px;
+    }
+
+    .o_assistant_bubble {
+        background-color: #fff;
+        border: 1px solid #e0e0e0;
+        border-bottom-left-radius: 2px;
+    }
+
+    .o_claude_typing {
+        opacity: 0.7;
+    }
+
+    .o_claude_thinking {
+        font-size: 0.85em;
+        padding-left: 4px;
+    }
+
+    .o_claude_tool {
+        display: inline-block;
+        background-color: #eef6ee;
+        border: 1px solid #cde3cd;
+        border-radius: 8px;
+        font-size: 0.9em;
+
+        &.o_tool_error {
+            background-color: #fdeeee;
+            border-color: #efcaca;
+        }
+    }
+
+    .o_claude_error {
+        background-color: #fdeeee;
+        border: 1px solid #efcaca;
+        border-radius: 8px;
+        display: inline-block;
+    }
+
+    .o_claude_composer textarea {
+        resize: none;
+    }
+
+    // Markdown-rendered assistant bubble content.
+    .o_claude_md {
+        white-space: normal;
+
+        p { margin: 0 0 6px; }
+        p:last-child { margin-bottom: 0; }
+        ul, ol { margin: 4px 0 6px 18px; padding: 0; }
+        li { margin-bottom: 2px; }
+        code {
+            background: #f3f4f6;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-size: 0.88em;
+        }
+        pre {
+            background: #f3f4f6;
+            padding: 8px 10px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 6px 0;
+            code { background: none; padding: 0; }
+        }
+        h3, h4, h5, h6 { margin: 8px 0 4px; font-size: 1em; font-weight: 700; }
+        a { color: #4f46e5; text-decoration: underline; }
+        strong { font-weight: 700; }
+        em { font-style: italic; }
+    }
+}

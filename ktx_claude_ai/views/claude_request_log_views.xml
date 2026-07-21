@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_claude_request_log_list" model="ir.ui.view">
+        <field name="name">claude.request.log.list</field>
+        <field name="model">claude.request.log</field>
+        <field name="arch" type="xml">
+            <list string="Bitácora de Claude" create="false">
+                <field name="create_date"/>
+                <field name="user_id"/>
+                <field name="source"/>
+                <field name="tool_name"/>
+                <field name="model_name"/>
+                <field name="record_ids" optional="hide"/>
+                <field name="success" widget="boolean_toggle" readonly="1"/>
+                <field name="duration_ms" optional="hide"/>
+                <field name="error_message" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claude_request_log_form" model="ir.ui.view">
+        <field name="name">claude.request.log.form</field>
+        <field name="model">claude.request.log</field>
+        <field name="arch" type="xml">
+            <form string="Entrada de bitácora" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date"/>
+                            <field name="user_id"/>
+                            <field name="source"/>
+                            <field name="success"/>
+                        </group>
+                        <group>
+                            <field name="tool_name"/>
+                            <field name="model_name"/>
+                            <field name="record_ids"/>
+                            <field name="duration_ms"/>
+                        </group>
+                    </group>
+                    <group string="Error" invisible="success">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_claude_request_log" model="ir.actions.act_window">
+        <field name="name">Bitácora de Claude</field>
+        <field name="res_model">claude.request.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_claude_enabled_model_list" model="ir.ui.view">
+        <field name="name">claude.enabled.model.list</field>
+        <field name="model">claude.enabled.model</field>
+        <field name="arch" type="xml">
+            <list string="Modelos habilitados" editable="bottom">
+                <field name="model_id" options="{'no_create': True}"/>
+                <field name="model_name"/>
+                <field name="allow_read"/>
+                <field name="allow_create"/>
+                <field name="allow_write"/>
+                <field name="allow_unlink"/>
+                <field name="allow_action"/>
+                <field name="allowed_methods" optional="hide"/>
+                <field name="active" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_claude_enabled_model_form" model="ir.ui.view">
+        <field name="name">claude.enabled.model.form</field>
+        <field name="model">claude.enabled.model</field>
+        <field name="arch" type="xml">
+            <form string="Modelo habilitado">
+                <sheet>
+                    <group>
+                        <field name="model_id" options="{'no_create': True}"/>
+                        <field name="model_name"/>
+                        <field name="active"/>
+                    </group>
+                    <group string="Operaciones permitidas">
+                        <field name="allow_read"/>
+                        <field name="allow_create"/>
+                        <field name="allow_write"/>
+                        <field name="allow_unlink"/>
+                        <field name="allow_action"/>
+                        <field name="allowed_methods"
+                               placeholder="action_post,button_draft,button_cancel"/>
+                    </group>
+                    <group string="Notas">
+                        <field name="notes" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_claude_enabled_model" model="ir.actions.act_window">
+        <field name="name">Modelos habilitados</field>
+        <field name="res_model">claude.enabled.model</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Habilita modelos para Claude</p>
+            <p>Elige qué modelos de Odoo puede consultar y manipular Claude, y con
+               qué operaciones.</p>
+        </field>
+    </record>
+</odoo>

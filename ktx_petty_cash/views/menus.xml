@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_ktx_petty_cash_root" name="Caja Chica"
+        web_icon="ktx_petty_cash,static/description/icon.png"
+        sequence="91" groups="ktx_petty_cash.group_petty_cash_user"/>
+
+    <menuitem id="menu_ktx_petty_cash_funds" name="Mis Cajas Chicas"
+        parent="menu_ktx_petty_cash_root"
+        action="action_ktx_petty_cash_fund" sequence="5"/>
+
+    <menuitem id="menu_ktx_petty_cash_staging" name="Gastos por Reembolsar"
+        parent="menu_ktx_petty_cash_root"
+        action="action_ktx_petty_cash_staging" sequence="10"/>
+
+    <!-- Operaciones submenu -->
+    <menuitem id="menu_ktx_petty_cash_operations" name="Operaciones"
+        parent="menu_ktx_petty_cash_root" sequence="20"/>
+
+    <menuitem id="menu_ktx_petty_cash_moves" name="Movimientos"
+        parent="menu_ktx_petty_cash_operations"
+        action="action_ktx_petty_cash_move" sequence="10"/>
+
+    <menuitem id="menu_ktx_petty_cash_replenishments" name="Reposiciones"
+        parent="menu_ktx_petty_cash_operations"
+        action="action_ktx_petty_cash_replenishment" sequence="20"/>
+
+    <!-- Configuración submenu -->
+    <menuitem id="menu_ktx_petty_cash_config_root" name="Configuración"
+        parent="menu_ktx_petty_cash_root" sequence="90"
+        groups="ktx_petty_cash.group_petty_cash_manager"/>
+
+    <menuitem id="menu_ktx_petty_cash_config_settings" name="Ajustes"
+        parent="menu_ktx_petty_cash_config_root"
+        action="action_ktx_petty_cash_config_settings" sequence="1"/>
+</odoo>

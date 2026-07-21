@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_account_rule_view_list" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.account.rule.list</field>
+        <field name="model">ktx.fel2odoo.account.rule</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="keyword"/>
+                <field name="account_name"/>
+                <field name="account_code" optional="hide"/>
+                <field name="account_id"/>
+                <field name="operation"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_account_rule_action" model="ir.actions.act_window">
+        <field name="name">Reglas de cuentas</field>
+        <field name="res_model">ktx.fel2odoo.account.rule</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Cree reglas de clasificacion</p>
+            <p>El modulo ya trae un estandar de reglas para Guatemala. Si una
+               palabra clave aparece en la descripcion de la linea, se asigna la
+               cuenta indicada (por nombre, codigo o cuenta concreta). Si no hay
+               regla, se usa la cuenta que ese proveedor uso historicamente.</p>
+        </field>
+    </record>
+
+</odoo>

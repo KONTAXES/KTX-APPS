@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_res_partner_form" model="ir.ui.view">
+        <field name="name">res.partner.form.ktx.fel2odoo</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <!-- Se inserta ANTES del primer botón inteligente para que quede en
+                 la fila visible (junto a los primeros) y no colapse dentro del
+                 menú "Más". -->
+            <xpath expr="//div[@name='button_box']/button[1]" position="before">
+                <field name="ktx_fel_nit_button_visible" invisible="1"/>
+                <button name="action_ktx_fel_consultar_nit"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-id-card-o"
+                        invisible="not ktx_fel_nit_button_visible">
+                    <div class="o_stat_info">
+                        <span class="o_stat_text">NIT</span>
+                        <span class="o_stat_text">FEL2ODOO</span>
+                    </div>
+                </button>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

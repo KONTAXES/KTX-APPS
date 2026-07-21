@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="ktx_fel2odoo_log_view_list" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.log.list</field>
+        <field name="model">ktx.fel2odoo.log</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'error'"
+                  decoration-success="state == 'success'">
+                <field name="create_date"/>
+                <field name="config_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="tipo_operacion"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="docs_found"/>
+                <field name="docs_skipped"/>
+                <field name="invoices_created"/>
+                <field name="invoices_confirmed"/>
+                <field name="state" widget="badge"
+                       decoration-danger="state == 'error'"
+                       decoration-success="state == 'success'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_log_view_form" model="ir.ui.view">
+        <field name="name">ktx.fel2odoo.log.form</field>
+        <field name="model">ktx.fel2odoo.log</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_open_session" type="object"
+                            string="Ver sesion de importacion" class="btn-secondary"
+                            invisible="not session_id"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="config_id"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="tipo_operacion"/>
+                            <field name="session_id"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="docs_found"/>
+                            <field name="docs_skipped"/>
+                            <field name="invoices_created"/>
+                            <field name="invoices_confirmed"/>
+                        </group>
+                    </group>
+                    <group string="Detalle">
+                        <field name="message" nolabel="1"/>
+                    </group>
+                    <group string="Respuesta del proveedor (diagnostico)">
+                        <field name="raw_response" nolabel="1" widget="text"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="ktx_fel2odoo_log_action" model="ir.actions.act_window">
+        <field name="name">Bitacora de sincronizacion</field>
+        <field name="res_model">ktx.fel2odoo.log</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+</odoo>

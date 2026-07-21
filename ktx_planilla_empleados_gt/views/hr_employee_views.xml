@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Pestaña «Planilla GT» en la ficha del empleado -->
+    <record id="view_hr_employee_form_ktx_pl" model="ir.ui.view">
+        <field name="name">hr.employee.form.ktx.planilla</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_ktx_pl_ver_asistencias" type="object"
+                        class="oe_stat_button" icon="fa-calendar-check-o"
+                        groups="ktx_planilla_empleados_gt.group_planilla_user">
+                    <field name="ktx_pl_asistencia_count" widget="statinfo"
+                           string="Asistencias"/>
+                </button>
+                <button name="action_ktx_pl_ver_lineas" type="object"
+                        class="oe_stat_button" icon="fa-file-text-o"
+                        groups="ktx_planilla_empleados_gt.group_planilla_user">
+                    <field name="ktx_pl_linea_count" widget="statinfo"
+                           string="Planillas"/>
+                </button>
+                <button name="action_ktx_pl_ver_liquidaciones" type="object"
+                        class="oe_stat_button" icon="fa-handshake-o"
+                        groups="ktx_planilla_empleados_gt.group_planilla_officer"
+                        invisible="ktx_pl_liquidacion_count == 0">
+                    <field name="ktx_pl_liquidacion_count" widget="statinfo"
+                           string="Liquidaciones"/>
+                </button>
+            </div>
+            <notebook position="inside">
+                <page string="Planilla GT" name="ktx_planilla"
+                      groups="hr.group_hr_user">
+                    <group>
+                        <group string="Remuneración">
+                            <field name="ktx_pl_currency_id" invisible="1"/>
+                            <field name="ktx_pl_sueldo_base"/>
+                            <field name="ktx_pl_bonificacion_incentivo"
+                                   placeholder="Vacío = valor de compañía (Q250)"/>
+                            <field name="ktx_pl_frecuencia_pago"/>
+                            <field name="ktx_pl_fecha_inicio"/>
+                            <field name="ktx_pl_ubicacion"/>
+                        </group>
+                        <group string="Identificación Fiscal y Social">
+                            <field name="ktx_pl_nit"/>
+                            <field name="ktx_pl_afiliacion_igss"/>
+                            <field name="ktx_pl_aplica_igss"/>
+                            <field name="ktx_pl_aplica_isr"/>
+                            <field name="ktx_pl_prestaciones_universales"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Jornada y Horario">
+                            <field name="ktx_pl_jornada"/>
+                            <field name="ktx_pl_horas_dia" widget="float_time"/>
+                            <field name="ktx_pl_hora_entrada" widget="float_time"/>
+                            <field name="ktx_pl_hora_salida" widget="float_time"/>
+                            <field name="ktx_pl_almuerzo_horas" widget="float_time"/>
+                        </group>
+                        <group string="Datos Bancarios (para el recibo)">
+                            <field name="ktx_pl_banco"/>
+                            <field name="ktx_pl_cuenta_bancaria"/>
+                            <field name="ktx_pl_tipo_cuenta"/>
+                        </group>
+                        <group string="Cobro / Pago por Cuenta Ajena">
+                            <field name="ktx_pl_cuenta_ajena"/>
+                            <field name="ktx_pl_cuenta_ajena_partner_id"
+                                   invisible="not ktx_pl_cuenta_ajena"
+                                   required="ktx_pl_cuenta_ajena"/>
+                            <field name="ktx_pl_cuenta_ajena_monto"
+                                   invisible="not ktx_pl_cuenta_ajena"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+
+</odoo>

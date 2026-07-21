@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- 1) Tamaño de papel: Carta, márgenes en 0. -->
+    <record id="paperformat_ktx5_carta" model="report.paperformat">
+        <field name="name">KTX5 - Carta</field>
+        <field name="format">custom</field>
+        <field name="page_height">279</field>
+        <field name="page_width">216</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">0</field>
+        <field name="margin_bottom">0</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">0</field>
+    </record>
+
+    <!-- 2) Acción de reporte. El id externo DEBE ser action_report_ktx5_carta. -->
+    <record id="action_report_ktx5_carta" model="ir.actions.report">
+        <field name="name">Formato FEL GT (KTX5) - Carta</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_fel2odoo_format_4.report_ktx5_carta</field>
+        <field name="report_file">ktx_fel2odoo_format_4.report_ktx5_carta</field>
+        <field name="print_report_name">'FEL_Formato_%s' % (object.name or object.id)</field>
+        <field name="paperformat_id" ref="paperformat_ktx5_carta"/>
+    </record>
+
+    <!-- Media Carta: mismo diseño minimalista, en media hoja. Reutiliza la
+         MISMA plantilla report_ktx5_carta (refluye al ancho menor). -->
+
+    <record id="action_report_ktx5_media_carta" model="ir.actions.report">
+        <field name="name">Formato FEL GT (KTX5) - Media Carta</field>
+        <field name="model">account.move</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">ktx_fel2odoo_format_4.report_ktx5_carta</field>
+        <field name="report_file">ktx_fel2odoo_format_4.report_ktx5_carta</field>
+        <field name="print_report_name">'FEL_Formato_%s' % (object.name or object.id)</field>
+        <field name="paperformat_id" ref="paperformat_ktx5_carta"/>
+    </record>
+
+    <!-- Ticket (72mm termica): el minimalismo a escala de Carta no aplica a una
+         termica de 72mm; se reutiliza la plantilla de ticket del modulo base
+         (report_ktx1_ticket), una sola columna estilo POS. -->
+
+    <!-- 3) Plantilla QWeb con el diseño KTX 5 (minimalista / carta). -->
+    <template id="report_ktx5_carta">
+        <t t-call="web.html_container">
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+            <t t-foreach="docs" t-as="o">
+                <t t-set="dte" t-value="o._ktx_fel_get_format_data()"/>
+                <t t-set="cfg" t-value="o._ktx_fel_format_company_data()"/>
+                <t t-set="qr_src" t-value="o._ktx_fel_format_qr_img_src(dte['qr_url'])"/>
+                <t t-set="accent" t-value="cfg['accent_color'] or '#111827'"/>
+                <t t-set="em" t-value="dte['emisor']"/>
+                <t t-set="rc" t-value="dte['receptor']"/>
+                <t t-set="cert" t-value="dte['certificacion']"/>
+
+                <div class="ktx5">
+                    <style>
+                        .ktx5, .ktx5 * { font-family: Arial, Helvetica, sans-serif; box-sizing: border-box; }
+                        .ktx5 { color:#111827; font-size:11px; padding:18mm 16mm; }
+                        .ktx5 table { border-collapse: collapse; width:100%; }
+                        .ktx5 .up { text-transform:uppercase; letter-spacing:2px; color:#a3a9b4; font-size:10px; }
+                        .ktx5 .mut { color:#8a909c; }
+                    </style>
+
+                    <!-- HEADER -->
+                    <table>
+                        <tr>
+                            <td style="vertical-align:top; width:58%;">
+                                <img t-if="cfg['logo']" t-att-src="image_data_uri(cfg['logo'])"
+                                     style="max-height:50px; max-width:200px; object-fit:contain;"/>
+                                <div style="font-size:14px; font-weight:600; margin-top:14px;">
+                                    <t t-esc="em['nombre'] or em['nombre_comercial']"/>
+                                </div>
+                                <div class="mut" style="font-size:11px; margin-top:5px; line-height:1.7;">
+                                    NIT <t t-esc="em['nit']"/> · <t t-esc="em['direccion']"/><t t-if="em['municipio']">, <t t-esc="em['municipio']"/></t><br/>
+                                    <t t-if="cfg['social_phone']"><t t-esc="cfg['social_phone']"/> · </t><t t-esc="cfg['social_email'] or em['correo']"/>
+                                </div>
+                            </td>
+                            <td style="vertical-align:top; text-align:right;">
+                                <div class="up"><t t-esc="dte['tipo_documento_label']"/></div>
+                                <div style="font-size:31px; font-weight:300; margin-top:5px; line-height:1;"><t t-esc="cert['numero']"/></div>
+                                <div class="mut" style="font-size:11px; margin-top:7px;">Serie <t t-esc="cert['serie']"/> · <t t-esc="dte['moneda']"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div t-attf-style="height:1px; background:{{accent}}; margin:24px 0;"></div>
+
+                    <!-- META -->
+                    <table>
+                        <tr>
+                            <td style="width:50%; vertical-align:top; padding-right:20px;">
+                                <div class="up">Facturado a</div>
+                                <div style="font-size:14px; font-weight:600; margin-top:7px;"><t t-esc="rc['nombre']"/></div>
+                                <div class="mut" style="font-size:11.5px; margin-top:4px; line-height:1.7;">
+                                    NIT <t t-esc="rc['id']"/> · <t t-esc="rc['direccion'] or 'Ciudad'"/>
+                                </div>
+                            </td>
+                            <td style="width:50%; vertical-align:top;">
+                                <div class="up">Emitida &amp; certificada</div>
+                                <table style="margin-top:7px; font-size:11.5px; color:#3f4653;">
+                                    <tr><td class="mut" style="padding:2px 12px 2px 0;">Emisión</td><td><t t-esc="dte['fecha_emision']"/></td></tr>
+                                    <tr><td class="mut" style="padding:2px 12px 2px 0;">Certificación</td><td><t t-esc="cert['fecha']"/></td></tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- ITEMS -->
+                    <!-- Carta = area de lineas amplia (min-height); Media Carta = compacta. -->
+                    <div t-attf-style="margin-top:38px; #{'min-height:80mm;' if cfg['paper_size'] == 'carta' else ''}">
+                    <table style="font-size:12px;">
+                        <thead>
+                            <tr style="color:#a3a9b4;">
+                                <th style="text-align:left; padding:0 0 10px; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; font-weight:600; border-bottom:1px solid #e5e7eb; color:#a3a9b4;">Descripción</th>
+                                <th style="text-align:center; padding:0 0 10px; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; font-weight:600; border-bottom:1px solid #e5e7eb; width:64px; color:#a3a9b4;">Cant.</th>
+                                <th style="text-align:right; padding:0 0 10px; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; font-weight:600; border-bottom:1px solid #e5e7eb; width:100px; color:#a3a9b4;">P. Unit.</th>
+                                <th style="text-align:right; padding:0 0 10px; font-size:10px; letter-spacing:1.6px; text-transform:uppercase; font-weight:600; border-bottom:1px solid #e5e7eb; width:110px; color:#a3a9b4;">Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="dte['items']" t-as="it" style="border-bottom:1px solid #f0f1f4; color:#111827;">
+                                <td style="padding:16px 0; vertical-align:top; line-height:1.55; color:#111827;">
+                                    <span style="font-weight:600;"><t t-esc="it['descripcion']"/></span>
+                                </td>
+                                <td style="text-align:center; padding:16px 0; vertical-align:top; color:#111827;"><t t-esc="'%g' % it['cantidad']"/></td>
+                                <td style="text-align:right; padding:16px 0; vertical-align:top; color:#111827;"><t t-esc="'%.2f' % it['precio_unitario']"/></td>
+                                <td style="text-align:right; padding:16px 0; vertical-align:top; font-weight:600; color:#111827;"><t t-esc="'%.2f' % it['total']"/></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <!-- TOTALS -->
+                    <table style="margin-top:22px;">
+                        <tr>
+                            <td style="width:62%;"></td>
+                            <td style="width:38%; vertical-align:top;">
+                                <table style="font-size:12px;">
+                                    <tr>
+                                        <td class="mut" style="padding:6px 0;">Subtotal</td>
+                                        <td style="padding:6px 0; text-align:right; white-space:nowrap;"><t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['gran_total']"/></td>
+                                    </tr>
+                                    <tr t-foreach="dte['total_impuestos']" t-as="imp" style="border-bottom:1px solid #e5e7eb;">
+                                        <td class="mut" style="padding:6px 0;"><t t-esc="imp['nombre_corto']"/> (incluido)</td>
+                                        <td style="padding:6px 0; text-align:right; white-space:nowrap;"><t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % imp['monto']"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding:14px 0 0;"><span class="up">Total a pagar</span></td>
+                                        <td t-attf-style="padding:14px 0 0; text-align:right; font-size:24px; font-weight:600; white-space:nowrap; color:{{accent}};"><t t-esc="dte['moneda']"/> <t t-esc="'%.2f' % dte['gran_total']"/></td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- LETRAS + FRASES -->
+                    <table style="margin-top:32px; border-top:1px solid #e5e7eb; padding-top:18px;">
+                        <tr>
+                            <td style="vertical-align:middle; padding-top:18px;">
+                                <div class="up">Total en letras</div>
+                                <div style="font-size:12.5px; margin-top:5px;"><t t-esc="dte['total_en_letras']"/></div>
+                            </td>
+                            <td t-if="dte['frases']" style="vertical-align:middle; text-align:right; padding-top:18px;">
+                                <t t-foreach="dte['frases']" t-as="fr">
+                                    <span t-if="fr['texto']" style="display:inline-block; font-size:9px; letter-spacing:0.6px; color:#5b6472; border:1px solid #e5e7eb; padding:6px 12px; border-radius:999px; margin:0 0 4px 6px;">
+                                        <t t-esc="fr['texto']"/>
+                                    </span>
+                                </t>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <!-- CERTIFICATION -->
+                    <table style="margin-top:28px;">
+                        <tr>
+                            <td style="width:84px; vertical-align:middle;">
+                                <img t-if="qr_src" t-att-src="qr_src" style="width:72px; height:72px;"/>
+                            </td>
+                            <td style="vertical-align:middle; padding-left:16px;">
+                                <div style="font-size:10px; color:#3f4653; line-height:1.7;">Documento Tributario Electrónico · Certificador <t t-esc="cert['nombre_certificador']"/> — NIT <t t-esc="cert['nit_certificador']"/></div>
+                                <div class="mut" style="font-size:10px; line-height:1.7;">Autorización <t t-esc="cert['uuid']"/> · Certificado <t t-esc="cert['fecha']"/></div>
+                                <div t-if="cfg['show_footer'] and cfg['footer_description']" class="mut" style="font-size:10px; margin-top:4px; line-height:1.55;"><t t-esc="cfg['footer_description']"/></div>
+                            </td>
+                        </tr>
+                    </table>
+
+                </div>
+            </t>
+        </t>
+    </template>
+
+</odoo>

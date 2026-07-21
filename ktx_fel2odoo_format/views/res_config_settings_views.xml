@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_ktx_fel_format" model="ir.ui.view">
+        <field name="name">res.config.settings.ktx.fel2odoo.format</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="Formato FEL GT" name="ktx_fel2odoo_format"
+                     logo="/ktx_fel2odoo_format/static/description/icon.png">
+                    <block title="Formato FEL GT (KTX)" name="ktx_fel_format_block">
+                        <setting string="Imprimir FEL con Formato"
+                                 help="Activa el boton 'Imprimir FEL' en las facturas de venta que tengan un XML de DTE FEL adjunto (importado o emitido). Genera un PDF con formato de factura y codigo QR de verificacion de la SAT.">
+                            <field name="ktx_fel_format_enabled"/>
+                        </setting>
+                        <div class="alert alert-info mt-2" role="alert">
+                            Requiere que la factura tenga el XML del DTE adjunto
+                            (proviene de Importacion Masiva XML-SAT o de FEL2Odoo).
+                            No sustituye al documento oficial: es una representacion
+                            grafica de apoyo, con el mismo QR de verificacion de la SAT.
+                        </div>
+                    </block>
+
+                    <block title="Logo" name="ktx_fel_format_logo_block"
+                           invisible="not ktx_fel_format_enabled">
+                        <setting string="Formato/Apariencia" help="Diseno visual de la factura. Se pueden agregar mas apariencias instalando modulos complementarios (KTX3, KTX4...).">
+                            <field name="ktx_fel_format_style"/>
+                        </setting>
+                        <setting string="Tamano de papel"
+                                 help="Carta reserva bastante espacio en el area de lineas (formulario amplio); Media Carta es compacta (solo las lineas). El tamano Ticket (impresora termica) solo esta disponible con la apariencia KTX 1.">
+                            <field name="ktx_fel_format_paper_size"/>
+                        </setting>
+                        <setting string="Color de acento" help="Color principal del formato (titulo, barras de tablas, totales).">
+                            <field name="ktx_fel_format_accent_color" widget="color"/>
+                        </setting>
+                        <setting string="Posicion del logo" help="En que lado del encabezado se muestra el logo grande.">
+                            <field name="ktx_fel_format_logo_position" widget="radio" options="{'horizontal': true}"/>
+                        </setting>
+                        <setting string="Logo a usar" help="Usa el logo de la empresa o sube uno distinto solo para este formato.">
+                            <field name="ktx_fel_format_logo_source" widget="radio" options="{'horizontal': true}"/>
+                            <div class="mt-2" invisible="ktx_fel_format_logo_source != 'custom'">
+                                <field name="ktx_fel_format_logo" widget="image"
+                                       filename="ktx_fel_format_logo_filename"
+                                       options="{'size': [0, 120]}"/>
+                                <field name="ktx_fel_format_logo_filename" invisible="1"/>
+                            </div>
+                        </setting>
+                    </block>
+
+                    <block title="Imagenes" name="ktx_fel_format_images_block"
+                           invisible="not ktx_fel_format_enabled">
+                        <setting string="Imagen lateral"
+                                 help="Opcional. Si se sube, aparece como un panel decorativo en el lateral de la pagina. Si no se sube, no se reserva espacio.">
+                            <field name="ktx_fel_format_side_image" widget="image"
+                                   filename="ktx_fel_format_side_image_filename"
+                                   options="{'size': [0, 120]}"/>
+                            <field name="ktx_fel_format_side_image_filename" invisible="1"/>
+                        </setting>
+                        <setting string="Imagen de fondo (marca de agua)"
+                                 help="Opcional. Cubre toda la pagina de fondo, muy tenue, como marca de agua. Si no se sube, la pagina queda blanca.">
+                            <field name="ktx_fel_format_background_image" widget="image"
+                                   filename="ktx_fel_format_background_filename"
+                                   options="{'size': [0, 120]}"/>
+                            <field name="ktx_fel_format_background_filename" invisible="1"/>
+                        </setting>
+                    </block>
+
+                    <block title="Membrete / Pie de pagina" name="ktx_fel_format_footer_block"
+                           invisible="not ktx_fel_format_enabled">
+                        <setting string="Mostrar membrete/pie de pagina"
+                                 help="Agrega una descripcion adicional y/o redes sociales debajo del detalle de la factura.">
+                            <field name="ktx_fel_format_show_footer"/>
+                        </setting>
+                        <div invisible="not ktx_fel_format_show_footer">
+                            <setting string="Descripcion adicional">
+                                <field name="ktx_fel_format_footer_description" placeholder="Ej. Horario de atencion, eslogan, leyenda..."/>
+                            </setting>
+                            <setting string="Sitio web">
+                                <field name="ktx_fel_format_social_website" placeholder="www.miempresa.com"/>
+                            </setting>
+                            <setting string="Telefono">
+                                <field name="ktx_fel_format_social_phone"/>
+                            </setting>
+                            <setting string="Correo de contacto">
+                                <field name="ktx_fel_format_social_email"/>
+                            </setting>
+                            <setting string="Facebook">
+                                <field name="ktx_fel_format_social_facebook" placeholder="facebook.com/miempresa"/>
+                            </setting>
+                            <setting string="Instagram">
+                                <field name="ktx_fel_format_social_instagram" placeholder="@miempresa"/>
+                            </setting>
+                            <setting string="X / Twitter">
+                                <field name="ktx_fel_format_social_x" placeholder="@miempresa"/>
+                            </setting>
+                        </div>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ktx_login_theme_system,ktx.login.theme.system,model_ktx_login_theme,base.group_system,1,1,1,1
+access_ktx_login_asset_system,ktx.login.asset.system,model_ktx_login_asset,base.group_system,1,1,1,1
+access_ktx_login_theme_import_wizard_system,ktx.login.theme.import.wizard.system,model_ktx_login_theme_import_wizard,base.group_system,1,1,1,1

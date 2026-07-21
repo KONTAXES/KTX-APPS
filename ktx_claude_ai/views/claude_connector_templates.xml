@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Consent page shown during the OAuth authorize step. Standalone HTML
+         (no asset bundles) so it renders fast and works without the website
+         module. -->
+    <template id="oauth_consent" name="Claude: autorizar conector">
+        <html lang="es">
+            <head>
+                <title>Autorizar Claude</title>
+                <meta charset="utf-8"/>
+                <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            </head>
+            <body style="font-family:system-ui,Arial,sans-serif;background:#f4f4f8;margin:0;">
+                <div style="max-width:460px;margin:8vh auto;background:#fff;padding:28px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.08);">
+                    <h2 style="margin-top:0;">Conectar con Claude</h2>
+                    <p>
+                        <strong t-esc="client_name"/> solicita acceso a esta Odoo como
+                        <strong t-esc="user_name"/>.
+                    </p>
+                    <p style="color:#555;">
+                        Si autorizas, Claude podrá usar las herramientas habilitadas
+                        (buscar, crear, modificar, eliminar y cambiar estados) con
+                        <em>tus</em> permisos de Odoo. Las acciones quedan registradas
+                        en la bitácora.
+                    </p>
+                    <form method="post" action="/claude/oauth/authorize/decision">
+                        <input type="hidden" name="csrf_token" t-att-value="csrf_token"/>
+                        <input type="hidden" name="client_id" t-att-value="params.get('client_id')"/>
+                        <input type="hidden" name="redirect_uri" t-att-value="params.get('redirect_uri')"/>
+                        <input type="hidden" name="code_challenge" t-att-value="params.get('code_challenge')"/>
+                        <input type="hidden" name="code_challenge_method" t-att-value="params.get('code_challenge_method')"/>
+                        <input type="hidden" name="state" t-att-value="params.get('state')"/>
+                        <input type="hidden" name="scope" t-att-value="params.get('scope')"/>
+                        <input type="hidden" name="resource" t-att-value="params.get('resource')"/>
+                        <div style="display:flex;gap:10px;margin-top:20px;">
+                            <button type="submit" name="decision" value="allow"
+                                    style="flex:1;padding:10px;border:0;border-radius:6px;background:#4a4af0;color:#fff;font-weight:600;cursor:pointer;">
+                                Autorizar
+                            </button>
+                            <button type="submit" name="decision" value="deny"
+                                    style="flex:1;padding:10px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#333;cursor:pointer;">
+                                Denegar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </body>
+        </html>
+    </template>
+
+    <template id="oauth_error" name="Claude: error de autorización">
+        <html lang="es">
+            <head>
+                <title>Error de autorización</title>
+                <meta charset="utf-8"/>
+            </head>
+            <body style="font-family:system-ui,Arial,sans-serif;background:#f4f4f8;margin:0;">
+                <div style="max-width:460px;margin:8vh auto;background:#fff;padding:28px;border-radius:10px;box-shadow:0 4px 16px rgba(0,0,0,.08);">
+                    <h2 style="margin-top:0;color:#c0392b;">No se pudo autorizar</h2>
+                    <p t-esc="error"/>
+                </div>
+            </body>
+        </html>
+    </template>
+</odoo>
