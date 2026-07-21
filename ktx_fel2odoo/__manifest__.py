@@ -88,6 +88,7 @@ Contenido generado con ayuda de IA, con estricta planificacion y gestion de KTX.
         'views/menus.xml',
     ],
     'images': [
+        'static/description/banner.gif',
         'static/description/banner.png',
     ],
     'web_icon': 'ktx_fel2odoo,static/description/icon.png',

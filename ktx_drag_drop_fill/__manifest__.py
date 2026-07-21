@@ -127,7 +127,7 @@ Notas
             "ktx_drag_drop_fill/static/src/css/ktx_drag_drop_fill.css",
         ],
     },
-    "images": ["static/description/icon.png"],
+    "images": ["static/description/banner.gif", "static/description/banner.png"],
     "web_icon": "ktx_drag_drop_fill,static/description/icon.png",
     "installable": True,
     "application": False,

@@ -72,7 +72,7 @@ que instala sin ``pip install`` en Odoo Online, Odoo.sh y on-premise.
             "ktx_claude_ai/static/src/js/claude_systray/claude_systray.xml",
         ],
     },
-    "images": ["static/description/banner.png"],
+    "images": ["static/description/banner.gif", "static/description/banner.png"],
     "post_init_hook": "post_init_hook",
     "post_migrate_hook": "post_migrate_hook",
     "application": True,

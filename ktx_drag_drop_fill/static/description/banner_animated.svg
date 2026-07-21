@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eefdf4"/>
+      <stop offset="100%" style="stop-color:#eef2ff"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#16a34a1f"/>
+    </filter>
+    <style>
+      .title { animation: inD .7s ease both; }
+      .tag   { animation: inD .7s ease both .25s; }
+      .grid  { animation: inU .6s ease both .1s; }
+      .sel   { animation: fin .4s ease both .6s; opacity:0; }
+      .handle{ animation: fin .4s ease both 1.0s; opacity:0; }
+      .drag  { animation: grow 1.0s ease forwards 1.2s; transform:scaleY(0); transform-box:fill-box; transform-origin:top; opacity:0; }
+      .ants  { animation: fin .4s ease both 2.15s; opacity:0; }
+      .hand  { animation: down 1.0s ease forwards 1.2s; opacity:0; }
+      .f2{animation:fin .35s ease both 2.2s; opacity:0}
+      .f3{animation:fin .35s ease both 2.5s; opacity:0}
+      .f4{animation:fin .35s ease both 2.8s; opacity:0}
+      .f5{animation:fin .35s ease both 3.1s; opacity:0}
+      .f6{animation:fin .35s ease both 3.4s; opacity:0}
+      .badge{animation:fin .45s ease both 3.7s; opacity:0}
+      .float{animation:fl 5s ease-in-out infinite}
+      @keyframes inD{from{opacity:0;transform:translateY(-12px)}to{opacity:1;transform:none}}
+      @keyframes inU{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+      @keyframes fin{from{opacity:0}to{opacity:1}}
+      @keyframes pop{from{opacity:0;transform:scale(.4)}to{opacity:1;transform:scale(1)}}
+      @keyframes grow{0%{opacity:0;transform:scaleY(0)}12%{opacity:1}100%{opacity:1;transform:scaleY(1)}}
+      @keyframes down{0%{opacity:1;transform:translateY(0)}92%{opacity:1}100%{opacity:0;transform:translateY(140px)}}
+      @keyframes fl{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    </style>
+  </defs>
+
+  <rect width="900" height="300" fill="url(#bg)" rx="16"/>
+  <circle class="float" cx="828" cy="250" r="46" fill="#16a34a" opacity="0.07"/>
+  <circle cx="58" cy="40" r="26" fill="#6366f1" opacity="0.07"/>
+
+  <!-- Title -->
+  <text class="title" x="40" y="34" font-size="21" font-weight="800" fill="#14532d">Odoo como Excel — Arrastra y Rellena</text>
+  <text class="tag" x="41" y="55" font-size="12" fill="#4b5563" font-weight="500">Selecciona una celda, arrastra el tirador y copia el valor a decenas de filas</text>
+
+  <!-- ═══════════ GRID (editable list) ═══════════ -->
+  <g class="grid">
+    <rect x="40" y="72" width="820" height="200" rx="12" fill="#ffffff" filter="url(#sh)"/>
+    <!-- header -->
+    <rect x="40" y="72" width="820" height="30" rx="12" fill="#f1f5f9"/>
+    <rect x="40" y="90" width="820" height="12" fill="#f1f5f9"/>
+    <text x="58" y="92" font-size="10.5" font-weight="800" fill="#475569" letter-spacing="1">PRODUCTO</text>
+    <text x="360" y="92" font-size="10.5" font-weight="800" fill="#4338ca" letter-spacing="1">PRECIO</text>
+    <text x="512" y="92" font-size="10.5" font-weight="800" fill="#475569" letter-spacing="1">IMPUESTO</text>
+    <text x="648" y="92" font-size="10.5" font-weight="800" fill="#475569" letter-spacing="1">SUBTOTAL</text>
+    <!-- column separators -->
+    <line x1="340" y1="72" x2="340" y2="272" stroke="#eef2f7" stroke-width="1"/>
+    <line x1="500" y1="72" x2="500" y2="272" stroke="#eef2f7" stroke-width="1"/>
+    <line x1="636" y1="72" x2="636" y2="272" stroke="#eef2f7" stroke-width="1"/>
+
+    <!-- rows: baselines at 121,149,177,205,233,261 ; row tops 102,130,158,186,214,242 -->
+    <g font-size="12" fill="#334155">
+      <text x="58" y="121">Camisa Polo</text>
+      <text x="58" y="149">Pantalon Slim</text>
+      <text x="58" y="177">Zapatos Casual</text>
+      <text x="58" y="205">Gorra Deportiva</text>
+      <text x="58" y="233">Cinturon Cuero</text>
+      <text x="58" y="261">Calcetines x3</text>
+    </g>
+    <!-- static IMPUESTO / SUBTOTAL (muted, para dar contexto) -->
+    <g font-size="11.5" fill="#94a3b8">
+      <text x="512" y="121">12%</text><text x="512" y="149">12%</text><text x="512" y="177">12%</text>
+      <text x="512" y="205">12%</text><text x="512" y="233">12%</text><text x="512" y="261">12%</text>
+      <text x="648" y="121">Q 168.00</text><text x="648" y="149">Q 168.00</text><text x="648" y="177">Q 168.00</text>
+      <text x="648" y="205">Q 168.00</text><text x="648" y="233">Q 168.00</text><text x="648" y="261">Q 168.00</text>
+    </g>
+    <!-- row separators -->
+    <g stroke="#f1f5f9" stroke-width="1">
+      <line x1="40" y1="130" x2="860" y2="130"/><line x1="40" y1="158" x2="860" y2="158"/>
+      <line x1="40" y1="186" x2="860" y2="186"/><line x1="40" y1="214" x2="860" y2="214"/>
+      <line x1="40" y1="242" x2="860" y2="242"/>
+    </g>
+
+    <!-- PRECIO row 1 (source value, always visible) -->
+    <text x="352" y="121" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+    <!-- PRECIO rows 2-6 fill in sequence -->
+    <text class="f2" x="352" y="149" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+    <text class="f3" x="352" y="177" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+    <text class="f4" x="352" y="205" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+    <text class="f5" x="352" y="233" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+    <text class="f6" x="352" y="261" font-size="12.5" font-weight="700" fill="#111827">Q 150.00</text>
+
+    <!-- drag selection range rows 1-6 (grows downward) -->
+    <g class="drag">
+      <rect x="341" y="103" width="158" height="158" fill="#6366f1" opacity="0.10"/>
+    </g>
+    <!-- marching-ants border over the filled range -->
+    <g class="ants">
+      <rect x="341" y="103" width="158" height="158" fill="none" stroke="#4338ca" stroke-width="1.6" stroke-dasharray="5 4">
+        <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="0.6s" repeatCount="indefinite"/>
+      </rect>
+    </g>
+
+    <!-- initial single-cell selection (row 1 PRECIO) -->
+    <g class="sel">
+      <rect x="341" y="103" width="158" height="27" fill="none" stroke="#4338ca" stroke-width="2" rx="2"/>
+    </g>
+    <!-- fill handle (bottom-right of row1 cell) -->
+    <g class="handle">
+      <rect x="493" y="124" width="9" height="9" rx="1.5" fill="#16a34a" stroke="#ffffff" stroke-width="1.5"/>
+    </g>
+    <!-- dragging cursor (outer = posición fija; inner = animación CSS, sin conflicto con translate) -->
+    <g transform="translate(500,128)">
+      <g class="hand">
+        <path d="M0,0 L0,17 L4,13 L7,19 L9,18 L6,12 L11,12 Z" fill="#1e293b" stroke="#ffffff" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+
+  <!-- badge -->
+  <g class="badge" transform="translate(792,88)">
+    <rect x="-58" y="-13" width="116" height="26" rx="13" fill="#dcfce7"/>
+    <text x="0" y="4" text-anchor="middle" font-size="11" font-weight="800" fill="#166534">&#10003; 6 filas al instante</text>
+  </g>
+
+  <!-- footer -->
+  <text x="450" y="291" text-anchor="middle" font-size="9.5" fill="#94a3b8" font-weight="500">
+    Selecciona · arrastra · rellena · copia — en listas editables, lineas y facturas, sin abrir cada registro
+  </text>
+</svg>

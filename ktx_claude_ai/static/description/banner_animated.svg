@@ -1,0 +1,131 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 300" width="900" height="300" font-family="'Segoe UI',Arial,sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#eef0ff"/>
+      <stop offset="100%" style="stop-color:#f5f0ff"/>
+    </linearGradient>
+    <linearGradient id="acc" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#6366f1"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <filter id="sh" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#4338ca22"/>
+    </filter>
+    <style>
+      .title  { animation: inD .7s ease both; }
+      .tag    { animation: inD .7s ease both .25s; }
+      .win    { animation: inU .6s ease both .1s; }
+      .recs   { animation: inU .6s ease both .35s; }
+      .umsg   { animation: inR .5s ease both .7s; opacity:0; }
+      .think  { animation: fin .4s ease both 1.7s; opacity:0; }
+      .tool   { animation: pop .45s cubic-bezier(.2,1.3,.5,1) both 2.5s; opacity:0; transform-box:fill-box; transform-origin:left center; }
+      .amsg   { animation: inU .5s ease both 4.2s; opacity:0; }
+      .pubA   { animation: outF .4s ease forwards 3.25s; }
+      .pubB   { animation: outF .4s ease forwards 3.55s; }
+      .drfA   { animation: fin .45s ease both 3.35s; opacity:0; }
+      .drfB   { animation: fin .45s ease both 3.65s; opacity:0; }
+      .ckA    { animation: fin .4s ease both 3.4s; opacity:0; }
+      .ckB    { animation: fin .4s ease both 3.7s; opacity:0; }
+      .d1{animation:blink 1.2s infinite ease-in-out}
+      .d2{animation:blink 1.2s infinite ease-in-out .2s}
+      .d3{animation:blink 1.2s infinite ease-in-out .4s}
+      .caret{animation:blink 1s infinite steps(1)}
+      .float{animation:fl 5s ease-in-out infinite}
+      @keyframes inD { from{opacity:0;transform:translateY(-12px)} to{opacity:1;transform:none} }
+      @keyframes inU { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+      @keyframes inR { from{opacity:0;transform:translateX(22px)} to{opacity:1;transform:none} }
+      @keyframes fin { from{opacity:0} to{opacity:1} }
+      @keyframes outF { from{opacity:1} to{opacity:0} }
+      @keyframes pop { from{opacity:0;transform:scale(.4)} to{opacity:1;transform:scale(1)} }
+      @keyframes blink { 0%,100%{opacity:.2} 50%{opacity:1} }
+      @keyframes fl { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+    </style>
+  </defs>
+
+  <rect width="900" height="300" fill="url(#bg)" rx="16"/>
+  <circle class="float" cx="825" cy="255" r="46" fill="#7c3aed" opacity="0.07"/>
+  <circle cx="60" cy="40" r="30" fill="#6366f1" opacity="0.07"/>
+
+  <!-- Title -->
+  <text class="title" x="30" y="34" font-size="21" font-weight="800" fill="#1e293b">Claude AI para Odoo</text>
+  <text class="tag" x="31" y="55" font-size="12" fill="#64748b" font-weight="500">Escríbele en lenguaje natural — y opera tus registros por ti</text>
+
+  <!-- ═══════════ CHAT WINDOW ═══════════ -->
+  <g class="win">
+    <rect x="28" y="70" width="452" height="208" rx="14" fill="#0f172a" filter="url(#sh)"/>
+    <!-- header -->
+    <circle cx="52" cy="92" r="10" fill="url(#acc)"/>
+    <path d="M52,87 l1.4,3.2 3.3,1.4 -3.3,1.4 -1.4,3.2 -1.4,-3.2 -3.3,-1.4 3.3,-1.4 Z" fill="#fff"/>
+    <text x="70" y="90" font-size="11.5" font-weight="700" fill="#e2e8f0">Claude</text>
+    <text x="70" y="101" font-size="9" fill="#64748b">Chat dentro de Odoo</text>
+    <line x1="42" y1="110" x2="466" y2="110" stroke="#1e293b" stroke-width="1"/>
+
+    <!-- user message (right) -->
+    <g class="umsg">
+      <rect x="196" y="120" width="270" height="42" rx="11" fill="#4f46e5"/>
+      <text x="210" y="137" font-size="11.5" fill="#ffffff">Restablece a borrador las</text>
+      <text x="210" y="152" font-size="11.5" fill="#ffffff">facturas 5 y 7</text>
+    </g>
+
+    <!-- assistant thinking -->
+    <g class="think">
+      <text x="44" y="180" font-size="10.5" fill="#93c5fd" font-style="italic">Verifico el estado y aplico el cambio</text>
+      <circle class="d1" cx="250" cy="177" r="2.4" fill="#93c5fd"/>
+      <circle class="d2" cx="258" cy="177" r="2.4" fill="#93c5fd"/>
+      <circle class="d3" cx="266" cy="177" r="2.4" fill="#93c5fd"/>
+    </g>
+
+    <!-- tool execution chip -->
+    <g class="tool">
+      <rect x="44" y="190" width="300" height="26" rx="8" fill="#0e2a1c" stroke="#14532d" stroke-width="1"/>
+      <text x="54" y="207" font-size="10" fill="#86efac">&#9881; button_draft &#8594; account.move [5,7]</text>
+      <text x="300" y="207" font-size="10" font-weight="800" fill="#22c55e">&#10003; 2</text>
+    </g>
+
+    <!-- assistant result -->
+    <g class="amsg">
+      <rect x="44" y="224" width="330" height="40" rx="11" fill="#1e293b"/>
+      <text x="56" y="240" font-size="11" fill="#e5e7eb">Listo: las facturas 5 y 7 volvieron</text>
+      <text x="56" y="254" font-size="11" fill="#e5e7eb">a <tspan fill="#86efac" font-weight="700">borrador</tspan>. ¿Algo más?</text>
+    </g>
+  </g>
+
+  <!-- flow arrow chat -> records -->
+  <g>
+    <path id="flow" d="M484,175 C494,175 494,150 504,150" fill="none" stroke="#c4b5fd" stroke-width="2" stroke-dasharray="4 4"/>
+    <circle r="4" fill="#7c3aed">
+      <animateMotion dur="1.4s" repeatCount="indefinite" begin="2.6s"><mpath href="#flow"/></animateMotion>
+    </circle>
+  </g>
+
+  <!-- ═══════════ RECORDS PANEL ═══════════ -->
+  <g class="recs">
+    <text x="512" y="90" font-size="10" font-weight="700" fill="#6d28d9" letter-spacing="1.5">TUS REGISTROS EN ODOO</text>
+
+    <!-- Card A -->
+    <rect x="510" y="100" width="360" height="76" rx="12" fill="#ffffff" stroke="#e4e6fb" stroke-width="1.5" filter="url(#sh)"/>
+    <rect x="510" y="100" width="6" height="76" rx="3" fill="url(#acc)"/>
+    <text x="532" y="128" font-size="13" font-weight="700" fill="#1f2937">FACT/2026/00005</text>
+    <text x="532" y="147" font-size="11" fill="#64748b">Cliente Acme, S.A.</text>
+    <text x="532" y="164" font-size="11" font-weight="700" fill="#4338ca">Q 4,500.00</text>
+    <!-- badge swap -->
+    <g class="pubA"><rect x="754" y="116" width="96" height="24" rx="12" fill="#dbeafe"/><text x="802" y="132" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8">PUBLICADA</text></g>
+    <g class="drfA"><rect x="760" y="116" width="90" height="24" rx="12" fill="#fef3c7"/><text x="805" y="132" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b45309">BORRADOR</text></g>
+    <g class="ckA" transform="translate(736,128)"><circle r="10" fill="#10b981"/><path d="M-4,0 L-1,3 L5,-4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+
+    <!-- Card B -->
+    <rect x="510" y="188" width="360" height="76" rx="12" fill="#ffffff" stroke="#e4e6fb" stroke-width="1.5" filter="url(#sh)"/>
+    <rect x="510" y="188" width="6" height="76" rx="3" fill="url(#acc)"/>
+    <text x="532" y="216" font-size="13" font-weight="700" fill="#1f2937">FACT/2026/00007</text>
+    <text x="532" y="235" font-size="11" fill="#64748b">Cliente Beta, Ltda.</text>
+    <text x="532" y="252" font-size="11" font-weight="700" fill="#4338ca">Q 1,280.00</text>
+    <g class="pubB"><rect x="754" y="204" width="96" height="24" rx="12" fill="#dbeafe"/><text x="802" y="220" text-anchor="middle" font-size="10.5" font-weight="700" fill="#1d4ed8">PUBLICADA</text></g>
+    <g class="drfB"><rect x="760" y="204" width="90" height="24" rx="12" fill="#fef3c7"/><text x="805" y="220" text-anchor="middle" font-size="10.5" font-weight="700" fill="#b45309">BORRADOR</text></g>
+    <g class="ckB" transform="translate(736,216)"><circle r="10" fill="#10b981"/><path d="M-4,0 L-1,3 L5,-4" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g>
+  </g>
+
+  <!-- Footer -->
+  <text x="450" y="293" text-anchor="middle" font-size="9.5" fill="#94a3b8" font-weight="500">
+    Crea · edita · elimina · cambia de estado — individual o masivo, con tus permisos y todo auditado
+  </text>
+</svg>
